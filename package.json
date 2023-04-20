@@ -25,10 +25,12 @@
     "http-status-codes": "^2.2.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.4",
+    "nodemailer": "^6.9.1",
     "typescript": "^5.0.4",
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
-    "@types/cookie-parser": "^1.4.3"
+    "@types/cookie-parser": "^1.4.3",
+    "@types/nodemailer": "^6.4.7"
   }
 }

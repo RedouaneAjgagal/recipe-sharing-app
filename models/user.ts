@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
         required: [true, "Image is required"],
         default: "https://res.cloudinary.com/dqfrgtxde/image/upload/v1681957720/recipe-sharing-app/default-profile-picture_dwfnb9.png"
     }
-});
+}, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
 
