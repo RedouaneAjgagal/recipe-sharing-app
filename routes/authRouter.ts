@@ -5,7 +5,7 @@ import { login, logout, register } from "../controllers/authController";
 
 router.get('/login', login);
 
-router.get('/register', register);
+router.post('/register', register);
 
 router.get('/logout', logout);
 

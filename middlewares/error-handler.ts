@@ -15,7 +15,7 @@ const errorHandler = (err: Err, req: Request, res: Response, next: NextFunction)
         msg: err.message || 'Something went wrong. Please try later'
     }
     if (err instanceof Error.ValidationError) {
-        customError.msg = Object.values(err.errors).map(item => item.message).join(',');
+        customError.msg = Object.values(err.errors).map(item => item.message).join(', ');
         customError.statusCode = StatusCodes.BAD_REQUEST;
     }
     if (err.code && err.code === 1100) {

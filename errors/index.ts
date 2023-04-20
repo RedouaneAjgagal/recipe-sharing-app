@@ -6,7 +6,6 @@ import NotFoundError from "./not-found";
 
 
 export {
-    CustomApiError,
     UnauthenticatedError,
     BadRequestError,
     TooManyRequestError,

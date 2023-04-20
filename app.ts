@@ -34,6 +34,7 @@ import authRouter from './routes/authRouter';
 
 
 
+app.use(express.json());
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(xssCleaner());
