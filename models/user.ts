@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import bcryptJS from "bcryptjs";
+
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -50,6 +52,15 @@ const userSchema = new mongoose.Schema({
         default: "https://res.cloudinary.com/dqfrgtxde/image/upload/v1681957720/recipe-sharing-app/default-profile-picture_dwfnb9.png"
     }
 }, { timestamps: true });
+
+userSchema.pre('save', async function () {
+    if (!this.isModified('password')) {
+        return;
+    }
+    const salt = await bcryptJS.genSalt(10);
+    const hashedPassword = await bcryptJS.hash(this.password, salt);
+    this.password = hashedPassword;
+});
 
 const User = mongoose.model('User', userSchema);
 
