@@ -2,7 +2,19 @@ import mongoose from "mongoose";
 import bcryptJS from "bcryptjs";
 
 
-const userSchema = new mongoose.Schema({
+interface User {
+    name: string,
+    email: string,
+    password: string,
+    isVerified: boolean,
+    verificationToken: string,
+    verifiedDate: string | null,
+    role: 'user' | 'admin',
+    image: string,
+    comparePassword: (candidatePassword: string) => boolean
+}
+
+const userSchema = new mongoose.Schema<User>({
     name: {
         type: String,
         minLength: [3, "Name cannot be less than 3 characters"],
@@ -61,6 +73,11 @@ userSchema.pre('save', async function () {
     const hashedPassword = await bcryptJS.hash(this.password, salt);
     this.password = hashedPassword;
 });
+
+userSchema.methods.comparePassword = async function (candidatePassword: string) {
+    const isCorrectPassword = await bcryptJS.compare(candidatePassword, this.password);
+    return isCorrectPassword;
+}
 
 const User = mongoose.model('User', userSchema);
 

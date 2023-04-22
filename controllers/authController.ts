@@ -4,10 +4,31 @@ import { Request, Response } from "express";
 import User from "../models/user";
 import crypto from "crypto";
 import sendVerificationEmail from "../utils/sendVerificationEmail";
+import { Document } from "mongoose"
 
 
 const login = async (req: Request, res: Response) => {
-    res.status(StatusCodes.OK).json({ msg: "login Controller" });
+    const { email, password }: { email: string, password: string } = req.body;
+
+    // additional validation
+    const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+    const isValidPassword = /^(?=.*\w).{6,60}$/.test(password);
+    if ((!email || !isValidEmail) || (!password || !isValidPassword)) {
+        throw new BadRequestError('Please provide valid values!');
+    }
+
+    // find the user
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new BadRequestError('Email or Password are incorrect');
+    }
+
+    // check if the password correct
+    const isCorrectPassword = await user.comparePassword(password);
+    if (!isCorrectPassword) {
+        throw new BadRequestError('Email or Password are incorrect');
+    }
+    res.status(StatusCodes.OK).json({ email, password });
 }
 
 const logout = async (req: Request, res: Response) => {
