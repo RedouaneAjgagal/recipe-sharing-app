@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 import User from "../models/user";
 import crypto from "crypto";
 import sendVerificationEmail from "../utils/sendVerificationEmail";
-import { Document } from "mongoose"
+import { createToken, attachTokenToCookies, destroyCookie } from "../utils/createToken"
 
 
 const login = async (req: Request, res: Response) => {
@@ -28,12 +28,13 @@ const login = async (req: Request, res: Response) => {
     if (!isCorrectPassword) {
         throw new BadRequestError('Email or Password are incorrect');
     }
+
+    const token = createToken(user);
+    attachTokenToCookies(res, token);
+
     res.status(StatusCodes.OK).json({ email, password });
 }
 
-const logout = async (req: Request, res: Response) => {
-    res.status(StatusCodes.OK).json({ msg: "logout Controller" });
-}
 
 const register = async (req: Request, res: Response) => {
     const { name, email, password }: { name: string, email: string, password: string } = req.body;
@@ -63,6 +64,14 @@ const register = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.CREATED).json({ msg: "Success! Please verify your email" });
 }
+
+
+const logout = async (req: Request, res: Response) => {
+    destroyCookie(res, "accessToken");
+    res.status(StatusCodes.OK).json({ msg: "logged out" });
+}
+
+
 
 export {
     login,
