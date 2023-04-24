@@ -31,6 +31,7 @@ import notFoundMiddleware from './middlewares/not-found';
 
 // routes
 import authRouter from './routes/authRouter';
+import userRouter from './routes/userRouter'
 
 
 
@@ -42,6 +43,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.use('/api/v1', apiLimiter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/user', userRouter);
 
 
 

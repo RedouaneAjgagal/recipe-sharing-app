@@ -10,6 +10,11 @@ const createToken = (user: User) => {
     return token
 }
 
+const verifyToken = (token: string) => {
+    const payload = jwt.verify(token, process.env.JWT_SECRET!) as { id: string, name: string, role: string };
+    return { id: payload.id, name: payload.name, role: payload.role }
+}
+
 const attachTokenToCookies = (res: Response, token: string) => {
     const expiresIn = 2 * 60 * 1000 // 2h
     res.cookie("accessToken", token, {
@@ -34,5 +39,6 @@ const destroyCookie = (res: Response, tokenName: string) => {
 export {
     createToken,
     attachTokenToCookies,
-    destroyCookie
+    destroyCookie,
+    verifyToken
 };
