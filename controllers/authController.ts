@@ -1,18 +1,19 @@
 import { StatusCodes } from "http-status-codes";
 import { BadRequestError, TooManyRequestError, UnauthenticatedError, NotFoundError } from "../errors";
-import { Request, Response } from "express";
+import { RequestHandler } from "express";
 import User from "../models/user";
 import crypto from "crypto";
 import sendVerificationEmail from "../utils/sendVerificationEmail";
-import { createToken, attachTokenToCookies, destroyCookie } from "../utils/createToken"
+import { createToken, attachTokenToCookies, destroyCookie } from "../utils/createToken";
+import { validEmail, validPassword, validName } from "../helpers/authValidation";
 
 
-const login = async (req: Request, res: Response) => {
+const login: RequestHandler = async (req, res) => {
     const { email, password }: { email: string, password: string } = req.body;
 
     // additional validation
-    const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-    const isValidPassword = /^(?=.*\w).{6,60}$/.test(password);
+    const isValidEmail = validEmail(email);
+    const isValidPassword = validPassword(password);
     if ((!email || !isValidEmail) || (!password || !isValidPassword)) {
         throw new BadRequestError('Please provide valid values!');
     }
@@ -36,13 +37,13 @@ const login = async (req: Request, res: Response) => {
 }
 
 
-const register = async (req: Request, res: Response) => {
+const register: RequestHandler = async (req, res) => {
     const { name, email, password }: { name: string, email: string, password: string } = req.body;
 
     // additional validation
-    const isValidName = /^[a-zA-Z0-9_-]{3,20}$/.test(name);
-    const isValidEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-    const isValidPassword = /^(?=.*\w).{6,60}$/.test(password);
+    const isValidName = validName(name);
+    const isValidEmail = validEmail(email);
+    const isValidPassword = validPassword(password);
     if ((!name || !isValidName) || (!email || !isValidEmail) || (!password || !isValidPassword)) {
         throw new BadRequestError('Please provide valid values!');
     }
@@ -66,15 +67,38 @@ const register = async (req: Request, res: Response) => {
 }
 
 
-const logout = async (req: Request, res: Response) => {
+const logout: RequestHandler = async (req, res) => {
     destroyCookie(res, "accessToken");
     res.status(StatusCodes.OK).json({ msg: "logged out" });
 }
 
+const verifyEmail: RequestHandler = async (req, res) => {
+    const { token, email } = req.query as { token: string, email: string };
+    const isValidEmail = validEmail(email);
+    if (!email || !isValidEmail) {
+        throw new BadRequestError('Invalid email');
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new UnauthenticatedError('Verification failed');
+    }
+    if (user.isVerified) {
+        return res.status(StatusCodes.OK).json({ msg: "Already verified" });
+    }
+    if (user.verificationToken !== token) {
+        throw new UnauthenticatedError('Verification failed');
+    }
+    user.isVerified = true;
+    user.verifiedDate = new Date(Date.now());
+    await user.save();
+
+    res.json({ msg: "Success! You are verified now" });
+}
 
 
 export {
     login,
     logout,
-    register
+    register,
+    verifyEmail
 };

@@ -9,7 +9,7 @@ interface User {
     password: string,
     isVerified: boolean,
     verificationToken: string,
-    verifiedDate: string | null,
+    verifiedDate: Date | null,
     role: 'user' | 'admin',
     image: string,
     comparePassword: (candidatePassword: string) => boolean
