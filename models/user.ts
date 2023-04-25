@@ -10,6 +10,8 @@ interface User {
     isVerified: boolean,
     verificationToken: string,
     verifiedDate: Date | null,
+    resetPasswordtoken: String | null,
+    passwordTokenExpirationDate: Date | null,
     role: 'user' | 'admin',
     image: string,
     comparePassword: (candidatePassword: string) => boolean
@@ -48,6 +50,14 @@ const userSchema = new mongoose.Schema<User>({
         type: String
     },
     verifiedDate: {
+        type: Date,
+        default: null
+    },
+    resetPasswordtoken: {
+        type: String,
+        default: null
+    },
+    passwordTokenExpirationDate: {
         type: Date,
         default: null
     },
