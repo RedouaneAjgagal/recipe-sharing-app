@@ -126,7 +126,7 @@ const forgetPassword: RequestHandler = async (req, res) => {
     const resetPasswordtoken = crypto.randomBytes(70).toString('hex');
     const hashedResetPasswordToken = createHash("md5", resetPasswordtoken);
     const expiresDate = 1000 * 60 * 10; // 10 min
-    const expiresIn = new Date(Date.now());
+    const expiresIn = new Date(Date.now() + expiresDate);
     user.resetPasswordtoken = hashedResetPasswordToken;
     user.passwordTokenExpirationDate = expiresIn;
     await user.save();
