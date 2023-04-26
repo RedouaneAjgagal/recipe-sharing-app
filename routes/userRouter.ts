@@ -1,12 +1,15 @@
 import express from "express";
 const router = express.Router();
 
-import { currentUser, userProfile, singleProfile } from "../controllers/userController";
+import { currentUser, userProfile, singleProfile, updateProfile } from "../controllers/userController";
 import authenticateUser from "../middlewares/authentication";
 
 router.get('/current-user', authenticateUser, currentUser);
 router.get('/settings', authenticateUser, userProfile);
-router.get('/:userId', singleProfile);
+
+router.route("/:userId")
+    .get(singleProfile)
+    .patch(authenticateUser, updateProfile);
 
 
 
