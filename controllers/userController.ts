@@ -20,40 +20,41 @@ const currentUser: RequestHandler = async (req: CustomRequest, res) => {
 
 const userProfile: RequestHandler = async (req: CustomRequest, res) => {
     const { id } = req.user!;
+
+    // find the profile
     const userInfo = await Profile.findOne({ user: id }).populate({ path: 'user', select: 'name email' });
     if (!userInfo) {
         throw new UnauthenticatedError("Failed to authenticate");
     }
+
     res.status(StatusCodes.OK).json(userInfo);
 }
 
 const singleProfile: RequestHandler = async (req, res) => {
     const { userId } = req.params;
+
+    // find the profile
     const profile = await Profile.findById(userId).populate({ path: "user", select: "name -_id" });
     if (!profile) {
         throw new NotFoundError(`There is no user with id ${userId}`);
     }
+    
     res.status(StatusCodes.OK).json(profile);
 }
 
 const updateProfile: RequestHandler = async (req: CustomRequest, res) => {
     const { name, picture, bio, favouriteMeals }: { name: string, picture: string, bio: string, favouriteMeals: string[] } = req.body;
-
+    const { id } = req.user!;
 
     // find the profile
-    const { userId: userRessouceId } = req.params; // profile id
-    const profile = await Profile.findById(userRessouceId);
+    const profile = await Profile.findOne({ user: id });
     if (!profile) {
-        throw new NotFoundError(`There is no user with id ${userRessouceId}`);
+        throw new UnauthenticatedError("Failed to authenticate");
     }
-
-
-    // check if the profile belongs to the current user
-    checkPermission(profile.user.toString(), req.user!.id);
-
 
     // update the profile
     const newProfileInfo: { picture?: string, bio?: string, favouriteMeals?: string[] } = {}
+
     if (picture && picture.trim().startsWith('https://res.cloudinary.com/dqfrgtxde/image/upload')) {
         newProfileInfo.picture = picture;
     }
@@ -63,6 +64,7 @@ const updateProfile: RequestHandler = async (req: CustomRequest, res) => {
     if (favouriteMeals && favouriteMeals.length <= 15 && favouriteMeals.every(meal => typeof meal === "string")) {
         newProfileInfo.favouriteMeals = favouriteMeals;
     }
+    
     await profile.updateOne(newProfileInfo, { runValidators: true });
 
 
