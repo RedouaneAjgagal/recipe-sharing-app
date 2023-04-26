@@ -13,7 +13,6 @@ interface User {
     resetPasswordtoken: String | null,
     passwordTokenExpirationDate: Date | null,
     role: 'user' | 'admin',
-    image: string,
     comparePassword: (candidatePassword: string) => boolean
 }
 
@@ -68,14 +67,20 @@ const userSchema = new mongoose.Schema<User>({
             message: '{VALUE} is not supported'
         },
         default: "user"
-    },
-    image: {
-        type: String,
-        required: [true, "Image is required"],
-        default: "https://res.cloudinary.com/dqfrgtxde/image/upload/v1681957720/recipe-sharing-app/default-profile-picture_dwfnb9.png"
     }
 }, { timestamps: true });
 
+
+// Add a profile model related to the user when creating a new user
+userSchema.post("save", { document: true }, async function (doc) {
+    if (!doc.isNew) {
+        return;
+    }
+    await this.$model("Profile").create({ user: this._id });
+});
+
+
+// hash the password when creating a new user
 userSchema.pre('save', async function () {
     if (!this.isModified('password')) {
         return;
@@ -85,6 +90,8 @@ userSchema.pre('save', async function () {
     this.password = hashedPassword;
 });
 
+
+// a compare password method to check if the password is correct in the login
 userSchema.methods.comparePassword = async function (candidatePassword: string) {
     const isCorrectPassword = await bcryptJS.compare(candidatePassword, this.password);
     return isCorrectPassword;

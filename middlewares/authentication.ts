@@ -6,12 +6,12 @@ import { CustomRequest } from "../controllers/userController";
 
 const authenticateUser: RequestHandler = (req: CustomRequest, res, next) => {
     const { accessToken } = req.signedCookies;
+    if (!accessToken) {
+        throw new UnauthenticatedError('Authentication failed');
+    }
+    
     try {
-        if (!accessToken) {
-            throw new UnauthenticatedError('Authentication failed');
-        }
         const userInfo = verifyToken(accessToken);
-
         req.user = userInfo;
         next();
     } catch (error) {
