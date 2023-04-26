@@ -16,7 +16,10 @@ import cookieParser from 'cookie-parser';
 import mongoSanitize from 'express-mongo-sanitize';
 import helmet from "helmet";
 import xssCleaner from "xss-clean";
+import fileUpload from "express-fileupload";
 import rateLimit from 'express-rate-limit';
+import { v2 as cloudinary } from "cloudinary";
+
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 60, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
@@ -35,11 +38,20 @@ import userRouter from './routes/userRouter'
 
 
 
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET,
+    secure: true,
+    ssl_detected: true
+});
+
 app.use(express.json());
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(xssCleaner());
 app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(fileUpload({ useTempFiles: true, safeFileNames: true }));
 
 app.use('/api/v1', apiLimiter);
 app.use('/api/v1/auth', authRouter);

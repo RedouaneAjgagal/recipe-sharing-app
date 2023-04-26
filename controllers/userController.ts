@@ -1,10 +1,13 @@
 import { Response, Request, RequestHandler } from "express"
 import Profile from "../models/profile"
-import { NotFoundError, UnauthenticatedError } from "../errors"
+import { BadRequestError, NotFoundError, UnauthenticatedError } from "../errors"
 import { StatusCodes } from "http-status-codes"
-import checkPermission from "../utils/permissionChecker"
-import UnauthorizedError from "../errors/unauthorized"
 import User from "../models/user"
+import { UploadedFile } from "express-fileupload";
+import fs from "fs";
+import { v2 as cloudinary } from "cloudinary";
+import path from "path"
+
 
 interface CustomRequest extends Request {
     user?: {
@@ -38,7 +41,7 @@ const singleProfile: RequestHandler = async (req, res) => {
     if (!profile) {
         throw new NotFoundError(`There is no user with id ${userId}`);
     }
-    
+
     res.status(StatusCodes.OK).json(profile);
 }
 
@@ -64,7 +67,7 @@ const updateProfile: RequestHandler = async (req: CustomRequest, res) => {
     if (favouriteMeals && favouriteMeals.length <= 15 && favouriteMeals.every(meal => typeof meal === "string")) {
         newProfileInfo.favouriteMeals = favouriteMeals;
     }
-    
+
     await profile.updateOne(newProfileInfo, { runValidators: true });
 
 
@@ -76,11 +79,46 @@ const updateProfile: RequestHandler = async (req: CustomRequest, res) => {
     res.status(StatusCodes.OK).json({ msg: "Profile updated!" });
 }
 
+const uploadPicture: RequestHandler = async (req, res) => {
+
+    // find the picture
+    const picture = req.files?.picture as UploadedFile;
+    if (!picture) {
+        throw new BadRequestError('Must provide an image');
+    }
+
+    // check if its an image
+    if (!picture.mimetype.startsWith("image")) {
+        fs.unlinkSync(picture.tempFilePath);
+        throw new BadRequestError('Only images are supported');
+    }
+
+    // check if the image is less than 1MB
+    const maxSize = 1024 * 1024;
+    if (picture.size > maxSize) {
+        fs.unlinkSync(picture.tempFilePath);
+        throw new BadRequestError('Image size must be less than 1MB');
+    }
+
+    // Upload the image to cloudinary
+    const result = await cloudinary.uploader.upload(picture.tempFilePath, {
+        folder: "recipe-sharing-app",
+        resource_type: "image"
+    })
+
+
+    // remove the new tmp
+    fs.unlinkSync(picture.tempFilePath);
+
+    res.status(StatusCodes.OK).json({ src: result.secure_url });
+}
+
 
 export {
     CustomRequest,
     currentUser,
     userProfile,
     singleProfile,
-    updateProfile
+    updateProfile,
+    uploadPicture
 }

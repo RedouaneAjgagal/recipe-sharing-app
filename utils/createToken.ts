@@ -16,7 +16,7 @@ const verifyToken = (token: string) => {
 }
 
 const attachTokenToCookies = (res: Response, token: string) => {
-    const expiresIn = 2 * 60 * 1000 // 2h
+    const expiresIn = 2 * 60 * 60 * 1000 // 2h
     res.cookie("accessToken", token, {
         expires: new Date(Date.now() + expiresIn),
         signed: true,
