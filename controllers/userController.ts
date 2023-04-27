@@ -104,8 +104,7 @@ const uploadPicture: RequestHandler = async (req, res) => {
     const result = await cloudinary.uploader.upload(picture.tempFilePath, {
         folder: "recipe-sharing-app",
         resource_type: "image"
-    })
-
+    });
 
     // remove the new tmp
     fs.unlinkSync(picture.tempFilePath);
