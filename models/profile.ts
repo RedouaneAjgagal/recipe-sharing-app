@@ -18,7 +18,7 @@ const profileSchema = new mongoose.Schema<Profile>({
     picture: {
         type: String,
         required: [true, "Image is required"],
-        default: "https://res.cloudinary.com/dqfrgtxde/image/upload/v1682521049/recipe-sharing-app/illustration-of-human-icon-user-symbol-icon-modern-design-on-blank-background-free-vector_zsxy1x.jpg"
+        default: "https://res.cloudinary.com/dqfrgtxde/image/upload/v1682521049/recipe-sharing-app/profiles/default-profile-picture.jpg"
     },
     bio: {
         type: String,

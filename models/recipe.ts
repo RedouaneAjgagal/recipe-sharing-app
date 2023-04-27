@@ -10,16 +10,23 @@ export interface Methods {
     sub: string
 }
 
+export interface RecipeImages {
+    main: string,
+    sub: string[]
+}
+
 export interface Recipe {
     user: typeof mongoose.Types.ObjectId,
     title: string,
     description?: string,
+    image: RecipeImages,
     note?: string,
     preparationTime: number,
     cookTime: number,
+    totalTime?: number,
     ingredients: Ingredients[],
     methods: Methods[],
-    avgRating?:  number
+    avgRating?: number
 }
 
 const ingredientsShema = new mongoose.Schema<Ingredients>({
@@ -44,6 +51,17 @@ const methodsShema = new mongoose.Schema<Methods>({
     }
 });
 
+const imageSchema = new mongoose.Schema<RecipeImages>({
+    main: {
+        type: String,
+        required: true
+    },
+    sub: {
+        type: [String],
+        maxlength: 4
+    }
+})
+
 const recipeSchema = new mongoose.Schema<Recipe>({
     user: {
         type: mongoose.Types.ObjectId,
@@ -58,6 +76,10 @@ const recipeSchema = new mongoose.Schema<Recipe>({
     description: {
         type: String
     },
+    image: {
+        type: imageSchema,
+        required: true
+    },
     note: {
         type: String
     },
@@ -68,6 +90,9 @@ const recipeSchema = new mongoose.Schema<Recipe>({
     cookTime: {
         type: Number,
         required: true
+    },
+    totalTime: {
+        type: Number
     },
     ingredients: {
         type: [ingredientsShema],
@@ -82,10 +107,13 @@ const recipeSchema = new mongoose.Schema<Recipe>({
         default: 0,
         required: true
     }
+}, { timestamps: true });
+
+recipeSchema.pre(["updateOne", "save"], { document: true }, async function () {
+    // calc total time
+    const totalTime = this.preparationTime + this.cookTime;
+    this.totalTime = totalTime;
 });
-
-// recipeSchema.methods.
-
 
 const Recipe = mongoose.model('Recipe', recipeSchema);
 

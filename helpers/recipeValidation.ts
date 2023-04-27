@@ -1,4 +1,4 @@
-import { Ingredients, Methods } from "../models/recipe"
+import { Ingredients, Methods, RecipeImages } from "../models/recipe"
 
 const validIngredients = (ingredients: Ingredients[]) => {
     const isValidIngredients = ingredients?.length > 0 && ingredients.every(ingredient => ingredient.title?.trim().length > 0 && ingredient.sub?.length > 0 && ingredient.sub.every(item => item.trim().length > 0));
@@ -10,7 +10,13 @@ const validMethods = (methods: Methods[]) => {
     return isValidMethods;
 }
 
+const validImages = (recipeImages: RecipeImages) => {
+    const isValidRecipeImages = recipeImages?.main?.trim().startsWith("https://res.cloudinary.com/dqfrgtxde/image/upload") && recipeImages.sub?.length < 5 && recipeImages.sub.every(item => item.trim().startsWith("https://res.cloudinary.com/dqfrgtxde/image/upload"));
+    return isValidRecipeImages;
+}
+
 export {
     validIngredients,
-    validMethods
+    validMethods,
+    validImages
 }
