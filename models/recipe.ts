@@ -1,17 +1,25 @@
 import mongoose from "mongoose";
 
-interface Ingredients {
+export interface Ingredients {
     title: string,
     sub: string[]
 }
 
-interface Recipe {
+export interface Methods {
+    title: string,
+    sub: string
+}
+
+export interface Recipe {
     user: typeof mongoose.Types.ObjectId,
+    title: string,
+    description?: string,
+    note?: string,
     preparationTime: number,
     cookTime: number,
     ingredients: Ingredients[],
-    method: string[],
-    avgRating:  number
+    methods: Methods[],
+    avgRating?:  number
 }
 
 const ingredientsShema = new mongoose.Schema<Ingredients>({
@@ -23,13 +31,35 @@ const ingredientsShema = new mongoose.Schema<Ingredients>({
         type: [String],
         required: true
     }
-})
+});
+
+const methodsShema = new mongoose.Schema<Methods>({
+    title: {
+        type: String,
+        required: true
+    },
+    sub: {
+        type: String,
+        required: true
+    }
+});
 
 const recipeSchema = new mongoose.Schema<Recipe>({
     user: {
         type: mongoose.Types.ObjectId,
         ref: "User",
         required: true
+    },
+    title: {
+        type: String,
+        maxlength: 100,
+        required: true
+    },
+    description: {
+        type: String
+    },
+    note: {
+        type: String
     },
     preparationTime: {
         type: Number,
@@ -43,8 +73,8 @@ const recipeSchema = new mongoose.Schema<Recipe>({
         type: [ingredientsShema],
         required: true
     },
-    method: {
-        type: [],
+    methods: {
+        type: [methodsShema],
         required: true
     },
     avgRating: {
@@ -53,6 +83,8 @@ const recipeSchema = new mongoose.Schema<Recipe>({
         required: true
     }
 });
+
+// recipeSchema.methods.
 
 
 const Recipe = mongoose.model('Recipe', recipeSchema);
