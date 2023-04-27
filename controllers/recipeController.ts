@@ -5,6 +5,7 @@ import { RequestHandler } from "express";
 import { validIngredients, validMethods, validImages } from "../helpers/recipeValidation";
 import { CustomRequest } from "./userController";
 import Profile from "../models/profile";
+import checkPermission from "../utils/permissionChecker";
 
 
 
@@ -80,7 +81,7 @@ const singleRecipe: RequestHandler = async (req, res) => {
     const profile = await Profile.findOne({ user: recipe.user }, { picture: true }).populate({ path: "user", select: "name -_id" });
 
     const recipeDetail = { user: { name: profile!.user.name, picture: profile!.picture }, recipe }
-    
+
     res.status(StatusCodes.OK).json(recipeDetail);
 }
 
@@ -92,8 +93,22 @@ const updateRecipe: RequestHandler = async (req, res) => {
 
 
 
-const deleteRecipe: RequestHandler = async (req, res) => {
-    res.status(StatusCodes.OK).json({ msg: "delete recipe" });
+const deleteRecipe: RequestHandler = async (req: CustomRequest, res) => {
+    const { id } = req.user!;
+    const { recipeId } = req.params;
+
+    // find recipe
+    const recipe = await Recipe.findById(recipeId);
+    if (!recipe) {
+        throw new NotFoundError(`Faound no recipe with id ${recipeId}`);
+    }
+
+    // check if it the recipe belongs to the user
+    checkPermission(recipe.user.toString(), id);
+
+    await recipe.deleteOne();
+
+    res.status(StatusCodes.OK).json({ msg: "You have deleted the recipe successfully" });
 }
 
 
