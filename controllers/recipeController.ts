@@ -4,6 +4,7 @@ import Recipe, { Recipe as URecipe } from "../models/recipe";
 import { RequestHandler } from "express";
 import { validIngredients, validMethods, validImages } from "../helpers/recipeValidation";
 import { CustomRequest } from "./userController";
+import Profile from "../models/profile";
 
 
 
@@ -66,13 +67,31 @@ const allRecipes: RequestHandler = async (req, res) => {
 
 
 
-
 const singleRecipe: RequestHandler = async (req, res) => {
-    res.status(StatusCodes.OK).json({ msg: "single recipe" });
+    const { recipeId } = req.params;
+
+    // find recipe
+    const recipe = await Recipe.findById(recipeId).select('-_id');
+    if (!recipe) {
+        throw new NotFoundError(`Found no recipe with id ${recipeId}`);
+    }
+
+    // find user profile picture
+    const profile = await Profile.findOne({ user: recipe.user }, { picture: true }).populate({ path: "user", select: "name -_id" });
+
+    const recipeDetail = { user: { name: profile!.user.name, picture: profile!.picture }, recipe }
+    
+    res.status(StatusCodes.OK).json(recipeDetail);
 }
+
+
+
 const updateRecipe: RequestHandler = async (req, res) => {
     res.status(StatusCodes.OK).json({ msg: "update recipe" });
 }
+
+
+
 const deleteRecipe: RequestHandler = async (req, res) => {
     res.status(StatusCodes.OK).json({ msg: "delete recipe" });
 }
