@@ -29,6 +29,8 @@ export interface Recipe {
     avgRating?: number
 }
 
+export type PartialRecipe = Partial<Recipe>
+
 const ingredientsShema = new mongoose.Schema<Ingredients>({
     title: {
         type: String,

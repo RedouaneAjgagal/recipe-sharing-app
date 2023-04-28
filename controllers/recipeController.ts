@@ -1,12 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { UnauthenticatedError, BadRequestError, NotFoundError, TooManyRequestError, UnauthorizedError } from "../errors";
-import Recipe, { Recipe as URecipe } from "../models/recipe";
+import Recipe, { Recipe as URecipe, PartialRecipe } from "../models/recipe";
 import { RequestHandler } from "express";
 import { validIngredients, validMethods, validImages } from "../helpers/recipeValidation";
 import { CustomRequest } from "./userController";
 import Profile from "../models/profile";
 import checkPermission from "../utils/permissionChecker";
-
 
 
 
@@ -87,14 +86,57 @@ const singleRecipe: RequestHandler = async (req, res) => {
 
 
 
-const updateRecipe: RequestHandler = async (req, res) => {
-    res.status(StatusCodes.OK).json({ msg: "update recipe" });
+const updateRecipe: RequestHandler = async (req: CustomRequest, res) => {
+    const { title, description, image, note, preparationTime, cookTime, ingredients, methods }: URecipe = req.body;
+    const { recipeId } = req.params;
+
+    // find recipe
+    const recipe = await Recipe.findById(recipeId);
+    if (!recipe) {
+        throw new NotFoundError(`Found no recipe with id ${recipeId}`);
+    }
+
+    // check if it the recipe belongs to the user
+    checkPermission(recipe.user.toString(), req.user!.id);
+
+
+    // update valid properties
+    const isValidImages = validImages(image);
+    const isValidIngredients = validIngredients(ingredients);
+    const isValidMethods = validMethods(methods);
+    if (isValidImages) {
+        recipe.image = image;
+    }
+    if (isValidIngredients) {
+        recipe.ingredients = ingredients;
+    }
+    if (isValidMethods) {
+        recipe.methods = methods;
+    }
+    if (title && title.trim() !== "") {
+        recipe.title = title;
+    }
+    if (description && description.trim() !== "") {
+        recipe.description = description;
+    }
+    if (note && note.trim() !== "") {
+        recipe.note = note;
+    }
+    if (preparationTime) {
+        recipe.preparationTime = preparationTime;
+    }
+    if (cookTime) {
+        recipe.cookTime = cookTime;
+    }
+
+    await recipe.save();
+
+    res.status(StatusCodes.OK).json({msg: "You have updated the recipe successfully"});
 }
 
 
 
 const deleteRecipe: RequestHandler = async (req: CustomRequest, res) => {
-    const { id } = req.user!;
     const { recipeId } = req.params;
 
     // find recipe
@@ -104,7 +146,7 @@ const deleteRecipe: RequestHandler = async (req: CustomRequest, res) => {
     }
 
     // check if it the recipe belongs to the user
-    checkPermission(recipe.user.toString(), id);
+    checkPermission(recipe.user.toString(), req.user!.id);
 
     await recipe.deleteOne();
 
