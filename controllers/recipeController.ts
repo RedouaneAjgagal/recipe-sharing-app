@@ -90,48 +90,46 @@ const updateRecipe: RequestHandler = async (req: CustomRequest, res) => {
     const { title, description, image, note, preparationTime, cookTime, ingredients, methods }: URecipe = req.body;
     const { recipeId } = req.params;
 
-    // find recipe
     const recipe = await Recipe.findById(recipeId);
+    
     if (!recipe) {
         throw new NotFoundError(`Found no recipe with id ${recipeId}`);
     }
 
-    // check if it the recipe belongs to the user
     checkPermission(recipe.user.toString(), req.user!.id);
 
-
-    // update valid properties
+    const updatedRecipe: PartialRecipe = {}
     const isValidImages = validImages(image);
     const isValidIngredients = validIngredients(ingredients);
     const isValidMethods = validMethods(methods);
     if (isValidImages) {
-        recipe.image = image;
+        updatedRecipe.image = image;
     }
     if (isValidIngredients) {
-        recipe.ingredients = ingredients;
+        updatedRecipe.ingredients = ingredients;
     }
     if (isValidMethods) {
-        recipe.methods = methods;
+        updatedRecipe.methods = methods;
     }
     if (title && title.trim() !== "") {
-        recipe.title = title;
+        updatedRecipe.title = title;
     }
     if (description && description.trim() !== "") {
-        recipe.description = description;
+        updatedRecipe.description = description;
     }
     if (note && note.trim() !== "") {
-        recipe.note = note;
+        updatedRecipe.note = note;
     }
     if (preparationTime) {
-        recipe.preparationTime = preparationTime;
+        updatedRecipe.preparationTime = preparationTime;
     }
     if (cookTime) {
-        recipe.cookTime = cookTime;
+        updatedRecipe.cookTime = cookTime;
     }
 
-    await recipe.save();
+    await recipe.updateOne(updatedRecipe, { runValidators: true });
 
-    res.status(StatusCodes.OK).json({msg: "You have updated the recipe successfully"});
+    res.status(StatusCodes.OK).json({ msg: "You have updated the recipe successfully" });
 }
 
 

@@ -29,6 +29,10 @@ export interface Recipe {
     avgRating?: number
 }
 
+interface RecipeModel extends mongoose.Model<Recipe> {
+    calcTotalTime(recipeId: mongoose.Types.ObjectId): Promise<void>;
+}
+
 export type PartialRecipe = Partial<Recipe>
 
 const ingredientsShema = new mongoose.Schema<Ingredients>({
@@ -111,10 +115,23 @@ const recipeSchema = new mongoose.Schema<Recipe>({
     }
 }, { timestamps: true });
 
-recipeSchema.pre(["updateOne", "save"], { document: true }, async function () {
-    // calc total time
-    const totalTime = this.preparationTime + this.cookTime;
-    this.totalTime = totalTime;
+
+// total time calculation
+recipeSchema.statics.calcTotalTime = async function (recipeId: mongoose.Types.ObjectId) {
+    const [result] = await this.aggregate([
+        { $match: { _id: recipeId } },
+        {
+            $group: {
+                _id: null,
+                totalTime: { $sum: { $sum: ["$preparationTime", "$cookTime"] } }
+            }
+        }
+    ]);
+    await this.findByIdAndUpdate(recipeId, { totalTime: result.totalTime });
+}
+
+recipeSchema.post(["save", "updateOne"], { document: true }, async function () {
+    await (this.constructor as RecipeModel).calcTotalTime(this._id);
 });
 
 const Recipe = mongoose.model('Recipe', recipeSchema);
