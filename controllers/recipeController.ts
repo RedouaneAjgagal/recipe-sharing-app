@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { UnauthenticatedError, BadRequestError, NotFoundError, TooManyRequestError, UnauthorizedError } from "../errors";
 import Recipe, { Recipe as URecipe, PartialRecipe } from "../models/recipe";
 import { RequestHandler } from "express";
-import { validIngredients, validMethods, validImages } from "../helpers/recipeValidation";
+import { validIngredients, validMethods, validImages, validNumber } from "../helpers/recipeValidation";
 import { CustomRequest } from "./userController";
 import Profile from "../models/profile";
 import checkPermission from "../utils/permissionChecker";
@@ -16,7 +16,9 @@ const createRecipe: RequestHandler = async (req: CustomRequest, res) => {
     const isValidIngredients = validIngredients(ingredients);
     const isValidMethods = validMethods(methods);
     const isValidImages = validImages(image);
-    if ((!title || title.trim().length < 1) || !preparationTime || !cookTime || !isValidIngredients || !isValidMethods || !isValidImages) {
+    const isValidPreparationTime = validNumber(preparationTime);
+    const isValidCookTime = validNumber(cookTime);
+    if ((!title || title.trim().length < 1) || !isValidPreparationTime || !isValidCookTime || !isValidIngredients || !isValidMethods || !isValidImages) {
         throw new BadRequestError('Must provide all the required values');
     }
 
@@ -102,6 +104,8 @@ const updateRecipe: RequestHandler = async (req: CustomRequest, res) => {
     const isValidImages = validImages(image);
     const isValidIngredients = validIngredients(ingredients);
     const isValidMethods = validMethods(methods);
+    const isValidPreparationTime = validNumber(preparationTime);
+    const isValidCookTime = validNumber(cookTime);
     if (isValidImages) {
         updatedRecipe.image = image;
     }
@@ -120,10 +124,10 @@ const updateRecipe: RequestHandler = async (req: CustomRequest, res) => {
     if (note && note.trim() !== "") {
         updatedRecipe.note = note;
     }
-    if (preparationTime) {
+    if (isValidPreparationTime) {
         updatedRecipe.preparationTime = preparationTime;
     }
-    if (cookTime) {
+    if (isValidCookTime) {
         updatedRecipe.cookTime = cookTime;
     }
 

@@ -15,8 +15,14 @@ const validImages = (recipeImages: RecipeImages) => {
     return isValidRecipeImages;
 }
 
+const validNumber = (value: number) => {
+    const isValidNumber = /^[0-9]+$/.test(value?.toString());
+    return isValidNumber
+}
+
 export {
     validIngredients,
     validMethods,
-    validImages
+    validImages,
+    validNumber
 }
