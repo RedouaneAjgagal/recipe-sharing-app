@@ -4,9 +4,7 @@ import { BadRequestError, NotFoundError, UnauthenticatedError } from "../errors"
 import { StatusCodes } from "http-status-codes"
 import User from "../models/user"
 import { UploadedFile } from "express-fileupload";
-import fs from "fs";
-import { v2 as cloudinary } from "cloudinary";
-import path from "path"
+import { uploadImage } from "../utils/uploadImg"
 
 
 interface CustomRequest extends Request {
@@ -80,36 +78,9 @@ const updateProfile: RequestHandler = async (req: CustomRequest, res) => {
 }
 
 const uploadPicture: RequestHandler = async (req, res) => {
-
-    // find the picture
     const picture = req.files?.picture as UploadedFile;
-    if (!picture) {
-        throw new BadRequestError('Must provide an image');
-    }
-
-    // check if its an image
-    if (!picture.mimetype.startsWith("image")) {
-        fs.unlinkSync(picture.tempFilePath);
-        throw new BadRequestError('Only images are supported');
-    }
-
-    // check if the image is less than 1MB
-    const maxSize = 1024 * 1024;
-    if (picture.size > maxSize) {
-        fs.unlinkSync(picture.tempFilePath);
-        throw new BadRequestError('Image size must be less than 1MB');
-    }
-
-    // Upload the image to cloudinary
-    const result = await cloudinary.uploader.upload(picture.tempFilePath, {
-        folder: "recipe-sharing-app",
-        resource_type: "image"
-    });
-
-    // remove the new tmp
-    fs.unlinkSync(picture.tempFilePath);
-
-    res.status(StatusCodes.OK).json({ src: result.secure_url });
+    const url = await uploadImage(picture);
+    res.status(StatusCodes.OK).json({ src: url });
 }
 
 

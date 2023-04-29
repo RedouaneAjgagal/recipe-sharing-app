@@ -10,16 +10,16 @@ export interface Methods {
     sub: string
 }
 
-export interface RecipeImages {
-    main: string,
-    sub: string[]
-}
+// export interface RecipeImages {
+//     main: string,
+//     sub: string[]
+// }
 
 export interface Recipe {
     user: typeof mongoose.Types.ObjectId,
     title: string,
     description?: string,
-    image: RecipeImages,
+    images: string[],
     note?: string,
     preparationTime: number,
     cookTime: number,
@@ -57,16 +57,16 @@ const methodsShema = new mongoose.Schema<Methods>({
     }
 });
 
-const imageSchema = new mongoose.Schema<RecipeImages>({
-    main: {
-        type: String,
-        required: true
-    },
-    sub: {
-        type: [String],
-        maxlength: 4
-    }
-})
+// const imageSchema = new mongoose.Schema<RecipeImages>({
+//     main: {
+//         type: String,
+//         required: true
+//     },
+//     sub: {
+//         type: [String],
+//         maxlength: 4
+//     }
+// })
 
 const recipeSchema = new mongoose.Schema<Recipe>({
     user: {
@@ -82,8 +82,9 @@ const recipeSchema = new mongoose.Schema<Recipe>({
     description: {
         type: String
     },
-    image: {
-        type: imageSchema,
+    images: {
+        type: [String],
+        maxlength: 5,
         required: true
     },
     note: {
