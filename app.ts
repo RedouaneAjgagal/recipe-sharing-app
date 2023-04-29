@@ -36,6 +36,7 @@ import notFoundMiddleware from './middlewares/not-found';
 import authRouter from './routes/authRouter';
 import userRouter from './routes/userRouter';
 import recipeRouter from './routes/recipeRouter';
+import commentRouter from './routes/commentRouter';
 
 
 
@@ -58,6 +59,7 @@ app.use('/api/v1', apiLimiter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/recipes', recipeRouter);
+app.use('/api/v1/comments', commentRouter);
 
 
 

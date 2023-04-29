@@ -94,14 +94,16 @@ const updateRecipe: RequestHandler = async (req: CustomRequest, res) => {
     const { title, description, images, note, preparationTime, cookTime, ingredients, methods }: URecipe = req.body;
     const { recipeId } = req.params;
 
+    // find recipe
     const recipe = await Recipe.findById(recipeId);
-
     if (!recipe) {
         throw new NotFoundError(`Found no recipe with id ${recipeId}`);
     }
 
+    // check if it the recipe belongs to the user
     checkPermission(recipe.user.toString(), req.user!.id);
 
+    // insert valid values to new obj
     const updatedRecipe: PartialRecipe = {}
     const isValidImages = validImages(images);
     const isValidIngredients = validIngredients(ingredients);
@@ -133,6 +135,7 @@ const updateRecipe: RequestHandler = async (req: CustomRequest, res) => {
         updatedRecipe.cookTime = cookTime;
     }
 
+    // update the recipe
     await recipe.updateOne(updatedRecipe, { runValidators: true });
 
     res.status(StatusCodes.OK).json({ msg: "You have updated the recipe successfully" });
@@ -169,7 +172,6 @@ const uploadRecipeImages: RequestHandler = async (req, res) => {
         const url = await uploadImage(images);
         return res.status(StatusCodes.OK).json({ src: [url] });
     }
-
 }
 
 
