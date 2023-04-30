@@ -8,6 +8,7 @@ import Profile from "../models/profile";
 import checkPermission from "../utils/permissionChecker";
 import { UploadedFile } from "express-fileupload";
 import { uploadImage, uploadImages } from "../utils/uploadImg";
+import Comment from "../models/comment";
 
 
 const createRecipe: RequestHandler = async (req: CustomRequest, res) => {
@@ -174,6 +175,20 @@ const uploadRecipeImages: RequestHandler = async (req, res) => {
     }
 }
 
+const recipeComments: RequestHandler = async (req, res) => {
+    const { recipeId } = req.params;
+
+    // find recipe
+    const recipe = await Recipe.findById(recipeId);
+    if (!recipe) {
+        throw new NotFoundError(`Found no recipe with id ${recipeId}`);
+    }
+
+    // find comments
+    const comments = await Comment.find({ recipe: recipe._id }).populate({ path: "user profile", select: "name role picture" }).select('-recipe -updatedAt');
+
+    res.status(StatusCodes.OK).json(comments);
+}
 
 export {
     allRecipes,
@@ -181,5 +196,6 @@ export {
     createRecipe,
     updateRecipe,
     deleteRecipe,
-    uploadRecipeImages
+    uploadRecipeImages,
+    recipeComments
 }
