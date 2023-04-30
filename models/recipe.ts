@@ -10,11 +10,6 @@ export interface Methods {
     sub: string
 }
 
-// export interface RecipeImages {
-//     main: string,
-//     sub: string[]
-// }
-
 export interface Recipe {
     user: typeof mongoose.Types.ObjectId,
     title: string,
@@ -29,11 +24,11 @@ export interface Recipe {
     avgRating?: number
 }
 
+export type PartialRecipe = Partial<Recipe>
+
 interface RecipeModel extends mongoose.Model<Recipe> {
     calcTotalTime(recipeId: mongoose.Types.ObjectId): Promise<void>;
 }
-
-export type PartialRecipe = Partial<Recipe>
 
 const ingredientsShema = new mongoose.Schema<Ingredients>({
     title: {
@@ -56,17 +51,6 @@ const methodsShema = new mongoose.Schema<Methods>({
         required: true
     }
 });
-
-// const imageSchema = new mongoose.Schema<RecipeImages>({
-//     main: {
-//         type: String,
-//         required: true
-//     },
-//     sub: {
-//         type: [String],
-//         maxlength: 4
-//     }
-// })
 
 const recipeSchema = new mongoose.Schema<Recipe>({
     user: {

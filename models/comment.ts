@@ -4,10 +4,10 @@ import mongoose from "mongoose";
 interface Comment {
     user: typeof mongoose.Types.ObjectId,
     recipe: typeof mongoose.Types.ObjectId,
-    content: string,
-    rating: number,
-    like: number
+    content: string
 }
+
+export type PartialComment = Partial<Comment>
 
 
 const commentSchema = new mongoose.Schema<Comment>({
@@ -25,11 +25,6 @@ const commentSchema = new mongoose.Schema<Comment>({
         type: String,
         required: [true, "Comment content is required"],
         maxlength: 600
-    },
-    rating: {
-        type: Number,
-        min: 1,
-        max: 5
     }
 }, { timestamps: true });
 
