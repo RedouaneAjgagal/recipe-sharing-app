@@ -34,7 +34,7 @@ const updateComment: RequestHandler = async (req: CustomRequest, res) => {
     const { commentId } = req.params;
 
     // additional checks
-    if (!content || content.trim() === "" || !commentId) {
+    if (!content || content.trim() === "" || !commentId || commentId.trim() === "") {
         throw new BadRequestError(`Must provide all values`);
     }
 
@@ -52,8 +52,29 @@ const updateComment: RequestHandler = async (req: CustomRequest, res) => {
 
     res.status(StatusCodes.OK).json({ msg: "Updated comment successfully" });
 }
+
+
 const deleteComment: RequestHandler = async (req: CustomRequest, res) => {
-    res.status(StatusCodes.CREATED).json({ msg: "delete comment" });
+    const { commentId } = req.params;
+
+    // additional checks
+    if (!commentId || commentId.trim() === "") {
+        throw new BadRequestError(`Must provide comment id`);
+    }
+
+    // find comment
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+        throw new NotFoundError(`Found no comment with id ${commentId}`);
+    }
+
+    // check if the comment belong to the user
+    checkPermission(comment.user.toString(), req.user!.id);
+
+    // delete the comment
+    await comment.deleteOne();
+
+    res.status(StatusCodes.OK).json({ msg: "Deleted comment successfully" });
 }
 
 export {
