@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes";
 import { CustomRequest } from "./userController";
 import { PartialComment } from "../models/comment";
 import Recipe from "../models/recipe";
+import checkPermission from "../utils/permissionChecker";
 
 
 const createComment: RequestHandler = async (req: CustomRequest, res) => {
@@ -29,7 +30,27 @@ const createComment: RequestHandler = async (req: CustomRequest, res) => {
 
 
 const updateComment: RequestHandler = async (req: CustomRequest, res) => {
-    res.status(StatusCodes.CREATED).json({ msg: "update comment" });
+    const { content }: { content: string | undefined } = req.body;
+    const { commentId } = req.params;
+
+    // additional checks
+    if (!content || content.trim() === "" || !commentId) {
+        throw new BadRequestError(`Must provide all values`);
+    }
+
+    // find comment
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+        throw new NotFoundError(`Found no comment with id ${commentId}`);
+    }
+
+    // check if the comment belong to the user 
+    checkPermission(comment.user.toString(), req.user!.id);
+
+    // update the comment
+    await comment.updateOne({ content }, { runValidators: true });
+
+    res.status(StatusCodes.OK).json({ msg: "Updated comment successfully" });
 }
 const deleteComment: RequestHandler = async (req: CustomRequest, res) => {
     res.status(StatusCodes.CREATED).json({ msg: "delete comment" });
