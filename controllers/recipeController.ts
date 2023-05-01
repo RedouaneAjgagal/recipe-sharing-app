@@ -185,7 +185,7 @@ const recipeComments: RequestHandler = async (req, res) => {
     }
 
     // find comments
-    const comments = await Comment.find({ recipe: recipe._id }).populate({ path: "user profile", select: "name role picture" }).select('-recipe -updatedAt');
+    const comments = await Comment.find({ recipe: recipe._id }).populate({ path: "user profile", select: "name role picture" }).select('-recipe -updatedAt -userLike');
 
     res.status(StatusCodes.OK).json(comments);
 }

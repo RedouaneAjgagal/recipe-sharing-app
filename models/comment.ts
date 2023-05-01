@@ -1,5 +1,11 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { Recipe } from "./recipe";
+
+
+export interface Likes {
+    user: typeof mongoose.Types.ObjectId,
+    isLike: boolean
+}
 
 interface Comment {
     user: typeof mongoose.Types.ObjectId,
@@ -7,11 +13,25 @@ interface Comment {
     recipe: typeof mongoose.Types.ObjectId,
     content: string,
     edited: boolean,
-    publisher: boolean
+    publisher: boolean,
+    userLike: Likes[],
+    likes: number
 }
 
 export type PartialComment = Partial<Comment>
 
+
+const likeSchema = new mongoose.Schema<Likes>({
+    user: {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
+    isLike: {
+        type: Boolean,
+        default: true
+    }
+});
 
 const commentSchema = new mongoose.Schema<Comment>({
     user: {
@@ -40,20 +60,29 @@ const commentSchema = new mongoose.Schema<Comment>({
     publisher: {
         type: Boolean,
         default: false
+    },
+    userLike: {
+        type: [likeSchema]
+    },
+    likes: {
+        type: Number,
+        default: 0,
+        min: 0
     }
 }, { timestamps: true });
 
 
 commentSchema.pre("save", { document: true, query: false }, async function () {
-    // add profile to the model
-    const profileId = await this.$model("Profile").findOne({ user: this.user });
-    this.profile = Object(profileId!._id);
-
-    // check if the user is the recipe publisher
-    const recipe = await this.$model("Recipe").findById(this.recipe) as Recipe;
-    const isPublisher = recipe.user.toString() === this.user.toString();
-    if (isPublisher) {
-        this.publisher = true;
+    if (this.isNew) {
+        // add profile to the model
+        const profileId = await this.$model("Profile").findOne({ user: this.user });
+        this.profile = Object(profileId!._id);
+        // check if the user is the recipe publisher
+        const recipe = await this.$model("Recipe").findById(this.recipe) as Recipe;
+        const isPublisher = recipe.user.toString() === this.user.toString();
+        if (isPublisher) {
+            this.publisher = true;
+        }
     }
 });
 
