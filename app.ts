@@ -37,6 +37,7 @@ import authRouter from './routes/authRouter';
 import userRouter from './routes/userRouter';
 import recipeRouter from './routes/recipeRouter';
 import commentRouter from './routes/commentRouter';
+import rateRouter from './routes/rateRouter';
 
 
 
@@ -60,6 +61,7 @@ app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/recipes', recipeRouter);
 app.use('/api/v1/comments', commentRouter);
+app.use('/api/v1/rates', rateRouter);
 
 
 
