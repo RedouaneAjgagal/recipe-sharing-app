@@ -26,6 +26,8 @@ const rateSchema = new mongoose.Schema<Rate>({
     }
 });
 
+rateSchema.index({ user: 1, recipe: 1 }, { unique: true });
+
 const Rate = mongoose.model("Rate", rateSchema);
 
 export default Rate;
