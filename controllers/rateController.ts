@@ -5,6 +5,7 @@ import { RequestHandler } from "express";
 import { CustomRequest } from "./userController";
 import Recipe from "../models/recipe";
 import checkPermission from "../utils/permissionChecker";
+import User from "../models/user";
 
 
 const rateRecipe: RequestHandler = async (req: CustomRequest, res) => {
@@ -30,6 +31,12 @@ const rateRecipe: RequestHandler = async (req: CustomRequest, res) => {
     const alreadyRated = await Rate.findOne({ recipe: recipe._id, user: req.user!.id });
     if (alreadyRated) {
         throw new BadRequestError('You have already rated for this recipe');
+    }
+
+    // check if its a verified user
+    const isVerified = await User.findOne({ _id: req.user!.id, isVerified: true });
+    if (!isVerified) {
+        throw new UnauthorizedError("Must verify your email to start rating recipes");
     }
 
     // create a new rate
