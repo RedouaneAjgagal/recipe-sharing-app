@@ -123,9 +123,13 @@ recipeSchema.post(["save", "updateOne"], { document: true }, async function () {
 recipeSchema.pre("deleteOne", { document: true, query: false }, async function () {
     // delete all rates related to this recipe
     await this.$model("Rate").deleteMany({ recipe: this._id });
-    
+
     // delete all comments related to this recipe
     await this.$model("Comment").deleteMany({ recipe: this._id });
+
+
+    // delete all favourite recipes related to this recipe
+    await this.$model("Favourite").deleteMany({ recipe: this._id });
 });
 
 const Recipe = mongoose.model('Recipe', recipeSchema);
