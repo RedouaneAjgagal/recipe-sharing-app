@@ -4,10 +4,21 @@ import Favourite from "../models/favourite";
 import Recipe from "../models/recipe";
 import { RequestHandler } from "express";
 import { CustomRequest } from "./userController";
+import Profile from "../models/profile";
 
 const favouriteRecipes: RequestHandler = async (req: CustomRequest, res) => {
-    // find all favourited recupes related to this user
-    const favourites = await Favourite.find({ user: req.user!.id }).populate({ path: "recipe user", select: "title avgRating totalTime images name" });
+    // find all favourited recipes related to this user
+    const favourites = await Favourite.find({ user: req.user!.id }).populate(
+        {
+            path: "recipe",
+            select: "title avgRating totalTime images user",
+            populate: {
+                path: "user",
+                select: "name"
+            }
+        }
+    );
+
     res.status(StatusCodes.OK).json(favourites);
 }
 
