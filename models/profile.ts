@@ -1,8 +1,7 @@
-import mongoose, { SchemaType } from "mongoose";
+import mongoose from "mongoose";
 
 
 interface Profile {
-    _id: string,
     user: typeof mongoose.Types.ObjectId,
     picture: string,
     bio: string,

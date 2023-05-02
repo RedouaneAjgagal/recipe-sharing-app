@@ -41,7 +41,7 @@ rateSchema.statics.getAvgRating = async function (recipeId: mongoose.Types.Objec
             }
         }
     ]);
-    const avgRating = Math.ceil(result.avgRating);
+    const avgRating = Math.ceil(result?.avgRating) || 0;
 
     await Recipe.findByIdAndUpdate(recipeId, { avgRating }, { timestamps: false });
 }

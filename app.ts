@@ -38,6 +38,7 @@ import userRouter from './routes/userRouter';
 import recipeRouter from './routes/recipeRouter';
 import commentRouter from './routes/commentRouter';
 import rateRouter from './routes/rateRouter';
+import favouriteRouter from './routes/favouriteRouter';
 
 
 
@@ -56,12 +57,14 @@ app.use(xssCleaner());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(fileUpload({ useTempFiles: true, safeFileNames: true }));
 
+
 app.use('/api/v1', apiLimiter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/recipes', recipeRouter);
 app.use('/api/v1/comments', commentRouter);
 app.use('/api/v1/rates', rateRouter);
+app.use('/api/v1/favourite', favouriteRouter);
 
 
 
