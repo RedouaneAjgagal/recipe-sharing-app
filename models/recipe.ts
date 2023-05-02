@@ -115,8 +115,17 @@ recipeSchema.statics.calcTotalTime = async function (recipeId: mongoose.Types.Ob
     await this.findByIdAndUpdate(recipeId, { totalTime: result.totalTime });
 }
 
-recipeSchema.post(["save", "updateOne"], { document: true }, async function () {    
+recipeSchema.post(["save", "updateOne"], { document: true }, async function () {
     await (this.constructor as RecipeModel).calcTotalTime(this._id);
+});
+
+
+recipeSchema.pre("deleteOne", { document: true, query: false }, async function () {
+    // delete all rates related to this recipe
+    await this.$model("Rate").deleteMany({ recipe: this._id });
+    
+    // delete all comments related to this recipe
+    await this.$model("Comment").deleteMany({ recipe: this._id });
 });
 
 const Recipe = mongoose.model('Recipe', recipeSchema);
