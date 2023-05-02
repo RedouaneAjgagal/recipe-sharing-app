@@ -115,7 +115,7 @@ recipeSchema.statics.calcTotalTime = async function (recipeId: mongoose.Types.Ob
     await this.findByIdAndUpdate(recipeId, { totalTime: result.totalTime });
 }
 
-recipeSchema.post(["save", "updateOne"], { document: true }, async function () {
+recipeSchema.post(["save", "updateOne"], { document: true }, async function () {    
     await (this.constructor as RecipeModel).calcTotalTime(this._id);
 });
 
