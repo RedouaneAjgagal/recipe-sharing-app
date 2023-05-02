@@ -6,8 +6,6 @@ import { CustomRequest } from "./userController";
 import { PartialComment } from "../models/comment";
 import Recipe from "../models/recipe";
 import checkPermission from "../utils/permissionChecker";
-import mongoose from "mongoose";
-import { Likes } from "../models/comment";
 
 const createComment: RequestHandler = async (req: CustomRequest, res) => {
     const { content, recipe: recipeId }: PartialComment = req.body;

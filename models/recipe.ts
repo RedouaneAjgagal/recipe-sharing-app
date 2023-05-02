@@ -127,7 +127,6 @@ recipeSchema.pre("deleteOne", { document: true, query: false }, async function (
     // delete all comments related to this recipe
     await this.$model("Comment").deleteMany({ recipe: this._id });
 
-
     // delete all favourite recipes related to this recipe
     await this.$model("Favourite").deleteMany({ recipe: this._id });
 });

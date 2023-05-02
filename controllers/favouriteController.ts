@@ -4,7 +4,6 @@ import Favourite from "../models/favourite";
 import Recipe from "../models/recipe";
 import { RequestHandler } from "express";
 import { CustomRequest } from "./userController";
-import Profile from "../models/profile";
 
 const favouriteRecipes: RequestHandler = async (req: CustomRequest, res) => {
     // find all favourited recipes related to this user
@@ -41,6 +40,7 @@ const favouriteToggle: RequestHandler = async (req: CustomRequest, res) => {
 
     // if its not favourited
     await Favourite.create({ recipe: recipe._id, user: req.user!.id });
+
     res.status(StatusCodes.CREATED).json({ msg: "Added to favourite recipes" });
 }
 

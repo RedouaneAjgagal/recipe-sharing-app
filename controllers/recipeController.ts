@@ -177,6 +177,7 @@ const uploadRecipeImages: RequestHandler = async (req, res) => {
 
 const recipeComments: RequestHandler = async (req, res) => {
     const { recipeId } = req.params;
+    const { newest } = req.query;
 
     // find recipe
     const recipe = await Recipe.findById(recipeId);
@@ -184,8 +185,11 @@ const recipeComments: RequestHandler = async (req, res) => {
         throw new NotFoundError(`Found no recipe with id ${recipeId}`);
     }
 
+    // sort TOP by default else by NEW
+    const sorting = newest === "true" ? "-createdAt" : "-likes -createdAt";
+
     // find comments
-    const comments = await Comment.find({ recipe: recipe._id }).populate({ path: "user profile", select: "name role picture" }).select('-recipe -updatedAt');
+    const comments = await Comment.find({ recipe: recipe._id }).populate({ path: "user profile", select: "name role picture" }).select('-recipe -updatedAt').sort(sorting);
 
     res.status(StatusCodes.OK).json(comments);
 }
