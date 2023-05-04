@@ -10,6 +10,9 @@ const app = express();
 // db
 import connectDB from './db/connect';
 
+// configs
+import origin from './config/origin';
+
 
 // extra packages
 import cookieParser from 'cookie-parser';
@@ -19,6 +22,7 @@ import xssCleaner from "xss-clean";
 import fileUpload from "express-fileupload";
 import rateLimit from 'express-rate-limit';
 import { v2 as cloudinary } from "cloudinary";
+import cors from "cors";
 
 const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -50,6 +54,9 @@ cloudinary.config({
     ssl_detected: true
 });
 
+app.use(cors({
+    origin
+}));
 app.use(express.json());
 app.use(helmet());
 app.use(mongoSanitize());

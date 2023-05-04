@@ -1,5 +1,5 @@
 import Root from "./pages/Root";
-import Home from "./pages/Home";
+import Home, { loader as recipes } from "./pages/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 function App() {
@@ -11,7 +11,8 @@ function App() {
       children: [
         {
           index: true,
-          element: <Home />
+          element: <Home />,
+          loader: recipes
         }
       ]
     }

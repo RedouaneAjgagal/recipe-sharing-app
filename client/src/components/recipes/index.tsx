@@ -1,10 +1,14 @@
 import RecipesList from "./RecipesList"
+import { URecipe } from "./Recipe"
 
-const Recipes = () => {
+
+interface Props {
+  recipes: URecipe[]
+}
+
+const Recipes = (props: React.PropsWithoutRef<Props>) => {
   return (
-    <div>
-      <RecipesList />
-    </div>
+    <RecipesList recipes={props.recipes} />
   )
 }
 

@@ -1,3 +1,3 @@
-const origin = 'http://localhost:5000';
+const origin = 'http://127.0.0.1:5173';
 
 export default origin;
