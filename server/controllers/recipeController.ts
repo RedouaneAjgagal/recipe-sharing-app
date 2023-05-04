@@ -57,17 +57,22 @@ const allRecipes: RequestHandler = async (req, res) => {
 
     // display 12 recipes per page
     const pages = Number(page) || 1;
-    const limits = 12;
+    const limits = 3;
     const skip = (pages - 1) * limits;
+
+    // calc amount of pages
+    const totalRecipes = await Recipe.countDocuments();
+    const numOfPages = Math.ceil(totalRecipes / limits);
 
     // find recipes
     const recipes = await Recipe.find({}).select('title avgRating totalTime images').populate({ path: "user", select: 'name -_id' }).limit(limits).skip(skip).sort(sortRecipes);
+
 
     if (recipes.length < 1) {
         throw new NotFoundError('Found no recipe');
     }
 
-    res.status(StatusCodes.OK).json(recipes);
+    res.status(StatusCodes.OK).json({ recipes, numOfPages });
 }
 
 

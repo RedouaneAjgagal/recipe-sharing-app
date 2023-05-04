@@ -1,9 +1,41 @@
 import { BsArrowRightShort } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
-const NextPage = () => {
+
+
+interface Props {
+  numOfPages: number
+}
+
+
+
+const NextPage = (props: React.PropsWithoutRef<Props>) => {
+
+  const [searchParams, setSearchParamas] = useSearchParams();
+  const currentPage = searchParams.get("page") || "1";
+  const nextPage = (Number(currentPage) + 1).toString();
+
+  const isMaxPage = props.numOfPages === Number(currentPage);
+
+
+
+  const nextPageHandler = () => {
+    setSearchParamas((prev) => {
+      // check if sorting already in the URL
+      const isSorting = prev.has("sort");
+      if (isSorting) {
+        prev.set("sort", prev.get("sort")!)
+      }
+
+      // Switch to the next page
+      prev.set("page", nextPage);
+      return prev;
+    });
+  }
+
+
   return (
-    <Link to={"/"} className="flex items-center gap-1 font-medium p-3 w-full text-[0.9rem] justify-end">Next <BsArrowRightShort className="mt-1" /></Link>
+    <button onClick={nextPageHandler} disabled={isMaxPage} className={`flex items-center gap-1 font-medium p-3 w-full text-[0.9rem] justify-end ${isMaxPage && "text-slate-500/60"}`}>Next<BsArrowRightShort className="mt-1" /></button>
   )
 }
 

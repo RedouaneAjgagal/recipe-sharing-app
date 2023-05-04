@@ -7,13 +7,14 @@ import { URecipe } from "../components/recipes/Recipe";
 
 const Home = () => {
 
-  const loaderData = useLoaderData() as URecipe[];
+  const { recipes, numOfPages } = useLoaderData() as { recipes: URecipe[], numOfPages: number };
+
 
   return (
     <div className="px-3">
       <RecipeNav />
-      <Recipes recipes={loaderData} />
-      <ChangePages />
+      <Recipes recipes={recipes} />
+      <ChangePages numOfPages={numOfPages} />
     </div>
   )
 }
@@ -22,12 +23,19 @@ export default Home
 
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const isNewest = new URL(request.url).searchParams.get("sort") === "newest";
-  let search = "";
-  if (isNewest) {
-    search = "?sort=newest";
+  const isSorting = new URL(request.url).searchParams.has("sort");
+  const isPages = new URL(request.url).searchParams.has("page");
+  let sort = "";
+  let page = ""
+  if (isSorting) {
+    const sortValue = new URL(request.url).searchParams.get("sort")!
+    sort = `sort=${sortValue}`;
   }
-  const url = `http://localhost:5000/api/v1/recipes/${search}`
+  if (isPages) {
+    const pageNum = new URL(request.url).searchParams.get("page")!
+    page = isPages ? `&page=${pageNum}` : `page=${pageNum}`
+  }
+  const url = `http://localhost:5000/api/v1/recipes/?${sort}${page}`
   const response = await fetch(url);
   const recipes = await response.json();
   return recipes
