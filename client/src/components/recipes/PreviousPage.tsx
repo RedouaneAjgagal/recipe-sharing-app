@@ -6,20 +6,11 @@ const PreviousPage = () => {
     const currentPage = searchParams.get("page") || "1";
     const previousPage = Number(currentPage) <= 1 ? "1" : (Number(currentPage) - 1).toString();
 
-
-
     const previousPageHandler = () => {
         setSearchParams((prev) => {
-            // check if sorting already in the URL
-            const isSorting = prev.has('sort');
-            if (isSorting) {
-                prev.set("sort", prev.get("sort")!);
-            }
-
-            // Switch to the previous page
             prev.set("page", previousPage);
             return prev
-        })
+        });
     }
 
     return (

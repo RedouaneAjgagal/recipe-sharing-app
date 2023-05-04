@@ -17,17 +17,8 @@ const NextPage = (props: React.PropsWithoutRef<Props>) => {
 
   const isMaxPage = props.numOfPages === Number(currentPage);
 
-
-
   const nextPageHandler = () => {
     setSearchParamas((prev) => {
-      // check if sorting already in the URL
-      const isSorting = prev.has("sort");
-      if (isSorting) {
-        prev.set("sort", prev.get("sort")!)
-      }
-
-      // Switch to the next page
       prev.set("page", nextPage);
       return prev;
     });

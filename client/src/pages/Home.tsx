@@ -1,7 +1,7 @@
 import RecipeNav from "../components/recipes/RecipeNav";
 import Recipes from "../components/recipes";
 import ChangePages from "../components/recipes/ChangePages";
-import { LoaderFunction, useLoaderData } from "react-router-dom";
+import { LoaderFunction, json, useLoaderData, redirect } from "react-router-dom";
 import { URecipe } from "../components/recipes/Recipe";
 
 
@@ -35,8 +35,15 @@ export const loader: LoaderFunction = async ({ request }) => {
     const pageNum = new URL(request.url).searchParams.get("page")!
     page = isPages ? `&page=${pageNum}` : `page=${pageNum}`
   }
-  const url = `http://localhost:5000/api/v1/recipes/?${sort}${page}`
+  const url = `http://localhost:5000/api/v1/recipes/?${sort}${page}`;
   const response = await fetch(url);
-  const recipes = await response.json();
-  return recipes
+  if (!response.ok) {
+    if (response.status === 404 || response.status === 400) {
+      return redirect("/", { status: 302 });
+    }
+    throw json({ msg: response.statusText }, { status: response.status })
+  }
+  const data = await response.json();
+  return data
+
 }

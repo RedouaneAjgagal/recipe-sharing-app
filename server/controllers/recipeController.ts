@@ -57,6 +57,9 @@ const allRecipes: RequestHandler = async (req, res) => {
 
     // display 12 recipes per page
     const pages = Number(page) || 1;
+    if (Number(pages) < 1) {
+        throw new BadRequestError('Invalid page number');
+    }
     const limits = 3;
     const skip = (pages - 1) * limits;
 
