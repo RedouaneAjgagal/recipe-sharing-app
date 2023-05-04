@@ -84,7 +84,7 @@ const singleRecipe: RequestHandler = async (req, res) => {
     const { recipeId } = req.params;
 
     // find recipe
-    const recipe = await Recipe.findById(recipeId).select('-_id');
+    const recipe = await Recipe.findById(recipeId);
     if (!recipe) {
         throw new NotFoundError(`Found no recipe with id ${recipeId}`);
     }

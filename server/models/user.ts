@@ -70,18 +70,13 @@ const userSchema = new mongoose.Schema<User>({
     }
 }, { timestamps: true });
 
-
-// Add a profile model related to the user when creating a new user
-userSchema.post("save", { document: true }, async function (doc) {
-    if (!doc.isNew) {
-        return;
-    }
-    await this.$model("Profile").create({ user: this._id });
-});
-
-
-// hash the password when creating a new user
 userSchema.pre('save', async function () {
+    // Add a profile model related to the user when creating a new user
+    if (this.isNew) {
+        await this.$model("Profile").create({ user: this._id });
+    }
+
+    // hash the password when creating a new user
     if (!this.isModified('password')) {
         return;
     }

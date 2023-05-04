@@ -1,6 +1,7 @@
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./pages/Root";
 import Home, { loader as recipes } from "./pages/Home";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Recipe, {loader as recipeDetails} from "./pages/Recipe";
 
 function App() {
 
@@ -13,6 +14,11 @@ function App() {
           index: true,
           element: <Home />,
           loader: recipes
+        },
+        {
+          path: "/recipes/:recipeId",
+          element: <Recipe />,
+          loader: recipeDetails
         }
       ]
     }
