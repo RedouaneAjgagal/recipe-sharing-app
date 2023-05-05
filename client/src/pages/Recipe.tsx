@@ -1,12 +1,12 @@
 import { LoaderFunction, json, useLoaderData } from "react-router-dom";
 import RecipeDetails from "../components/recipeDetails";
 
-interface Ingredients {
+export interface UIngredients {
     title: string,
     sub: string[]
 }
 
-interface Methods {
+export interface UMethods {
     title: string,
     sub: string
 }
@@ -25,9 +25,9 @@ export interface URecipeDetails {
         note?: string
         preparationTime: number
         cookTime: number
-        totalTime?: number
-        ingredients: Ingredients[]
-        methods: Methods[]
+        totalTime: number
+        ingredients: UIngredients[]
+        methods: UMethods[]
         avgRating?: number,
         createdAt: Date,
         updatedAt: Date
