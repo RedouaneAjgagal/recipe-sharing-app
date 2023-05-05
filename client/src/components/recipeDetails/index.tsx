@@ -3,6 +3,7 @@ import RecipeImages from "./RecipeImages"
 import RecipeStats from "./RecipeStats"
 import Ingredients from "./Ingredients"
 import Methods from "./Methods"
+import Publisher from "./Publisher"
 
 interface Props {
     recipeDetails: URecipeDetails
@@ -50,6 +51,7 @@ const RecipeDetails = (props: React.PropsWithoutRef<Props>) => {
             </div>
             <Ingredients ingredients={props.recipeDetails.recipe.ingredients} />
             <Methods methods={props.recipeDetails.recipe.methods} />
+            <Publisher publisher={props.recipeDetails.user} updatedAt={props.recipeDetails.recipe.updatedAt} />
         </div>
     )
 }
