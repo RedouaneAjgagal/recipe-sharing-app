@@ -1,5 +1,6 @@
 import { LoaderFunction, json, useLoaderData } from "react-router-dom";
 import RecipeDetails from "../components/recipeDetails";
+import Comments from "../components/comments";
 
 export interface UIngredients {
     title: string,
@@ -35,9 +36,12 @@ export interface URecipeDetails {
 }
 
 const Recipe = () => {
-    const recipeDetails = useLoaderData() as URecipeDetails;    
+    const recipeDetails = useLoaderData() as URecipeDetails;
     return (
-        <RecipeDetails recipeDetails={recipeDetails} />
+        <>
+            <RecipeDetails recipeDetails={recipeDetails} />
+            <Comments />
+        </>
     )
 }
 

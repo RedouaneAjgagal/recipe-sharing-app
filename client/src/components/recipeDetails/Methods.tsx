@@ -10,12 +10,12 @@ const Methods = (props: React.PropsWithoutRef<Props>) => {
 
 
     return (
-        <div className="mt-6">
+        <section className="mt-6">
             <h2 className="text-2xl text-slate-700 font-medium tracking-wide pb-4 border-b border-slate-800/30">Methods</h2>
             <ul className="list-decimal list-inside leading-loose">
                 {methods}
             </ul>
-        </div>
+        </section>
     )
 }
 

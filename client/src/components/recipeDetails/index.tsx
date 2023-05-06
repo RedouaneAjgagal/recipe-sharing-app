@@ -19,7 +19,7 @@ const RecipeDetails = (props: React.PropsWithoutRef<Props>) => {
     const cookTime = props.recipeDetails.recipe.cookTime.toString().padStart(2, "0");
 
     return (
-        <div className="py-6 flex flex-col gap-6 text-[#535353] leading-relaxed">
+        <article className="py-6 flex flex-col gap-6 text-[#535353] leading-relaxed">
             <RecipeImages images={props.recipeDetails.recipe.images} />
             <h1 className="text-3xl text-slate-800 font-medium tracking-wide">{props.recipeDetails.recipe.title}</h1>
             <RecipeStats stats={{ ingredients, methods, totalTime }} />
@@ -52,7 +52,7 @@ const RecipeDetails = (props: React.PropsWithoutRef<Props>) => {
             <Ingredients ingredients={props.recipeDetails.recipe.ingredients} />
             <Methods methods={props.recipeDetails.recipe.methods} />
             <Publisher publisher={props.recipeDetails.user} updatedAt={props.recipeDetails.recipe.updatedAt} />
-        </div>
+        </article>
     )
 }
 
