@@ -61,9 +61,6 @@ export interface UComment {
 const Recipe = () => {
     const { recipeDetails, recipeComments } = useLoaderData() as { recipeDetails: URecipeDetails, recipeComments: UComment[] };
 
-    console.log(recipeComments);
-    
-
     return (
         <>
             <RecipeDetails recipeDetails={recipeDetails} />
@@ -85,8 +82,9 @@ const loadRecipeDetails = async (recipeId: string) => {
     return data;
 }
 
-const loadRecipeComments = async (recipeId: string) => {
-    const url = `http://localhost:5000/api/v1/recipes/${recipeId}/comments`;
+const loadRecipeComments = async (recipeId: string, isNewest: boolean) => {
+    const sorting = isNewest ? "?newest=true" : ""
+    const url = `http://localhost:5000/api/v1/recipes/${recipeId}/comments${sorting}`;
     const response = await fetch(url);
     if (!response.ok) {
         throw json({ msg: "Something went wrong..", }, { status: response.status, statusText: response.statusText });
@@ -95,10 +93,11 @@ const loadRecipeComments = async (recipeId: string) => {
     return data;
 }
 
-export const loader: LoaderFunction = async ({ params }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
+    const isNewest = new URL(request.url).searchParams.get("newest") === "true";
     const { recipeId } = params;
     return {
         recipeDetails: await loadRecipeDetails(recipeId!),
-        recipeComments: await loadRecipeComments(recipeId!)
+        recipeComments: await loadRecipeComments(recipeId!, isNewest)
     };
 }
