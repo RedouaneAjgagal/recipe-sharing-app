@@ -35,12 +35,39 @@ export interface URecipeDetails {
     }
 }
 
+export interface Likes {
+    user: string,
+    isLike: boolean
+}
+
+
+export interface UComment {
+    _id: string
+    user: {
+        name: string
+        role: "user" | "admin"
+    },
+    content: string
+    edited: boolean
+    publisher: boolean
+    likes: number
+    userLike: Likes[]
+    createdAt: Date
+    profile: {
+        picture: string
+    }
+}
+
 const Recipe = () => {
-    const recipeDetails = useLoaderData() as URecipeDetails;
+    const { recipeDetails, recipeComments } = useLoaderData() as { recipeDetails: URecipeDetails, recipeComments: UComment[] };
+
+    console.log(recipeComments);
+    
+
     return (
         <>
             <RecipeDetails recipeDetails={recipeDetails} />
-            <Comments />
+            <Comments recipeComments={recipeComments} />
         </>
     )
 }
@@ -48,13 +75,30 @@ const Recipe = () => {
 export default Recipe
 
 
-export const loader: LoaderFunction = async ({ params }) => {
-    const { recipeId } = params;
+const loadRecipeDetails = async (recipeId: string) => {
     const url = `http://localhost:5000/api/v1/recipes/${recipeId}`;
     const response = await fetch(url);
     if (!response.ok) {
-        throw json("Something went wrong..", { status: response.status, statusText: response.statusText });
+        throw json({ msg: "Something went wrong.." }, { status: response.status, statusText: response.statusText });
     }
     const data = response.json();
     return data;
+}
+
+const loadRecipeComments = async (recipeId: string) => {
+    const url = `http://localhost:5000/api/v1/recipes/${recipeId}/comments`;
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw json({ msg: "Something went wrong..", }, { status: response.status, statusText: response.statusText });
+    }
+    const data = response.json();
+    return data;
+}
+
+export const loader: LoaderFunction = async ({ params }) => {
+    const { recipeId } = params;
+    return {
+        recipeDetails: await loadRecipeDetails(recipeId!),
+        recipeComments: await loadRecipeComments(recipeId!)
+    };
 }
