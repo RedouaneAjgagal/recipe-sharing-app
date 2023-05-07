@@ -1,4 +1,5 @@
-import { LoaderFunction, json, useLoaderData } from "react-router-dom";
+import { LoaderFunction, defer, json, useLoaderData, Await } from "react-router-dom";
+import { Suspense } from "react";
 import RecipeDetails from "../components/recipeDetails";
 import Comments from "../components/comments";
 
@@ -63,8 +64,17 @@ const Recipe = () => {
 
     return (
         <>
-            <RecipeDetails recipeDetails={recipeDetails} />
-            <Comments recipeComments={recipeComments} />
+            <Suspense fallback={<p className="text-center">Loading..</p>}>
+                <Await resolve={recipeDetails} key={0}>
+                    {(loadedDetails) => <RecipeDetails recipeDetails={loadedDetails} />}
+                </Await>
+            </Suspense>
+            <Suspense fallback={<p className="text-center">Loading..</p>}>
+                <Await resolve={recipeComments} key={1}>
+                    {(loadedComments) => <Comments recipeComments={loadedComments} />}
+                </Await>
+            </Suspense>
+
         </>
     )
 }
@@ -96,8 +106,8 @@ const loadRecipeComments = async (recipeId: string, isNewest: boolean) => {
 export const loader: LoaderFunction = async ({ params, request }) => {
     const isNewest = new URL(request.url).searchParams.get("newest") === "true";
     const { recipeId } = params;
-    return {
+    return defer({
         recipeDetails: await loadRecipeDetails(recipeId!),
-        recipeComments: await loadRecipeComments(recipeId!, isNewest)
-    };
+        recipeComments: loadRecipeComments(recipeId!, isNewest)
+    });
 }
