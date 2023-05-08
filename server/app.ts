@@ -55,7 +55,8 @@ cloudinary.config({
 });
 
 app.use(cors({
-    origin
+    origin,
+    credentials: true
 }));
 app.use(express.json());
 app.use(helmet());
@@ -65,7 +66,7 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(fileUpload({ useTempFiles: true, safeFileNames: true }));
 
 
-app.use('/api/v1', apiLimiter);
+// app.use('/api/v1', apiLimiter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
 app.use('/api/v1/recipes', recipeRouter);

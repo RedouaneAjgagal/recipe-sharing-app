@@ -35,7 +35,7 @@ const login: RequestHandler = async (req, res) => {
     const token = createToken(user);
     attachTokenToCookies(res, token);
 
-    res.status(StatusCodes.OK).json({ email, password });
+    res.status(StatusCodes.OK).json({ msg: `Success! Welcome back ${user.name}` });
 }
 
 
