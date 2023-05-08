@@ -3,6 +3,7 @@ import Root from "./pages/Root";
 import Home, { loader as recipes } from "./pages/Home";
 import Recipe, { loader as recipeDetails } from "./pages/Recipe";
 import Login, { action as loginAction } from "./pages/Login";
+import Register, { action } from "./pages/Register";
 
 function App() {
 
@@ -20,6 +21,11 @@ function App() {
           path: "/login",
           element: <Login />,
           action: loginAction
+        },
+        {
+          path: "/register",
+          element: <Register />,
+          action: action
         },
         {
           path: "/recipes/:recipeId",

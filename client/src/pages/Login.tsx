@@ -1,14 +1,11 @@
-import Form from "../components/auth/Form"
-import { ActionFunction, Link, } from "react-router-dom"
+import { ActionFunction } from "react-router-dom"
 import { validEmail, validPassword } from "../helpers/auth"
+import Auth from "../components/auth"
 
 const Login = () => {
 
   return (
-    <div className="flex flex-col min-h-[75vh] justify-center items-center">
-      <Form for="login" />
-      <p className="mt-4 text-black">You dont have an account yet? <Link to={"/register"} className="text-amber-700 font-medium">Join now</Link></p>
-    </div>
+    <Auth for="login" />
   )
 }
 
