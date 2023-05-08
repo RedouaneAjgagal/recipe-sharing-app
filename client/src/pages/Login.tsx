@@ -1,6 +1,7 @@
 import { ActionFunction } from "react-router-dom"
 import { validEmail, validPassword } from "../helpers/auth"
 import Auth from "../components/auth"
+import url from "../config/url"
 
 const Login = () => {
 
@@ -39,8 +40,8 @@ export const action: ActionFunction = async ({ request }) => {
     return result;
   }
 
-  // if both email and password are valid values then fetch
-  const response = await fetch(`http://localhost:5000/api/v1/auth/login`, {
+  // if both email and password are valid values then post request
+  const response = await fetch(`${url}/auth/login`, {
     method: request.method,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -49,9 +50,10 @@ export const action: ActionFunction = async ({ request }) => {
 
   const data = await response.json();
 
-  result.msg = data.msg
+  result.msg = data.msg;
+  
   if (response.ok) {
-    result.success = true
+    result.success = true;
   }
 
   return result

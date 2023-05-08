@@ -1,6 +1,7 @@
 import { ActionFunction } from "react-router-dom"
 import Auth from "../components/auth"
 import { validName, validEmail, validPassword } from "../helpers/auth"
+import url from "../config/url"
 
 const Register = () => {
     return (
@@ -44,6 +45,20 @@ export const action: ActionFunction = async ({ request }) => {
         return result;
     }
 
+    // if all the values are valid then post request
+    const response = await fetch(`${url}/auth/register`, {
+        method: request.method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await response.json();
+
+    result.msg = data.msg;
+
+    if (response.ok) {
+        result.success = true;
+    }
 
     return result
 }
