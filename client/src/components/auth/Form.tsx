@@ -1,5 +1,6 @@
 import { Link, useFetcher } from "react-router-dom"
 import StatusResponse from "../StatusResponse"
+import Input from "../Input"
 
 
 interface Props {
@@ -29,18 +30,17 @@ const Form = (props: React.PropsWithoutRef<Props>) => {
                 <div>
                     {props.for === "register" &&
                         <div className="relative pb-7">
-                            <input type="name" id="name" name="name" placeholder="Name" className={`border  rounded p-2 w-full ${responseMsg?.validName === false ? "border-red-700" : "border-gray-300"}`} />
+                            <Input type="text" name="name" placeHolder="Name" success={responseMsg?.validName} />
                             {responseMsg?.validName === false && <span className="absolute bottom-2 left-0 text-sm text-red-700">Must be between 3 and 20 characters</span>}
                         </div>
                     }
-
                     <div className="relative pb-7">
-                        <input type="email" id="email" name="email" placeholder="Email" className={`border  rounded p-2 w-full ${responseMsg?.validEmail === false ? "border-red-700" : "border-gray-300"}`} />
+                        <Input type="email" name="email" placeHolder="Email" success={responseMsg?.validEmail} />
                         {responseMsg?.validEmail === false && <span className="absolute bottom-2 left-0 text-sm text-red-700">Provide a valid email</span>}
                     </div>
 
                     <div className="relative pb-7">
-                        <input type="password" id="password" name="password" placeholder="Password" className={`border  rounded p-2 w-full ${responseMsg?.validPassword === false ? "border-red-700" : "border-gray-300"}`} />
+                        <Input type="password" name="password" placeHolder="Password" success={responseMsg?.validPassword} />
                         {responseMsg?.validPassword === false && <span className="absolute bottom-2 left-0 text-sm text-red-700">Must be 6 characters and more</span>}
                     </div>
                 </div>

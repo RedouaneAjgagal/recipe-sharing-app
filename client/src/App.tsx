@@ -3,7 +3,8 @@ import Root from "./pages/Root";
 import Home, { loader as recipes } from "./pages/Home";
 import Recipe, { loader as recipeDetails } from "./pages/Recipe";
 import Login, { action as loginAction } from "./pages/Login";
-import Register, { action } from "./pages/Register";
+import Register, { action as registerAction } from "./pages/Register";
+import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPassword";
 
 function App() {
 
@@ -25,7 +26,12 @@ function App() {
         {
           path: "/register",
           element: <Register />,
-          action: action
+          action: registerAction
+        },
+        {
+          path: "/forget-password",
+          element: <ForgetPassword />,
+          action: forgetPasswordAction
         },
         {
           path: "/recipes/:recipeId",
