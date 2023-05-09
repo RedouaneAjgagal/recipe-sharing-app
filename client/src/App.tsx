@@ -5,6 +5,7 @@ import Recipe, { loader as recipeDetails } from "./pages/Recipe";
 import Login, { action as loginAction } from "./pages/Login";
 import Register, { action as registerAction } from "./pages/Register";
 import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPassword";
+import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
 
 function App() {
 
@@ -32,6 +33,11 @@ function App() {
           path: "/forget-password",
           element: <ForgetPassword />,
           action: forgetPasswordAction
+        },
+        {
+          path: "/user/reset-password",
+          element: <ResetPassword />,
+          action: resetPasswordAction
         },
         {
           path: "/recipes/:recipeId",

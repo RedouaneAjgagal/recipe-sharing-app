@@ -1,11 +1,11 @@
-import ResetPassword from '../components/auth/ResetPassword'
+import ResetPasswordForm from '../components/auth/ResetPasswordForm'
 import { ActionFunction } from 'react-router-dom'
 import { validEmail } from '../helpers/auth'
 import url from '../config/url'
 
 const ForgetPassword = () => {
     return (
-        <ResetPassword />
+        <ResetPasswordForm for='forget-password' />
     )
 }
 
