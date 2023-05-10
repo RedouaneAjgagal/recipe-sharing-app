@@ -9,10 +9,12 @@ interface Props {
 }
 
 const CommentSection = (props: React.PropsWithoutRef<Props>) => {
+
+    const numOfComments = props.recipeComments.length
     
     return (
         <section className="py-8">
-            <h3 className="text-xl text-slate-900 font-medium tracking-wide pb-4 border-b border-slate-800/50">05 Comments</h3>
+            <h3 className="text-xl text-slate-900 font-medium tracking-wide pb-4 border-b border-slate-800/50">{numOfComments} Comments</h3>
             <PostComment />
             <article>
                 {props.recipeComments.length ?

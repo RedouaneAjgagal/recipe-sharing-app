@@ -21,8 +21,8 @@ const attachTokenToCookies = (res: Response, token: string) => {
         expires: new Date(Date.now() + expiresIn),
         signed: true,
         httpOnly: true,
-        secure: true,
-        sameSite: "none"
+        secure: process.env.NODE_ENV === "prouction",
+        sameSite: "lax"
     });
 }
 
@@ -31,8 +31,8 @@ const destroyCookie = (res: Response, tokenName: string) => {
         expires: new Date(Date.now()),
         signed: true,
         httpOnly: true,
-        secure: true,
-        sameSite: "none"
+        secure: process.env.NODE_ENV === "prouction",
+        sameSite: "lax"
     })
 }
 

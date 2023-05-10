@@ -3,6 +3,7 @@ import Recipes from "../components/recipes";
 import ChangePages from "../components/recipes/ChangePages";
 import { LoaderFunction, json, useLoaderData, redirect } from "react-router-dom";
 import { URecipe } from "../components/recipes/Recipe";
+import url from "../config/url";
 
 
 const Home = () => {
@@ -12,9 +13,15 @@ const Home = () => {
 
   return (
     <div className="px-3">
-      <RecipeNav />
-      <Recipes recipes={recipes} />
-      <ChangePages numOfPages={numOfPages} />
+      {recipes?.length ?
+        <>
+          <RecipeNav />
+          <Recipes recipes={recipes} />
+          <ChangePages numOfPages={numOfPages} />
+        </>
+        :
+        <h1 className="text-xl font-medium text-center">There is no recipe to show</h1>
+      }
     </div>
   )
 }
@@ -35,8 +42,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     const pageNum = new URL(request.url).searchParams.get("page")!
     page = isPages ? `&page=${pageNum}` : `page=${pageNum}`
   }
-  const url = `http://localhost:5000/api/v1/recipes/?${sort}${page}`;
-  const response = await fetch(url);
+  const customUrl = `${url}/recipes/?${sort}${page}`;
+  const response = await fetch(customUrl);
   if (!response.ok) {
     if (response.status === 404 || response.status === 400) {
       return redirect("/", { status: 302 });

@@ -1,8 +1,9 @@
 import PrimaryBtn from "../../UI/PrimaryBtn";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const RecipeNav = () => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate();
 
     const isNewest = searchParams.get("sort") === "newest";
 
@@ -21,7 +22,7 @@ const RecipeNav = () => {
     }
 
     const addRecipeHandler = () => {
-        console.log("addRecipe");
+        navigate("/profile/new-recipe");
     }
 
     return (
