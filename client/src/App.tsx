@@ -6,7 +6,7 @@ import Login, { action as loginAction } from "./pages/Login";
 import Register, { action as registerAction } from "./pages/Register";
 import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPassword";
 import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
-import NewRecipe from "./pages/NewPrecipe";
+import NewRecipe, { action as createRecipeAction } from "./pages/NewPrecipe";
 
 function App() {
 
@@ -51,7 +51,8 @@ function App() {
           children: [
             {
               path: "new-recipe",
-              element: <NewRecipe />
+              element: <NewRecipe />,
+              action: createRecipeAction
             }
           ]
         }

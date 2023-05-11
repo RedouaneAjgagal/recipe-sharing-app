@@ -1,13 +1,13 @@
-import { useFetcher } from 'react-router-dom'
+import CreateRecipeForm from './CreateRecipeForm';
 
 const CreateRecipe = () => {
 
-    const fetcher = useFetcher();
 
     return (
-        <fetcher.Form method='POST'>
-            <button>create recipe</button>
-        </fetcher.Form>
+        <section className='flex flex-col gap-4'>
+            <h1 className='text-3xl font-medium mb-2'>New Recipe</h1>
+            <CreateRecipeForm />
+        </section>
     )
 }
 
