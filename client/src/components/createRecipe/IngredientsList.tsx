@@ -5,14 +5,15 @@ import { AiOutlinePlus } from "react-icons/ai"
 
 const IngredientsList = () => {
 
-    const [ingredients, setIngredients] = useState([<Ingredients key={0} />]);
+    const [ingredients, setIngredients] = useState([<Ingredients key={0} nameId={0} />]);
 
     const anotherIngredientHandler = () => {
         const id = crypto.randomUUID();
         setIngredients((prev) => {
-            return [...prev, <Ingredients key={id} />]
+            return [...prev, <Ingredients key={id} nameId={prev.length} />]
         });
     }
+
     return (
         <>
             <h2 className='text-2xl font-medium text-slate-700/90 mb-5'>Ingredients</h2>

@@ -3,14 +3,18 @@ import { useState } from "react";
 import Ingredient from "./Ingredient";
 import { AiOutlinePlus } from "react-icons/ai"
 
-const Ingredients = () => {
+interface Props {
+    nameId: number
+}
 
-    const [ingredient, setIngredient] = useState([<Ingredient key={0} />])
+const Ingredients = (props: React.PropsWithoutRef<Props>) => {
+
+    const [ingredient, setIngredient] = useState([<Ingredient key={0} nameId={props.nameId} />])
 
     const addIngredientHandler = () => {
         const id = crypto.randomUUID()
         setIngredient(prev => {
-            return [...prev, <Ingredient key={id} />]
+            return [...prev, <Ingredient key={id} nameId={props.nameId} />]
         });
     }
 

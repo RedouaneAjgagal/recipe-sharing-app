@@ -172,6 +172,9 @@ const deleteRecipe: RequestHandler = async (req: CustomRequest, res) => {
 const uploadRecipeImages: RequestHandler = async (req, res) => {
     const images = req.files?.images as UploadedFile;
 
+    console.log(images);
+    
+
     if (Array.isArray(images)) {
         // has multiple images
         const url = await uploadImages(images);
