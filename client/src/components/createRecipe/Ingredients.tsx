@@ -4,7 +4,7 @@ import Ingredient from "./Ingredient";
 import { AiOutlinePlus } from "react-icons/ai"
 
 interface Props {
-    nameId: number
+    nameId: number;
 }
 
 const Ingredients = (props: React.PropsWithoutRef<Props>) => {
@@ -26,7 +26,9 @@ const Ingredients = (props: React.PropsWithoutRef<Props>) => {
             </div>
             <div className='flex flex-col gap-2'>
                 <label className="text-lg font-medium text-amber-800">Ingredients</label>
-                {ingredient.map(item => item)}
+                <div className="flex flex-col gap-2 relative pb-2">
+                    {ingredient.map(item => item)}
+                </div>
                 <button type="button" onClick={addIngredientHandler} className="flex items-center justify-center bg-slate-200/80 text-slate-700/90 font-medium rounded-full py-1 mt-2"><AiOutlinePlus /> Add New Ingredient</button>
             </div>
         </div>

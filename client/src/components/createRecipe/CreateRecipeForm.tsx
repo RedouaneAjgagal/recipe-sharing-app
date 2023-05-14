@@ -4,31 +4,42 @@ import NoteInput from './NoteInput';
 import IngredientsList from './IngredientsList';
 import MethodsList from './MethodsList';
 import CallToAction from './CallToAction';
+import { UErrorsForm } from '../../pages/NewPrecipe';
+import StatusResponse from '../StatusResponse';
+import UploadImage from './UploadImage';
 
 const CreateRecipeForm = () => {
     const fetcher = useFetcher();
+    const errorsData = fetcher.data?.errors as UErrorsForm;
+    const responseData = fetcher.data?.response as { msg: string, success: boolean };
     return (
-        <fetcher.Form method='POST' encType='multipart/form-data'>
-            <div className='pb-7'>
-                <Input name='title' placeHolder='Title' type='text' success={true} />
-            </div>
-            <div className='pb-7'>
-                <Input name='description' placeHolder='Description' type='text' success={true} />
-            </div>
-            <div className='pb-7 flex gap-2'>
-                <Input name='prepTime' placeHolder='Preparation time' type='number' success={true} />
-                <Input name='cookTime' placeHolder='Cook time' type='number' success={true} />
-            </div>
-            <NoteInput />
-            <IngredientsList />
-            <MethodsList />
-            <div className='mb-4 flex flex-col justify-center'>
-                <h2 className='text-2xl font-medium text-slate-700/90 mt-7 mb-5'>Image</h2>
-                <label htmlFor="images" className="font-medium text-slate-600">Choose an image for your recipe:</label>
-                <input type="file" name="images" id="images" accept="image/*" className='py-2' multiple />
-            </div>
-            <CallToAction />
-        </fetcher.Form>
+        <>
+            {responseData?.msg && <StatusResponse success={responseData?.success} message={responseData?.msg} />}
+            <fetcher.Form method='POST' encType='multipart/form-data'>
+                <div className='pb-7 relative'>
+                    <Input name='title' placeHolder='Title' type='text' success={errorsData?.title ? false : true} />
+                    {errorsData?.title && <span className="absolute bottom-2 left-0 text-sm text-red-700">Title is required</span>}
+                </div>
+                <div className='pb-7'>
+                    <Input name='description' placeHolder='Description' type='text' success={true} />
+                </div>
+                <div className='flex gap-2'>
+                    <div className='pb-7 relative'>
+                        <Input name='prepTime' placeHolder='Preparation time' type='number' success={errorsData?.prepTime ? false : true} />
+                        {errorsData?.prepTime && <span className="absolute bottom-2 left-0 text-sm text-red-700">Provide a valid number</span>}
+                    </div>
+                    <div className='pb-7 relative'>
+                        <Input name='cookTime' placeHolder='Cook time' type='number' success={errorsData?.cookTime ? false : true} />
+                        {errorsData?.cookTime && <span className="absolute bottom-2 left-0 text-sm text-red-700">Provide a valid number</span>}
+                    </div>
+                </div>
+                <NoteInput />
+                <IngredientsList errors={errorsData?.ingredients} />
+                <MethodsList errors={errorsData?.methods} />
+                <UploadImage errorMsg={errorsData?.images} />
+                <CallToAction />
+            </fetcher.Form>
+        </>
     )
 }
 

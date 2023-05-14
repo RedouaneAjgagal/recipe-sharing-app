@@ -13,7 +13,7 @@ const Home = () => {
 
   return (
     <div className="px-3">
-      {recipes?.length ?
+      {recipes && recipes.length ?
         <>
           <RecipeNav />
           <Recipes recipes={recipes} />

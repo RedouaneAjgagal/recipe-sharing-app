@@ -3,7 +3,11 @@ import { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai"
 
 
-const IngredientsList = () => {
+interface Props {
+    errors?: boolean
+}
+
+const IngredientsList = (props: React.PropsWithoutRef<Props>) => {
 
     const [ingredients, setIngredients] = useState([<Ingredients key={0} nameId={0} />]);
 
@@ -18,7 +22,10 @@ const IngredientsList = () => {
         <>
             <h2 className='text-2xl font-medium text-slate-700/90 mb-5'>Ingredients</h2>
             <div className="flex flex-col gap-6 py-2">
-                {ingredients.map(ingredient => ingredient)}
+                <div className="flex flex-col gap-6 relative pb-6">
+                    {ingredients.map(ingredient => ingredient)}
+                    {props.errors && <span className="absolute bottom-0 left-0 text-sm text-red-700">Please fill out all the ingredients</span>}
+                </div>
                 <button type="button" onClick={anotherIngredientHandler} className="flex items-center justify-center text-slate-200 bg-slate-800/90 font-medium rounded py-[0.35rem]"><AiOutlinePlus /> Add Another Ingredient</button>
             </div>
         </>
