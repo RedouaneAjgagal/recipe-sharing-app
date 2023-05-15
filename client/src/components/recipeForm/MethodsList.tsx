@@ -1,15 +1,18 @@
 import Method from "./Method"
 import { AiOutlinePlus } from "react-icons/ai";
 import { useState } from "react";
-
+import { UMethods } from "../../pages/Recipe";
 
 interface Props {
-    errors?: boolean
+    errors?: boolean,
+    methods?: UMethods[]
 }
 
 const MethodsList = (props: React.PropsWithoutRef<Props>) => {
 
-    const [methods, setMethods] = useState([<Method key={0} />]);
+    const initalMethods = props.methods ? props.methods.map(method => <Method key={crypto.randomUUID()} value={method} />) : [<Method key={crypto.randomUUID()} />]
+
+    const [methods, setMethods] = useState(initalMethods);
 
     const addMethodHandler = () => {
         const id = crypto.randomUUID();

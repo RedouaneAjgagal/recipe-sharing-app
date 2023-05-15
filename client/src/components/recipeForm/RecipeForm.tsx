@@ -44,7 +44,7 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
                 </div>
                 <NoteInput value={props.for === "updateRecipe" ? recipeDetails.note : undefined} />
                 <IngredientsList errors={errorsData?.ingredients} ingredients={props.for === "updateRecipe" ? recipeDetails.ingredients : undefined} />
-                <MethodsList errors={errorsData?.methods} />
+                <MethodsList errors={errorsData?.methods} methods={props.for === "updateRecipe" ? recipeDetails.methods : undefined} />
                 <UploadImage errorMsg={errorsData?.images} />
                 <CallToAction />
             </fetcher.Form>
