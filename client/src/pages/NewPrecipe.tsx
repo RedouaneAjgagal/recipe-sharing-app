@@ -59,6 +59,7 @@ export const action: ActionFunction = async ({ request }) => {
         return { errors }
     }
 
+    // get all inputs data
     const recipeDetails = {
         title: value.title,
         description: formData.get("description") as string,
@@ -70,11 +71,12 @@ export const action: ActionFunction = async ({ request }) => {
         methods: value.methods,
     }
 
+    // creqte recipe request
     const response = await fetch(`${url}/recipes`, {
         method: request.method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(recipeDetails),
-        credentials: "include"
+        credentials: "include",
+        body: JSON.stringify(recipeDetails)
     });
 
     const data = await response.json();
