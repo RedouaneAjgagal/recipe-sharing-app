@@ -1,15 +1,19 @@
 import Ingredients from "./Ingredients"
 import { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai"
+import { UIngredients } from "../../pages/Recipe";
 
 
 interface Props {
-    errors?: boolean
+    errors?: boolean,
+    ingredients?: UIngredients[]
 }
 
 const IngredientsList = (props: React.PropsWithoutRef<Props>) => {
+    
+    const initialIngredients = props.ingredients ? props.ingredients.map((ingredient, index) => <Ingredients key={crypto.randomUUID()} nameId={index} value={ingredient} />) : [<Ingredients key={0} nameId={0} />]
 
-    const [ingredients, setIngredients] = useState([<Ingredients key={0} nameId={0} />]);
+    const [ingredients, setIngredients] = useState(initialIngredients);
 
     const anotherIngredientHandler = () => {
         const id = crypto.randomUUID();

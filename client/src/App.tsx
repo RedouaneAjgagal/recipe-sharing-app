@@ -7,6 +7,8 @@ import Register, { action as registerAction } from "./pages/Register";
 import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPassword";
 import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
 import NewRecipe, { action as createRecipeAction } from "./pages/NewPrecipe";
+import UpdateRecipe from "./pages/UpdateRecipe";
+
 
 function App() {
 
@@ -21,32 +23,42 @@ function App() {
           loader: recipes
         },
         {
-          path: "/login",
+          path: "login",
           element: <Login />,
           action: loginAction
         },
         {
-          path: "/register",
+          path: "register",
           element: <Register />,
           action: registerAction
         },
         {
-          path: "/forget-password",
+          path: "forget-password",
           element: <ForgetPassword />,
           action: forgetPasswordAction
         },
         {
-          path: "/user/reset-password",
+          path: "user/reset-password",
           element: <ResetPassword />,
           action: resetPasswordAction
         },
         {
-          path: "/recipes/:recipeId",
-          element: <Recipe />,
-          loader: recipeDetails
+          path: "recipes/:recipeId",
+          loader: recipeDetails,
+          id: "recipeDetails",
+          children: [
+            {
+              index: true,
+              element: <Recipe />
+            },
+            {
+              path: "update",
+              element: <UpdateRecipe />
+            }
+          ]
         },
         {
-          path: "/profile",
+          path: "profile",
           element: null,
           children: [
             {

@@ -1,6 +1,6 @@
 import { ActionFunction, redirect } from "react-router-dom"
-import CreateRecipe from "../components/createRecipe"
-import CreateRecipeNav from "../components/createRecipe/CreateRecipeNav"
+import RecipeFormContainer from "../components/recipeForm"
+import CreateRecipeNav from "../components/recipeForm/CreateRecipeNav"
 import url from "../config/url"
 import { validIngredients, validMethods, validNumber } from "../helpers/recipeValidations"
 
@@ -17,7 +17,7 @@ const NewPrecipe = () => {
     return (
         <div>
             <CreateRecipeNav />
-            <CreateRecipe />
+            <RecipeFormContainer for="newRecipe" />
         </div>
     )
 }
@@ -30,7 +30,7 @@ const uploadImage = async (images: Blob[]): Promise<{ src?: string[], msg?: stri
 
     images.map(item => {
         formData.append('images', item);
-    })
+    });
 
     const reponse = await fetch(`${url}/recipes/upload-images`, {
         credentials: "include",
