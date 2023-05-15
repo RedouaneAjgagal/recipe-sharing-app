@@ -2,7 +2,7 @@ import { ActionFunction, redirect } from "react-router-dom"
 import RecipeFormContainer from "../components/recipeForm"
 import CreateRecipeNav from "../components/recipeForm/CreateRecipeNav"
 import url from "../config/url"
-import { validIngredients, validMethods, validNumber } from "../helpers/recipeValidations"
+import { isValidInputs } from "../components/util/recipeFormValidation"
 
 export interface UErrorsForm {
     ingredients?: boolean;
@@ -44,44 +44,10 @@ const uploadImage = async (images: Blob[]): Promise<{ src?: string[], msg?: stri
 
 
 export const action: ActionFunction = async ({ request }) => {
-
-    const errors: UErrorsForm = {};
-
     const formData = await request.formData();
 
-    // Addition checks
-    const title = formData.get("title") as string;
-    if (title.trim() === "") {
-        errors.title = true;
-    }
-
-    const prepTime = formData.get("prepTime") as string;
-    const isValidPrepTime = validNumber(Number(prepTime));
-    if (prepTime.trim() === "" || !isValidPrepTime) {
-        errors.prepTime = true
-    }
-
-    const cookTime = formData.get("cookTime") as string;
-    const isValidcookTime = validNumber(Number(cookTime));
-    if (cookTime.trim() === "" || !isValidcookTime) {
-        errors.cookTime = true
-    }
-
-    const ingredients = formData.getAll("ingredientTitle").map((title, index) => {
-        return { title, sub: formData.getAll(`ingredient-${index}`) }
-    }) as { title: string, sub: string[] }[];
-    const isValidIngredients = validIngredients(ingredients);
-    if (!isValidIngredients) {
-        errors.ingredients = true
-    }
-
-    const methods = formData.getAll("methodTitle").map((title, index) => {
-        return { title, sub: formData.getAll(`method`)[index] }
-    }) as { title: string, sub: string }[];
-    const isValidMethods = validMethods(methods);
-    if (!isValidMethods) {
-        errors.methods = true
-    }
+    // Add validations
+    const { errors, value } = isValidInputs(formData);
 
     const images = formData.getAll("images") as Blob[];
     const imagesData = await uploadImage(images);
@@ -94,14 +60,14 @@ export const action: ActionFunction = async ({ request }) => {
     }
 
     const recipeDetails = {
-        title,
+        title: value.title,
         description: formData.get("description") as string,
         note: formData.get("note") as string,
-        preparationTime: Number(prepTime),
-        cookTime: Number(cookTime),
+        preparationTime: Number(value.prepTime),
+        cookTime: Number(value.cookTime),
         images: imagesData.src,
-        ingredients,
-        methods,
+        ingredients: value.ingredients,
+        methods: value.methods,
     }
 
     const response = await fetch(`${url}/recipes`, {
@@ -116,6 +82,6 @@ export const action: ActionFunction = async ({ request }) => {
     if (!response.ok) {
         return { response: { msg: data.msg, success: response.ok } }
     }
-    
-    return redirect("/", {status: 302, statusText: "Found"});
+
+    return redirect("/", { status: 302, statusText: "Found" });
 }

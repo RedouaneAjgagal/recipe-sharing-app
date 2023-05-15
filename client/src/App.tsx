@@ -7,7 +7,7 @@ import Register, { action as registerAction } from "./pages/Register";
 import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPassword";
 import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
 import NewRecipe, { action as createRecipeAction } from "./pages/NewPrecipe";
-import UpdateRecipe from "./pages/UpdateRecipe";
+import UpdateRecipe, {action as updateRecipeAction} from "./pages/UpdateRecipe";
 
 
 function App() {
@@ -53,7 +53,8 @@ function App() {
             },
             {
               path: "update",
-              element: <UpdateRecipe />
+              element: <UpdateRecipe />,
+              action: updateRecipeAction
             }
           ]
         },

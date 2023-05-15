@@ -24,7 +24,7 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
     return (
         <>
             {responseData?.msg && <StatusResponse success={responseData?.success} message={responseData?.msg} />}
-            <fetcher.Form method='POST' encType='multipart/form-data' className={`${props.for === "updateRecipe" ? "mb-16" : "mb-0"}`}>
+            <fetcher.Form method={props.for === "newRecipe" ? "POST" : "PATCH"} encType='multipart/form-data' className={`${props.for === "updateRecipe" ? "mb-16" : "mb-0"}`}>
                 <div className='pb-7 relative'>
                     <Input name='title' placeHolder='Title' type='text' success={errorsData?.title ? false : true} value={props.for === "updateRecipe" ? recipeDetails.title : undefined} />
                     {errorsData?.title && <span className="absolute bottom-2 left-0 text-sm text-red-700">Title is required</span>}
