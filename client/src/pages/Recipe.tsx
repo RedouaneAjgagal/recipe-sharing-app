@@ -82,13 +82,13 @@ const Recipe = () => {
 export default Recipe
 
 
-const loadRecipeDetails = async (recipeId: string) => {
+export const loadRecipeDetails = async (recipeId: string) => {
     const url = `http://localhost:5000/api/v1/recipes/${recipeId}`;
     const response = await fetch(url);
+    const data = await response.json();
     if (!response.ok) {
-        throw json({ msg: "Something went wrong.." }, { status: response.status, statusText: response.statusText });
+        throw json({ msg: data.msg }, { status: response.status, statusText: response.statusText });
     }
-    const data = response.json();
     return data;
 }
 
@@ -96,16 +96,23 @@ const loadRecipeComments = async (recipeId: string, isNewest: boolean) => {
     const sorting = isNewest ? "?newest=true" : ""
     const url = `http://localhost:5000/api/v1/recipes/${recipeId}/comments${sorting}`;
     const response = await fetch(url);
+    const data = await response.json();
     if (!response.ok) {
-        throw json({ msg: "Something went wrong..", }, { status: response.status, statusText: response.statusText });
+        throw json({ msg: data.msg, }, { status: response.status, statusText: response.statusText });
     }
-    const data = response.json();
     return data;
 }
 
 export const loader: LoaderFunction = async ({ params, request }) => {
-    const isNewest = new URL(request.url).searchParams.get("newest") === "true";
     const { recipeId } = params;
+    const isNewest = new URL(request.url).searchParams.get("newest") === "true";
+    
+    // if its update recipe fetch then dont fetch comments
+    const isUpdateRoute = request.url === `${new URL(request.url).origin}/recipes/${recipeId}/update`;
+    if (isUpdateRoute) {
+        return loadRecipeDetails(recipeId!)
+    }
+    
     return defer({
         recipeDetails: await loadRecipeDetails(recipeId!),
         recipeComments: loadRecipeComments(recipeId!, isNewest)

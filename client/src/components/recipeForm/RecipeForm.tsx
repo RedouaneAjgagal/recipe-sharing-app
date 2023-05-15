@@ -19,7 +19,8 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
     const errorsData = fetcher.data?.errors as UErrorsForm;
     const responseData = fetcher.data?.response as { msg: string, success: boolean };
 
-    const recipeDetails = (useRouteLoaderData("recipeDetails") as { recipeDetails: URecipeDetails })?.recipeDetails.recipe;
+    const recipeDetails = (useRouteLoaderData("recipeDetails") as URecipeDetails)?.recipe;
+    
 
     return (
         <>
