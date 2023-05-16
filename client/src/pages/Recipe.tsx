@@ -105,13 +105,7 @@ const loadRecipeComments = async (recipeId: string, isNewest: boolean) => {
 
 export const loader: LoaderFunction = async ({ params, request }) => {
     const { recipeId } = params;
-    const isNewest = new URL(request.url).searchParams.get("newest") === "true";
-    
-    // if its update recipe fetch then dont fetch comments
-    const isUpdateRoute = request.url === `${new URL(request.url).origin}/recipes/${recipeId}/update`;
-    if (isUpdateRoute) {
-        return loadRecipeDetails(recipeId!)
-    }
+    const isNewest = new URL(request.url).searchParams.get("newest") === "true";    
     
     return defer({
         recipeDetails: await loadRecipeDetails(recipeId!),

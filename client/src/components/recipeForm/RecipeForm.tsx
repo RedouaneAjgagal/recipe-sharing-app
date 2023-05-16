@@ -19,8 +19,8 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
     const errorsData = fetcher.data?.errors as UErrorsForm;
     const responseData = fetcher.data?.response as { msg: string, success: boolean };
 
-    const recipeDetails = (useRouteLoaderData("recipeDetails") as URecipeDetails)?.recipe;
-    
+    const recipeDetails = (useRouteLoaderData("recipeDetails") as { recipeDetails: URecipeDetails })?.recipeDetails.recipe;
+
 
     return (
         <>
@@ -46,7 +46,7 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
                 <NoteInput value={props.for === "updateRecipe" ? recipeDetails.note : undefined} />
                 <IngredientsList errors={errorsData?.ingredients} ingredients={props.for === "updateRecipe" ? recipeDetails.ingredients : undefined} />
                 <MethodsList errors={errorsData?.methods} methods={props.for === "updateRecipe" ? recipeDetails.methods : undefined} />
-                {props.for === "newRecipe" && <UploadImage errorMsg={errorsData?.images} /> }
+                {props.for === "newRecipe" && <UploadImage errorMsg={errorsData?.images} />}
                 <CallToAction for={props.for} />
             </fetcher.Form>
         </>

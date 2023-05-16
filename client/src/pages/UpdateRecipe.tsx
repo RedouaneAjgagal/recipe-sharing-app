@@ -1,7 +1,8 @@
-import { ActionFunction, redirect } from "react-router-dom"
+import { ActionFunction, LoaderFunction, redirect } from "react-router-dom"
 import RecipeFormContainer from "../components/recipeForm"
 import { isValidInputs } from "../components/util/recipeFormValidation"
 import url from "../config/url"
+import { loadRecipeDetails } from "./Recipe"
 
 const UpdateRecipe = () => {
     return (
@@ -12,8 +13,16 @@ const UpdateRecipe = () => {
 export default UpdateRecipe
 
 
+
+
+export const loader: LoaderFunction = async ({ params }) => {
+    const { recipeId } = params;
+    const recipeDetails = await loadRecipeDetails(recipeId!);
+    return { recipeDetails }
+}
+
 export const action: ActionFunction = async ({ request, params }) => {
-    
+
 
     const formData = await request.formData();
 
@@ -38,7 +47,7 @@ export const action: ActionFunction = async ({ request, params }) => {
     const { recipeId } = params;
     const response = await fetch(`${url}/recipes/${recipeId}`, {
         method: request.method,
-        headers: {"Content-Type": "application/json"},
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(recipeDetails)
     });
