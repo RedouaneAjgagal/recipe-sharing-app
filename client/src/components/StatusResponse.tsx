@@ -6,7 +6,7 @@ interface Props {
 
 const StatusResponse = (props: React.PropsWithoutRef<Props>) => {
     return (
-        <section className={`text-white p-2 absolute top-0 left-0 w-full rounded shadow-md ${props.success ? "bg-green-500" : "bg-red-600"}`}>
+        <section className={`text-white p-2 fixed top-0 left-0 w-full rounded shadow-md ${props.success ? "bg-green-500" : "bg-red-600"}`}>
             <p className="text-center font-medium tracking-wide">{props.message}</p>
         </section>
     )

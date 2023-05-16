@@ -8,6 +8,7 @@ import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPa
 import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
 import NewRecipe, { action as createRecipeAction } from "./pages/NewPrecipe";
 import UpdateRecipe, {action as updateRecipeAction, loader as recipeDetailsLoader} from "./pages/UpdateRecipe";
+import {action as postCommentAction} from "./components/comments";
 
 
 function App() {
@@ -49,7 +50,8 @@ function App() {
           children: [
             {
               index: true,
-              element: <Recipe />
+              element: <Recipe />,
+              action: postCommentAction
             },
             {
               path: "update",
