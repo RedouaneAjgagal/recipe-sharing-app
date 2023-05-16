@@ -1,17 +1,20 @@
 import { AiOutlineHeart } from "react-icons/ai"
 import { AiFillHeart } from "react-icons/ai"
 import { UComment } from "../../pages/Recipe"
+import { useSubmit } from "react-router-dom";
 
 interface Props {
     comment: UComment
 }
 
 const Comment = (props: React.PropsWithoutRef<Props>) => {
-
+    const submit = useSubmit();
     const currentUser = "humala";
 
     const likeHandler = () => {
-        console.log("like a comment");
+        const formData = new FormData();
+        formData.set("commentId", props.comment._id);
+        submit(formData, { method: "PATCH" });
     }
 
     const createdAt = new Date(props.comment.createdAt).toLocaleDateString("en", { year: "numeric", month: "short", day: "2-digit" });
