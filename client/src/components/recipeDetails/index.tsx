@@ -20,7 +20,7 @@ const RecipeDetails = (props: React.PropsWithoutRef<Props>) => {
 
     return (
         <article className="py-6 flex flex-col gap-6 text-[#535353] leading-relaxed">
-            <RecipeDetailsNav avgRating={props.recipeDetails.recipe.avgRating} publisher={props.recipeDetails.user} updatedAt={props.recipeDetails.recipe.updatedAt} />
+            <RecipeDetailsNav avgRating={props.recipeDetails.recipe.avgRating} publisher={props.recipeDetails.user} updatedAt={props.recipeDetails.recipe.updatedAt} recipeId={props.recipeDetails.recipe._id} isFavourited={props.recipeDetails.recipe.isFavourited} />
             <RecipeImages images={props.recipeDetails.recipe.images} />
             <h1 className="text-3xl text-slate-800 font-medium tracking-wide">{props.recipeDetails.recipe.title}</h1>
             <RecipeStats stats={{ ingredients, methods, totalTime }} />

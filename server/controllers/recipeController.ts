@@ -9,6 +9,8 @@ import checkPermission from "../utils/permissionChecker";
 import { UploadedFile } from "express-fileupload";
 import { uploadImage, uploadImages } from "../utils/uploadImg";
 import Comment from "../models/comment";
+import Favourite from "../models/favourite";
+import { verifyToken } from "../utils/createToken";
 
 
 const createRecipe: RequestHandler = async (req: CustomRequest, res) => {
@@ -80,7 +82,8 @@ const allRecipes: RequestHandler = async (req, res) => {
 
 
 
-const singleRecipe: RequestHandler = async (req, res) => {
+const singleRecipe: RequestHandler = async (req: CustomRequest, res) => {
+    const { accessToken } = req.signedCookies;
     const { recipeId } = req.params;
 
     // find recipe
@@ -90,9 +93,28 @@ const singleRecipe: RequestHandler = async (req, res) => {
     }
 
     // find user profile picture
-    const profile = await Profile.findOne({ user: recipe.user }, { picture: true }).populate({ path: "user", select: "name -_id" });
+    const profile = await Profile.findOne({ user: recipe.user }, { picture: true }).populate({ path: "user", select: "name _id" });
 
-    const recipeDetail = { user: { name: profile!.user.name, picture: profile!.picture }, recipe }
+
+    // chech if the user is loged in but not required
+    let user: { id: string; name: string; role: string; } | undefined = undefined;
+    try {
+        const userInfo = verifyToken(accessToken) || undefined
+        user = userInfo
+    } catch (error) {
+        user = undefined;
+    }
+
+    // if the user logged in then check if already favourited the recipe or not
+    let isFavourited = false
+    if (user) {
+        const isFavourite = await Favourite.findOne({ recipe: recipe._id, user: user?.id });
+        if (isFavourite) {
+            isFavourited = true;
+        }
+    }
+
+    const recipeDetail = { user: { name: profile!.user.name, picture: profile!.picture }, recipe: {...recipe.toObject(), isFavourited} }
 
     res.status(StatusCodes.OK).json(recipeDetail);
 }

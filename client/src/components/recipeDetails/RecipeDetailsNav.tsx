@@ -8,7 +8,9 @@ interface Props {
     name: string;
     picture: string;
   },
-  updatedAt: Date
+  updatedAt: Date;
+  recipeId: string;
+  isFavourited: boolean;
 }
 
 const RecipeDetailsNav = (props: React.PropsWithoutRef<Props>) => {
@@ -18,7 +20,7 @@ const RecipeDetailsNav = (props: React.PropsWithoutRef<Props>) => {
         <Publisher publisher={props.publisher} updatedAt={props.updatedAt} />
         <Ratings avgRating={props.avgRating} />
       </div>
-      <BookMark />
+      <BookMark recipeId={props.recipeId} isFavourited={props.isFavourited} />
     </div>
   )
 }

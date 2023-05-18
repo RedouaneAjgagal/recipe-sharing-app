@@ -25,6 +25,11 @@ const favouriteRecipes: RequestHandler = async (req: CustomRequest, res) => {
 const favouriteToggle: RequestHandler = async (req: CustomRequest, res) => {
     const { recipe: recipeId } = req.body;
 
+    // check if recipe id is exist
+    if (!recipeId) {
+        throw new BadRequestError("Must be an existing recipe");
+    }
+
     // check if valid recipe
     const recipe = await Recipe.findById(recipeId);
     if (!recipe) {
@@ -35,13 +40,13 @@ const favouriteToggle: RequestHandler = async (req: CustomRequest, res) => {
     const isFavourite = await Favourite.findOne({ recipe: recipe._id, user: req.user!.id });
     if (isFavourite) {
         await isFavourite.deleteOne();
-        return res.status(StatusCodes.OK).json({ msg: "Removed from favourite recipes" });
+        return res.status(StatusCodes.OK).json({ msg: "Removed from favourite recipes", removed: true });
     }
 
     // if its not favourited
     await Favourite.create({ recipe: recipe._id, user: req.user!.id });
 
-    res.status(StatusCodes.CREATED).json({ msg: "Added to favourite recipes" });
+    res.status(StatusCodes.CREATED).json({ msg: "Added to favourite recipes", added: true });
 }
 
 
