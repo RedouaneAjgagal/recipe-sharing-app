@@ -4,6 +4,7 @@ import RecipeStats from "./RecipeStats"
 import Ingredients from "./Ingredients"
 import Methods from "./Methods"
 import RecipeDetailsNav from "./RecipeDetailsNav";
+import Rate from "./Rate"
 
 interface Props {
     recipeDetails: URecipeDetails
@@ -52,6 +53,7 @@ const RecipeDetails = (props: React.PropsWithoutRef<Props>) => {
             </div>
             <Ingredients ingredients={props.recipeDetails.recipe.ingredients} />
             <Methods methods={props.recipeDetails.recipe.methods} />
+            <Rate recipeId={props.recipeDetails.recipe._id} ratedValue={props.recipeDetails.recipe.rated} />
         </article>
     )
 }

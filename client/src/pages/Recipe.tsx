@@ -34,6 +34,7 @@ export interface URecipeDetails {
         createdAt: Date
         updatedAt: Date
         isFavourited: boolean
+        rated: number
     }
 }
 

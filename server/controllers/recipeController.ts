@@ -11,6 +11,7 @@ import { uploadImage, uploadImages } from "../utils/uploadImg";
 import Comment from "../models/comment";
 import Favourite from "../models/favourite";
 import { verifyToken } from "../utils/createToken";
+import User from "../models/user";
 
 
 const createRecipe: RequestHandler = async (req: CustomRequest, res) => {
@@ -97,24 +98,29 @@ const singleRecipe: RequestHandler = async (req: CustomRequest, res) => {
 
 
     // chech if the user is loged in but not required
-    let user: { id: string; name: string; role: string; } | undefined = undefined;
+    let userInfo: { id: string; name: string; role: string; } | undefined = undefined;
     try {
-        const userInfo = verifyToken(accessToken) || undefined
-        user = userInfo
+        userInfo = verifyToken(accessToken) || undefined
     } catch (error) {
-        user = undefined;
+        userInfo = undefined;
     }
 
     // if the user logged in then check if already favourited the recipe or not
-    let isFavourited = false
-    if (user) {
-        const isFavourite = await Favourite.findOne({ recipe: recipe._id, user: user?.id });
+    let isFavourited = false;
+    let rated = 0;
+    if (userInfo) {
+        const isFavourite = await Favourite.findOne({ recipe: recipe._id, user: userInfo?.id });
         if (isFavourite) {
             isFavourited = true;
         }
+        const user = await User.findById(userInfo.id);
+        const userDoc = await user?.populate({ path: "rate", match: { recipe: recipe._id, user: userInfo.id }, select: "rate" }) as { rate: { rate: number } | null };
+        if (userDoc.rate) {
+            rated = userDoc.rate.rate;
+        }
     }
 
-    const recipeDetail = { user: { name: profile!.user.name, picture: profile!.picture }, recipe: {...recipe.toObject(), isFavourited} }
+    const recipeDetail = { user: { name: profile!.user.name, picture: profile!.picture }, recipe: { ...recipe.toObject(), isFavourited, rated } }
 
     res.status(StatusCodes.OK).json(recipeDetail);
 }

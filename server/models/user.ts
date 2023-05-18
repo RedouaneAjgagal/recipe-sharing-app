@@ -68,7 +68,14 @@ const userSchema = new mongoose.Schema<User>({
         },
         default: "user"
     }
-}, { timestamps: true });
+}, { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } });
+
+userSchema.virtual("rate", {
+    ref: "Rate",
+    localField: "_id",
+    foreignField: "user",
+    justOne: true
+});
 
 userSchema.pre('save', async function () {
     // Add a profile model related to the user when creating a new user
