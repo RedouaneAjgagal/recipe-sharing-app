@@ -30,7 +30,7 @@ export interface URecipeDetails {
         totalTime: number
         ingredients: UIngredients[]
         methods: UMethods[]
-        avgRating?: number,
+        avgRating: number,
         createdAt: Date,
         updatedAt: Date
     }
