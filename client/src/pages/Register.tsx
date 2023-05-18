@@ -1,4 +1,4 @@
-import { ActionFunction } from "react-router-dom"
+import { ActionFunction, redirect } from "react-router-dom"
 import Auth from "../components/auth"
 import { validName, validEmail, validPassword } from "../helpers/auth"
 import url from "../config/url"
@@ -25,7 +25,7 @@ export const action: ActionFunction = async ({ request }) => {
 
     let result = {
         msg: "",
-        success: false,
+        success: true,
         validName: true,
         validEmail: true,
         validPassword: true,
@@ -54,11 +54,12 @@ export const action: ActionFunction = async ({ request }) => {
 
     const data = await response.json();
 
-    result.msg = data.msg;
-
-    if (response.ok) {
-        result.success = true;
+    
+    if (!response.ok) {
+        result.msg = data.msg;
+        result.success = false;
+        return result;
     }
 
-    return result
+    return redirect("/login");
 }
