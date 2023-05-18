@@ -27,51 +27,53 @@ const rateRecipe: RequestHandler = async (req: CustomRequest, res) => {
         throw new BadRequestError('Rating must be between 1 and 5');
     }
 
-    // check if already rated
-    const alreadyRated = await Rate.findOne({ recipe: recipe._id, user: req.user!.id });
-    if (alreadyRated) {
-        throw new BadRequestError('You have already rated for this recipe');
-    }
-
     // check if its a verified user
     const isVerified = await User.findOne({ _id: req.user!.id, isVerified: true });
     if (!isVerified) {
         throw new UnauthorizedError("Must verify your email to start rating recipes");
     }
 
-    // create a new rate
-    await Rate.create({ user: Object(req.user!.id), recipe: recipe._id, rate });
+    // check if already rated
+    const alreadyRated = await Rate.findOne({ recipe: recipe._id, user: req.user!.id });
+    if (alreadyRated) {
+        // upadate the rate
+        await alreadyRated.updateOne({ rate });
+        await alreadyRated.save();
+    } else {
+        // create a new rate
+        await Rate.create({ user: Object(req.user!.id), recipe: recipe._id, rate });
+    }
 
     res.status(StatusCodes.OK).json({ msg: "rate a recipe" });
 }
 
 
-const updateRate: RequestHandler = async (req: CustomRequest, res) => {
-    const { rateId } = req.params;
-    const { rate: updatedRate } = req.body;
+// const updateRate: RequestHandler = async (req: CustomRequest, res) => {
+//     const { rateId } = req.params;
+//     const { rate: updatedRate } = req.body;
 
-    // check if valid rate
-    if (updatedRate < 1 || updatedRate > 5) {
-        throw new BadRequestError('Rating must be between 1 and 5');
-    }
+//     // check if valid rate
+//     if (updatedRate < 1 || updatedRate > 5) {
+//         throw new BadRequestError('Rating must be between 1 and 5');
+//     }
 
-    // find rate
-    const rate = await Rate.findById(rateId);
-    if (!rate) {
-        throw new NotFoundError(`Found no rate with id ${rateId}`);
-    }
+//     // find rate
+//     const rate = await Rate.findById(rateId);
+//     if (!rate) {
+//         throw new NotFoundError(`Found no rate with id ${rateId}`);
+//     }
 
-    // check if rate belon to the user
-    checkPermission(rate.user.toString(), req.user!.id);
+//     // check if rate belon to the user
+//     checkPermission(rate.user.toString(), req.user!.id);
 
-    // update the rate
-    rate.rate = updatedRate
-    await rate.save();
+//     // update the rate
+//     rate.rate = updatedRate
+//     await rate.save();
 
-    res.status(StatusCodes.OK).json({ msg: "update a rate" });
-}
+//     res.status(StatusCodes.OK).json({ msg: "update a rate" });
+// }
 
 export {
     rateRecipe,
-    updateRate
+    // updateRate
 }
