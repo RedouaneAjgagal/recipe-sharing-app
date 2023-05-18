@@ -77,6 +77,13 @@ userSchema.virtual("rate", {
     justOne: true
 });
 
+userSchema.virtual("favourite", {
+    ref: "Favourite",
+    localField: "_id",
+    foreignField: "user",
+    justOne: true
+});
+
 userSchema.pre('save', async function () {
     // Add a profile model related to the user when creating a new user
     if (this.isNew) {

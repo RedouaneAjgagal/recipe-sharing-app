@@ -9,9 +9,16 @@ import checkPermission from "../utils/permissionChecker";
 import { UploadedFile } from "express-fileupload";
 import { uploadImage, uploadImages } from "../utils/uploadImg";
 import Comment from "../models/comment";
-import Favourite from "../models/favourite";
 import { verifyToken } from "../utils/createToken";
 import User from "../models/user";
+
+
+interface PopulatedUser extends User {
+    favourite: boolean;
+    rate: {
+        rate: number
+    };
+}
 
 
 const createRecipe: RequestHandler = async (req: CustomRequest, res) => {
@@ -105,18 +112,21 @@ const singleRecipe: RequestHandler = async (req: CustomRequest, res) => {
         userInfo = undefined;
     }
 
-    // if the user logged in then check if already favourited the recipe or not
     let isFavourited = false;
     let rated = 0;
+
+    // if user logged in
     if (userInfo) {
-        const isFavourite = await Favourite.findOne({ recipe: recipe._id, user: userInfo?.id });
-        if (isFavourite) {
+        const user = await User.findById(userInfo.id).populate({ path: "rate favourite", match: { recipe: recipe._id, user: userInfo.id }, select: "rate" }) as PopulatedUser;
+        
+        // check if already favourited the recipe
+        if (user.favourite) {
             isFavourited = true;
         }
-        const user = await User.findById(userInfo.id);
-        const userDoc = await user?.populate({ path: "rate", match: { recipe: recipe._id, user: userInfo.id }, select: "rate" }) as { rate: { rate: number } | null };
-        if (userDoc.rate) {
-            rated = userDoc.rate.rate;
+
+        // check if already rated the recipe
+        if (user.rate) {
+            rated = user.rate.rate
         }
     }
 
