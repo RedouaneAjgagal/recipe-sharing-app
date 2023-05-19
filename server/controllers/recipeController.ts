@@ -9,8 +9,9 @@ import checkPermission from "../utils/permissionChecker";
 import { UploadedFile } from "express-fileupload";
 import { uploadImage, uploadImages } from "../utils/uploadImg";
 import Comment from "../models/comment";
-import { verifyToken } from "../utils/createToken";
 import User from "../models/user";
+import { getUser } from "../utils/getCurrentUser";
+import { Types, Document } from "mongoose";
 
 
 interface PopulatedUser extends User {
@@ -105,12 +106,7 @@ const singleRecipe: RequestHandler = async (req: CustomRequest, res) => {
 
 
     // chech if the user is loged in but not required
-    let userInfo: { id: string; name: string; role: string; } | undefined = undefined;
-    try {
-        userInfo = verifyToken(accessToken) || undefined
-    } catch (error) {
-        userInfo = undefined;
-    }
+    let userInfo = getUser(accessToken);
 
     let isFavourited = false;
     let rated = 0;
@@ -118,7 +114,7 @@ const singleRecipe: RequestHandler = async (req: CustomRequest, res) => {
     // if user logged in
     if (userInfo) {
         const user = await User.findById(userInfo.id).populate({ path: "rate favourite", match: { recipe: recipe._id, user: userInfo.id }, select: "rate" }) as PopulatedUser;
-        
+
         // check if already favourited the recipe
         if (user.favourite) {
             isFavourited = true;
@@ -222,6 +218,7 @@ const uploadRecipeImages: RequestHandler = async (req, res) => {
 }
 
 const recipeComments: RequestHandler = async (req, res) => {
+    const { accessToken } = req.signedCookies;
     const { recipeId } = req.params;
     const { newest } = req.query;
 
@@ -235,7 +232,23 @@ const recipeComments: RequestHandler = async (req, res) => {
     const sorting = newest === "true" ? "-createdAt" : "-likes -createdAt";
 
     // find comments
-    const comments = await Comment.find({ recipe: recipe._id }).populate({ path: "user profile", select: "name role picture" }).select('-recipe -updatedAt').sort(sorting);
+    const comments = await Comment.find({ recipe: recipe._id }).populate({ path: "user profile", select: "name role picture", options: {} }).select('-recipe -updatedAt').sort(sorting);
+
+    // chech if the user is loged in but not required
+    const userInfo = getUser(accessToken);
+    
+    if (userInfo) {
+        // add new property if the comment belong to the current user
+        const customComments = comments.map(objComment => {
+            const comment = objComment.toObject() as Omit<Comment & { _id: Types.ObjectId, user: { _id: Types.ObjectId } }, never>;
+
+            if (comment.user._id.toString() === userInfo.id) {
+                return { ...comment, belongToUser: true }
+            }
+            return comment;
+        });
+        return res.status(StatusCodes.OK).json(customComments);
+    }
 
     res.status(StatusCodes.OK).json(comments);
 }
