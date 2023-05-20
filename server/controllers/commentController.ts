@@ -11,7 +11,7 @@ const createComment: RequestHandler = async (req: CustomRequest, res) => {
     const { content, recipe: recipeId }: PartialComment = req.body;
 
     // additional checks
-    if (!content || content.trim() === "" || !recipeId) {
+    if (!content || content.trim() === "" || content.trim().length > 250 || !recipeId) {
         throw new BadRequestError(`Must provide all values`);
     }
 
@@ -103,7 +103,7 @@ const likeComment: RequestHandler = async (req: CustomRequest, res) => {
 
 
     const totalLikes = comment.userLike.filter(item => item.isLike === true).length;
-    
+
     comment.likes = totalLikes
 
     await comment.save();

@@ -44,11 +44,6 @@ export default CommentSection
 const createComment = async (recipeId: string | undefined, formData: FormData) => {
     const comment = formData.get("comment") as string;
 
-    // add validations
-    if (comment.trim() === "") {
-        return { error: true }
-    }
-
     // create comment request
     const response = await fetch(`${url}/comments`, {
         method: "POST",
@@ -61,7 +56,7 @@ const createComment = async (recipeId: string | undefined, formData: FormData) =
     });
 
     const data = await response.json();
-    return { msg: data.msg, success: response.ok, value: "" };
+    return { msg: data.msg, success: response.ok };
 }
 
 
@@ -103,9 +98,6 @@ export const action: ActionFunction = async ({ request, params }) => {
     // Add new comment
     if (request.method === "POST") {
         const response = await createComment(recipeId, formData);
-        if (response.error) {
-            return { error: response.error }
-        }
         return { response }
     }
 

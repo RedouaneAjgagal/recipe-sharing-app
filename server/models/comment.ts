@@ -51,7 +51,7 @@ const commentSchema = new mongoose.Schema<Comment>({
     content: {
         type: String,
         required: [true, "Comment content is required"],
-        maxlength: 600
+        maxlength: 250
     },
     edited: {
         type: Boolean,
