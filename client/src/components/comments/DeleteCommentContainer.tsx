@@ -22,6 +22,9 @@ const DeleteCommentContainer = (props: React.PropsWithoutRef<Props>) => {
         props.onCancel();
     }
 
+    console.log(true);
+    
+
     return (
         <div className="relative">
             <Overlay onClick={cancelDeleteHandler} />

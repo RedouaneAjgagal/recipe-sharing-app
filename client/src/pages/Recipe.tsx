@@ -107,6 +107,10 @@ const loadRecipeComments = async (recipeId: string, isNewest: boolean) => {
     if (!response.ok) {
         throw json({ msg: data.msg, }, { status: response.status, statusText: response.statusText });
     }
+    
+    // set back overflow to auto after deleting a comment
+    document.body.style.overflow = "auto";
+
     return data;
 }
 
