@@ -59,6 +59,7 @@ export interface UComment {
     profile: {
         picture: string
     }
+    belongToUser: true | null
 }
 
 const Recipe = () => {
@@ -99,7 +100,9 @@ export const loadRecipeDetails = async (recipeId: string) => {
 const loadRecipeComments = async (recipeId: string, isNewest: boolean) => {
     const sorting = isNewest ? "?newest=true" : ""
     const url = `http://localhost:5000/api/v1/recipes/${recipeId}/comments${sorting}`;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+        credentials: "include"
+    });
     const data = await response.json();
     if (!response.ok) {
         throw json({ msg: data.msg, }, { status: response.status, statusText: response.statusText });

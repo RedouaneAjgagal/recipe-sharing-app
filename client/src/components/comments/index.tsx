@@ -65,6 +65,21 @@ const createComment = async (recipeId: string | undefined, formData: FormData) =
 }
 
 
+const deleteComment = async (formData: FormData) => {
+    const commentId = formData.get("commentId") as string;
+    const response = await fetch(`${url}/comments/${commentId}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include"
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        return { msg: data.msg, success: response.ok }
+    }
+    return { msg: data.msg, success: response.ok }
+}
+
+
 const likeComment = async (formData: FormData) => {
     const commentId = formData.get("commentId");
 
@@ -76,7 +91,7 @@ const likeComment = async (formData: FormData) => {
     });
 
     const data = await response.json();
-    
+
     return { msg: data.msg, success: response.ok };
 }
 
@@ -92,6 +107,12 @@ export const action: ActionFunction = async ({ request, params }) => {
             return { error: response.error }
         }
         return { response }
+    }
+
+    // Delete a comment
+    if (request.method === "DELETE") {
+        const response = await deleteComment(formData);
+        return response
     }
 
     // like a comment

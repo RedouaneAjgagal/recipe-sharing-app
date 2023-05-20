@@ -2,6 +2,7 @@ import { AiOutlineHeart } from "react-icons/ai"
 import { AiFillHeart } from "react-icons/ai"
 import { UComment } from "../../pages/Recipe"
 import { useSubmit } from "react-router-dom";
+import DeleteComment from "./DeleteComment";
 
 interface Props {
     comment: UComment
@@ -39,9 +40,16 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
             <div>
                 <p className="text-slate-500/90 text-[1.05rem]">{props.comment.content}</p>
             </div>
-            <div className="flex items-center gap-2 text-amber-900">
-                <button className="flex text-2xl" onClick={likeHandler}>{props.comment.userLike[0]?.user === currentUser && props.comment.userLike[0].isLike ? <AiFillHeart /> : <AiOutlineHeart />}</button>
-                <span className="font-medium">{props.comment.likes}</span>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-amber-900">
+                    <button className="flex text-2xl" onClick={likeHandler}>{props.comment.userLike[0]?.user === currentUser && props.comment.userLike[0].isLike ? <AiFillHeart /> : <AiOutlineHeart />}</button>
+                    <span className="font-medium">{props.comment.likes}</span>
+                </div>
+                {props.comment.belongToUser &&
+                    <div className="flex items-center gap-4">
+                        <DeleteComment commentId={props.comment._id} />
+                    </div>
+                }
             </div>
         </li>
     )
