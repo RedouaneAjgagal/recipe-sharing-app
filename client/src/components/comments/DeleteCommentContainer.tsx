@@ -21,8 +21,6 @@ const DeleteCommentContainer = (props: React.PropsWithoutRef<Props>) => {
     const cancelDeleteHandler = () => {
         props.onCancel();
     }
-
-    console.log(true);
     
 
     return (

@@ -49,7 +49,7 @@ const updateComment: RequestHandler = async (req: CustomRequest, res) => {
     // update the comment
     await comment.updateOne({ content }, { runValidators: true });
 
-    res.status(StatusCodes.OK).json({ msg: "Updated comment successfully" });
+    res.status(StatusCodes.OK).json({ msg: "Updated comment successfully", updatedComment: content });
 }
 
 

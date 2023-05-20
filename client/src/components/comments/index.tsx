@@ -60,8 +60,22 @@ const createComment = async (recipeId: string | undefined, formData: FormData) =
 }
 
 
-const deleteComment = async (formData: FormData) => {
-    const commentId = formData.get("commentId") as string;
+const updateComment = async (updatedContent: string, commentId: string) => {
+    const response = await fetch(`${url}/comments/${commentId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ content: updatedContent })
+    });
+    const data = await response.json();
+    if (!response.ok) {
+        return { msg: data.msg, success: response.ok } as { msg: string, success: boolean }
+    }
+    return { updatedComment: data.updatedComment, success: response.ok } as { updatedComment: string, success: boolean }
+}
+
+
+const deleteComment = async (commentId: string) => {
     const response = await fetch(`${url}/comments/${commentId}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -75,9 +89,7 @@ const deleteComment = async (formData: FormData) => {
 }
 
 
-const likeComment = async (formData: FormData) => {
-    const commentId = formData.get("commentId");
-
+const likeComment = async (commentId: string) => {
     // like comment request
     const response = await fetch(`${url}/comments/${commentId}/like`, {
         method: "PATCH",
@@ -94,6 +106,7 @@ const likeComment = async (formData: FormData) => {
 export const action: ActionFunction = async ({ request, params }) => {
     const { recipeId } = params;
     const formData = await request.formData();
+    const commentId = formData.get("commentId") as string;
 
     // Add new comment
     if (request.method === "POST") {
@@ -101,15 +114,22 @@ export const action: ActionFunction = async ({ request, params }) => {
         return { response }
     }
 
+    // update a comment
+    const updatedContent = formData.get("updatedContent") as string;
+    if (request.method === "PATCH" && updatedContent) {
+        const response = await updateComment(updatedContent, commentId);
+        return response
+    }
+
     // Delete a comment
     if (request.method === "DELETE") {
-        const response = await deleteComment(formData);
+        const response = await deleteComment(commentId);
         return response
     }
 
     // like a comment
     if (request.method === "PATCH") {
-        const response = await likeComment(formData);
+        const response = await likeComment(commentId);
         if (!response.success) {
             return response
         }

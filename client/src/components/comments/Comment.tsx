@@ -1,24 +1,62 @@
 import { AiOutlineHeart } from "react-icons/ai"
 import { AiFillHeart } from "react-icons/ai"
 import { UComment } from "../../pages/Recipe"
-import { useSubmit } from "react-router-dom";
+import { useFetcher } from "react-router-dom";
 import DeleteComment from "./DeleteComment";
+import UpdateComment from "./UpdateComment";
+import { useEffect, useState } from "react";
+import UpdateCommentContainer from "./UpdateCommentContainer";
+import PrimaryBtn from "../../UI/PrimaryBtn";
 
 interface Props {
     comment: UComment
 }
 
 const Comment = (props: React.PropsWithoutRef<Props>) => {
-    const submit = useSubmit();
+    const [isUpdate, setIsUpdate] = useState(false);
+    const [updatedComment, setUpdatedComment] = useState({ value: "", error: false });
+
+    const fetcher = useFetcher();
+
     const currentUser = "humala";
 
     const likeHandler = () => {
         const formData = new FormData();
         formData.set("commentId", props.comment._id);
-        submit(formData, { method: "PATCH" });
+        fetcher.submit(formData, { method: "PATCH" });
     }
 
     const createdAt = new Date(props.comment.createdAt).toLocaleDateString("en", { year: "numeric", month: "short", day: "2-digit" });
+
+
+    const openUpdateHandler = () => {
+        setIsUpdate(true);
+    }
+
+    const cancelUpdateHandler = () => {
+        setIsUpdate(false);
+    }
+
+    const updateCommentHandler = () => {
+        if (updatedComment.value.trim() === "" || updatedComment.value.length > 250) {
+            setUpdatedComment(prev => {
+                return { ...prev, error: true }
+            });
+            return;
+        }
+        const formData = new FormData();
+        formData.set("updatedContent", updatedComment.value);
+        formData.set("commentId", props.comment._id);
+        fetcher.submit(formData, { method: "PATCH" });
+    }
+
+    const getUpdatedContent = (value: string) => {
+        setUpdatedComment({ error: false, value });
+    }
+
+    useEffect(() => {
+        cancelUpdateHandler();
+    }, [fetcher.data]);
 
     return (
         <li className="bg-[#ffffff] border border-amber-700/80 p-4 flex flex-col gap-3 rounded-md">
@@ -38,17 +76,29 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
                 </div>
             </div>
             <div>
-                <p className="text-slate-500/90 text-[1.05rem]">{props.comment.content}</p>
+                {isUpdate ?
+                    <UpdateCommentContainer isError={updatedComment.error} content={props.comment.content} updatedContent={getUpdatedContent} />
+                    :
+                    <p className="text-slate-500/90 text-[1.05rem]">{fetcher.data && fetcher.data.success ? fetcher.data.updatedComment : props.comment.content}</p>
+                }
             </div>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-amber-900">
                     <button className="flex text-2xl" onClick={likeHandler}>{props.comment.userLike[0]?.user === currentUser && props.comment.userLike[0].isLike ? <AiFillHeart /> : <AiOutlineHeart />}</button>
                     <span className="font-medium">{props.comment.likes}</span>
                 </div>
-                {props.comment.belongToUser &&
-                    <div className="flex items-center gap-4">
-                        <DeleteComment commentId={props.comment._id} />
-                    </div>
+                {props.comment.belongToUser ?
+                    (isUpdate ?
+                        <div className="flex items-center gap-4">
+                            <button onClick={cancelUpdateHandler} className="text-[.95rem] font-medium text-slate-500">Cancel</button>
+                            <PrimaryBtn disabled={fetcher.state !== "idle" ? true : false} onClick={updateCommentHandler} style="orange">Update</PrimaryBtn>
+                        </div>
+                        :
+                        <div className="flex items-center gap-6">
+                            <DeleteComment commentId={props.comment._id} />
+                            <UpdateComment onClick={openUpdateHandler} />
+                        </div>)
+                    : null
                 }
             </div>
         </li>
