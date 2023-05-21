@@ -16,7 +16,14 @@ interface CustomRequest extends Request {
 }
 
 const currentUser: RequestHandler = async (req: CustomRequest, res) => {
-    res.json(req.user);
+    const { id } = req.user!;
+
+    // find the profile
+    const userInfo = await Profile.findOne({ user: id }).populate({ path: 'user', select: 'name' });
+    if (!userInfo) {
+        throw new UnauthenticatedError("Failed to authenticate");
+    }
+    res.status(StatusCodes.OK).json({ user: { ...userInfo.toObject().user, picture: userInfo.picture } });
 }
 
 const userProfile: RequestHandler = async (req: CustomRequest, res) => {
