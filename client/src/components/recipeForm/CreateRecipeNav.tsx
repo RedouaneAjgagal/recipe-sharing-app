@@ -6,7 +6,7 @@ const CreateRecipeNav = () => {
     const navigate = useNavigate();
 
     const backHandler = () => {
-        navigate('..');
+        navigate(-1);
     }
 
     return (
