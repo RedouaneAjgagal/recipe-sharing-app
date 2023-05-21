@@ -2,7 +2,7 @@ import { ActionFunction, redirect } from "react-router-dom"
 import RecipeFormContainer from "../components/recipeForm"
 import CreateRecipeNav from "../components/recipeForm/CreateRecipeNav"
 import url from "../config/url"
-import { isValidInputs } from "../components/util/recipeFormValidation"
+import { isValidInputs } from "../utils/recipeFormValidation"
 
 export interface UErrorsForm {
     ingredients?: boolean;

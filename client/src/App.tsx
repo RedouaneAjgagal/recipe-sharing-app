@@ -9,7 +9,7 @@ import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassw
 import NewRecipe, { action as createRecipeAction } from "./pages/NewPrecipe";
 import UpdateRecipe, {action as updateRecipeAction, loader as recipeDetailsLoader} from "./pages/UpdateRecipe";
 import {action as postCommentAction} from "./components/comments";
-
+import logoutAction from "./utils/logout";
 
 function App() {
 
@@ -69,6 +69,10 @@ function App() {
               path: "new-recipe",
               element: <NewRecipe />,
               action: createRecipeAction
+            },
+            {
+              path: "logout",
+              action: logoutAction
             }
           ]
         }

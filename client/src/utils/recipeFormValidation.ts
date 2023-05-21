@@ -1,5 +1,5 @@
-import { UErrorsForm } from "../../pages/NewPrecipe";
-import { validIngredients, validMethods, validNumber } from "../../helpers/recipeValidations"
+import { UErrorsForm } from "../pages/NewPrecipe";
+import { validIngredients, validMethods, validNumber } from "../helpers/recipeValidations"
 
 export const isValidInputs = (formData: FormData) => {
     const errors: UErrorsForm = {};

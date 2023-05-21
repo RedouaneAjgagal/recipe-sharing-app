@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Link, useFetcher, useLocation } from "react-router-dom";
 import { AiFillCaretDown, AiOutlineUser, AiOutlineSetting, AiOutlineUpload } from "react-icons/ai";
 
 interface Props {
@@ -11,8 +12,16 @@ interface Props {
 
 const UserNavbar = (props: React.PropsWithoutRef<Props>) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const fetcher = useFetcher();
+    const location = useLocation();
     const openProfileHandler = () => {
         setIsProfileOpen(prev => !prev);
+    }
+
+    const logoutHandler = () => {
+        const formData = new FormData();
+        formData.set("prevPath", location.pathname);
+        fetcher.submit(formData, { action: "/profile/logout", method: "POST" });
     }
 
     return (
@@ -23,9 +32,15 @@ const UserNavbar = (props: React.PropsWithoutRef<Props>) => {
             </button>
             {isProfileOpen ?
                 <ul className="flex flex-col absolute right-0 -bottom-[9.5rem] bg-white rounded border shadow-xl font-medium text-slate-700 w-44">
-                    <li><a href="/porfile" className="flex items-center gap-1 border-b py-3 px-4"><AiOutlineUser />Profile</a></li>
-                    <li><a href="/porfile/settings" className="flex items-center gap-1 border-b py-3 px-4"><AiOutlineSetting />Settings</a></li>
-                    <li><a href="/logout" className="flex items-center gap-1 py-3 px-4 text-red-600"><AiOutlineUpload className="rotate-90" />Sign out</a></li>
+                    <li>
+                        <Link to="/porfile" className="flex items-center gap-1 border-b py-3 px-4"><AiOutlineUser />Profile</Link>
+                    </li>
+                    <li>
+                        <Link to="/porfile/settings" className="flex items-center gap-1 border-b py-3 px-4"><AiOutlineSetting />Settings</Link>
+                    </li>
+                    <li>
+                        <button onClick={logoutHandler} className="flex items-center gap-1 py-3 px-4 text-red-600"><AiOutlineUpload className="rotate-90" />Sign out</button>
+                    </li>
                 </ul> : null}
         </div>
     )
