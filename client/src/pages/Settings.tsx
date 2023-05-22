@@ -1,4 +1,5 @@
 import { LoaderFunction, json, redirect } from 'react-router-dom'
+import ProfileSettings from '../components/userInfoSettings'
 import url from '../config/url'
 
 export interface ProfileData {
@@ -11,7 +12,7 @@ export interface ProfileData {
 
 const Settings = () => {
     return (
-        <div>Settings</div>
+        <ProfileSettings />
     )
 }
 
