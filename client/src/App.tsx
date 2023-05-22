@@ -7,9 +7,11 @@ import Register, { action as registerAction } from "./pages/Register";
 import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPassword";
 import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
 import NewRecipe, { action as createRecipeAction } from "./pages/NewPrecipe";
-import UpdateRecipe, {action as updateRecipeAction, loader as recipeDetailsLoader} from "./pages/UpdateRecipe";
-import {action as postCommentAction} from "./components/comments";
+import UpdateRecipe, { action as updateRecipeAction, loader as recipeDetailsLoader } from "./pages/UpdateRecipe";
+import { action as postCommentAction } from "./components/comments";
 import logoutAction from "./utils/logout";
+import Settings, { loader as settingsLoader } from "./pages/Settings";
+
 
 function App() {
 
@@ -69,6 +71,11 @@ function App() {
               path: "new-recipe",
               element: <NewRecipe />,
               action: createRecipeAction
+            },
+            {
+              path: "settings",
+              element: <Settings />,
+              loader: settingsLoader
             },
             {
               path: "logout",

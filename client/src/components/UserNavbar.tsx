@@ -33,13 +33,13 @@ const UserNavbar = (props: React.PropsWithoutRef<Props>) => {
             {isProfileOpen ?
                 <ul className="flex flex-col absolute right-0 -bottom-[9.5rem] bg-white rounded border shadow-xl font-medium text-slate-700 w-44">
                     <li>
-                        <Link to="/porfile" className="flex items-center gap-1 border-b py-3 px-4"><AiOutlineUser />Profile</Link>
+                        <Link to="/profile" className="flex items-center gap-1 border-b py-3 px-4"><AiOutlineUser />Profile</Link>
                     </li>
                     <li>
-                        <Link to="/porfile/settings" className="flex items-center gap-1 border-b py-3 px-4"><AiOutlineSetting />Settings</Link>
+                        <Link to="/profile/settings" className="flex items-center gap-1 border-b py-3 px-4"><AiOutlineSetting />Settings</Link>
                     </li>
                     <li>
-                        <button onClick={logoutHandler} className="flex items-center gap-1 py-3 px-4 text-red-600"><AiOutlineUpload className="rotate-90" />Sign out</button>
+                        <button onClick={logoutHandler} className="flex items-center gap-1 py-3 px-4 text-red-600 w-full"><AiOutlineUpload className="rotate-90" />Sign out</button>
                     </li>
                 </ul> : null}
         </div>
