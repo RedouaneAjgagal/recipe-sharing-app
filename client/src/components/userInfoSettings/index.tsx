@@ -8,7 +8,7 @@ import { useFetcher } from "react-router-dom";
 import { useState } from "react";
 
 const ProfileSettings = () => {
-  const profileData = useRouteLoaderData("profileInfo") as ProfileData;
+  const { profile } = useRouteLoaderData("profileInfo") as { profile: ProfileData };
   const fetcher = useFetcher();
   const [isUploadingImg, setIsUploadingImg] = useState(false);
 
@@ -17,7 +17,7 @@ const ProfileSettings = () => {
     e.preventDefault();
     if (isUploadingImg) return;
     const formData = new FormData(e.currentTarget);
-    formData.append("favouriteMeals", profileData.favouriteMeals.toString());
+    formData.append("favouriteMeals", profile.favouriteMeals.toString());
     fetcher.submit(formData, { method: "PATCH" });
   }
 
@@ -30,11 +30,11 @@ const ProfileSettings = () => {
       <div className="bg-white p-4 rounded border">
         <h1 className="font-medium tracking-wider text-xl mb-3">PERSONAL</h1>
         <div className="flex flex-col gap-4">
-          <UserImage profilePicture={profileData.picture} alt={`${profileData.user.name}'s profile picture`} getUploadingState={isUploadingImgHandler} />
-          <InputContainer label="Name" value={profileData.user.name} type="text" />
-          <InputContainer label="Email" value={profileData.user.email} type="email" readOnly />
-          <InputContainer label="Bio" value={profileData.bio} type="texterea" />
-          <MealsList meals={profileData.favouriteMeals} submit={fetcher.state} />
+          <UserImage profilePicture={profile.picture} alt={`${profile.user.name}'s profile picture`} getUploadingState={isUploadingImgHandler} />
+          <InputContainer label="Name" value={profile.user.name} type="text" />
+          <InputContainer label="Email" value={profile.user.email} type="email" readOnly />
+          <InputContainer label="Bio" value={profile.bio} type="texterea" />
+          <MealsList meals={profile.favouriteMeals} submit={fetcher.state} />
         </div>
       </div>
       <div className="flex justify-end">

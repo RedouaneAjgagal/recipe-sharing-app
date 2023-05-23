@@ -1,23 +1,28 @@
-import { useRouteLoaderData } from "react-router-dom"
+import { useRouteLoaderData, Await } from "react-router-dom";
+import { Suspense } from "react";
 import { ProfileData } from "../../pages/Profile";
-import ProfilePicture from "./ProfilePicture";
+import ProfileDetails from "./ProfileDetails";
+import FavouriteRecipes from "./FavouriteRecipes";
+import { URecipe } from "../recipes/Recipe";
 
 const ProfileInfo = () => {
-    const profile = useRouteLoaderData("profileInfo") as ProfileData;
+    const { profile, favouriteRecipes } = useRouteLoaderData("profileInfo") as { profile: ProfileData, favouriteRecipes: { recipe: URecipe }[] };
 
     return (
-        <section className="bg-white p-4 rounded border text-center flex flex-col gap-4">
-            <ProfilePicture picture={profile.picture} name={profile.user.name} />
-            <h1 className="text-xl font-medium tracking-wide">{profile.user.name}</h1>
-            <p className="text-slate-500">{profile.bio}</p>
-            <div className="flex flex-col gap-2">
-                <h2 className="font-medium">Favourite Meals</h2>
-                <div className="flex items-center justify-center flex-wrap gap-2">
-                    {profile.favouriteMeals.map((meal, index) => <span key={index} className="bg-amber-600 text-white font-medium tracking-wide rounded py-[0.15rem] px-2">{meal}</span>)}
-                </div>
-            </div>
-        </section>
+        <>
+            <Suspense>
+                <Await resolve={profile}>
+                    {(loaderProfile) => <ProfileDetails profile={loaderProfile} />}
+                </Await>
+            </Suspense>
+            <Suspense fallback={<p className="text-center">Loading..</p>}>
+                <Await resolve={favouriteRecipes}>
+                    {(recipes) => <FavouriteRecipes recipes={recipes} />}
+                </Await>
+            </Suspense>
+        </>
     )
 }
 
 export default ProfileInfo
+
