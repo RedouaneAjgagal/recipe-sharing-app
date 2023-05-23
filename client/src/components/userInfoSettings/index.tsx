@@ -1,6 +1,6 @@
 import { useRouteLoaderData } from "react-router-dom"
 import UserImage from "./UserImage"
-import { ProfileData } from "../../pages/Settings";
+import { ProfileData } from "../../pages/Profile";
 import InputContainer from "./InputContainer";
 import MealsList from "./MealsList";
 import PrimaryBtn from "../../UI/PrimaryBtn";

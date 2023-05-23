@@ -1,11 +1,20 @@
 import { LoaderFunction, json, redirect } from "react-router-dom";
 import url from "../config/url";
+import ProfileInfo from "../components/profile";
+
+
+export interface ProfileData {
+    _id: string
+    user: { _id: string, name: string, email: string }
+    picture: string
+    bio: string
+    favouriteMeals: string[]
+}
 
 
 const Profile = () => {
-    
     return (
-        <div>Profile</div>
+        <ProfileInfo />
     )
 }
 

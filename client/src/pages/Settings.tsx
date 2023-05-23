@@ -2,14 +2,6 @@ import { ActionFunction, json, redirect } from 'react-router-dom'
 import ProfileSettings from '../components/userInfoSettings'
 import url from '../config/url'
 
-export interface ProfileData {
-    _id: string
-    user: { _id: string, name: string, email: string }
-    picture: string
-    bio: string
-    favouriteMeals: string[]
-}
-
 const Settings = () => {
     return (
         <ProfileSettings />
@@ -77,6 +69,6 @@ export const action: ActionFunction = async ({ request }) => {
 
     // rerender only if uploaded image to show on nav
     if (picture) return redirect("");
-    
+
     return null
 }
