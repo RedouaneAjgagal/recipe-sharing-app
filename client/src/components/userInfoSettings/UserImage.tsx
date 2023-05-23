@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import url from "../../config/url";
 import { uploadImage } from "../../pages/NewPrecipe";
 import { ImSpinner2 } from "react-icons/im";
@@ -6,6 +6,7 @@ import { ImSpinner2 } from "react-icons/im";
 interface Props {
     profilePicture: string
     alt: string
+    getUploadingState: (isUploading: boolean) => void
 }
 
 const UserImage = (props: React.PropsWithoutRef<Props>) => {
@@ -13,6 +14,9 @@ const UserImage = (props: React.PropsWithoutRef<Props>) => {
     const [imgUrl, setImgUrl] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
+    useEffect(() => {
+        props.getUploadingState(isLoading);
+    }, [isLoading]);
 
     const uploadimageHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setIsError(false);
@@ -43,7 +47,7 @@ const UserImage = (props: React.PropsWithoutRef<Props>) => {
         <div className="flex items-center gap-2 relative mb-2">
             <label htmlFor="uploadImg">
                 <div className="flex relative w-24 h-24">
-                    <img className="w-full h-full object-cover rounded-full" src={imgUrl ? imgUrl : props.profilePicture} alt={props.alt} />
+                    <img className="w-full h-full object-cover rounded-full border-2 border-dashed border-slate-900/25" src={imgUrl ? imgUrl : props.profilePicture} alt={props.alt} />
                     {isLoading ? <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex justify-center items-center bg-slate-700/80 rounded-full">
                         <ImSpinner2 className="animate-spin text-amber-600 text-4xl" />
                     </div> : null}

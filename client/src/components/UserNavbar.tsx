@@ -31,7 +31,7 @@ const UserNavbar = (props: React.PropsWithoutRef<Props>) => {
                 <AiFillCaretDown className={`duration-300 ${isProfileOpen ? "rotate-180" : ""}`} />
             </button>
             {isProfileOpen ?
-                <ul className="flex flex-col absolute right-0 -bottom-[9.5rem] bg-white rounded border shadow-xl font-medium text-slate-700 w-44">
+                <ul className="flex flex-col absolute right-0 -bottom-[9.5rem] bg-white rounded border shadow-xl font-medium text-slate-700 w-44 z-50">
                     <li>
                         <Link to="/profile" className="flex items-center gap-1 border-b py-3 px-4"><AiOutlineUser />Profile</Link>
                     </li>
