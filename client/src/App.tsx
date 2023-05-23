@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Root from "./pages/Root";
+import Root, { loader as authLoader } from "./pages/Root";
 import Home, { loader as recipes } from "./pages/Home";
 import Recipe, { loader as recipeDetails } from "./pages/Recipe";
 import Login, { action as loginAction } from "./pages/Login";
@@ -10,7 +10,8 @@ import NewRecipe, { action as createRecipeAction } from "./pages/NewPrecipe";
 import UpdateRecipe, { action as updateRecipeAction, loader as recipeDetailsLoader } from "./pages/UpdateRecipe";
 import { action as postCommentAction } from "./components/comments";
 import logoutAction from "./utils/logout";
-import Settings, { loader as settingsLoader, action as updateProfileAction } from "./pages/Settings";
+import Profile, { loader as profileLoader } from "./pages/Profile";
+import Settings, { action as updateProfileAction } from "./pages/Settings";
 
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
     {
       path: "/",
       element: <Root />,
+      loader: authLoader,
+      id: "user",
       children: [
         {
           index: true,
@@ -65,8 +68,13 @@ function App() {
         },
         {
           path: "profile",
-          element: null,
+          loader: profileLoader,
+          id: "profileInfo",
           children: [
+            {
+              index: true,
+              element: <Profile />
+            },
             {
               path: "new-recipe",
               element: <NewRecipe />,
@@ -75,7 +83,6 @@ function App() {
             {
               path: "settings",
               element: <Settings />,
-              loader: settingsLoader,
               action: updateProfileAction
             },
             {

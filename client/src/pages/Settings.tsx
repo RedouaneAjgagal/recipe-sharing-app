@@ -1,4 +1,4 @@
-import { ActionFunction, LoaderFunction, json, redirect } from 'react-router-dom'
+import { ActionFunction, json, redirect } from 'react-router-dom'
 import ProfileSettings from '../components/userInfoSettings'
 import url from '../config/url'
 
@@ -17,27 +17,6 @@ const Settings = () => {
 }
 
 export default Settings
-
-export const loader: LoaderFunction = async () => {
-    const response = await fetch(`${url}/user`, {
-        method: "GET",
-        credentials: "include"
-    });
-
-    // if unauthenticated user 
-    if (response.status === 401) {
-        return redirect("/login");
-    }
-
-    const data = await response.json();
-
-    // if server error
-    if (response.status === 500) {
-        return json({ msg: data.msg }, { status: response.status, statusText: response.statusText });
-    }
-
-    return data;
-}
 
 export const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData();
@@ -96,5 +75,8 @@ export const action: ActionFunction = async ({ request }) => {
         return json({ msg: "Something went wrong.." }, { status: response.status, statusText: response.statusText })
     }
 
-    return redirect("");
+    // rerender only if uploaded image to show on nav
+    if (picture) return redirect("");
+    
+    return null
 }

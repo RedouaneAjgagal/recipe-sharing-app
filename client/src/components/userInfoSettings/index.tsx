@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom"
+import { useRouteLoaderData } from "react-router-dom"
 import UserImage from "./UserImage"
 import { ProfileData } from "../../pages/Settings";
 import InputContainer from "./InputContainer";
@@ -8,7 +8,7 @@ import { useFetcher } from "react-router-dom";
 import { useState } from "react";
 
 const ProfileSettings = () => {
-  const profileData = useLoaderData() as ProfileData;
+  const profileData = useRouteLoaderData("profileInfo") as ProfileData;
   const fetcher = useFetcher();
   const [isUploadingImg, setIsUploadingImg] = useState(false);
 
