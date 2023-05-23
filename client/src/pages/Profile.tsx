@@ -21,55 +21,42 @@ const Profile = () => {
 export default Profile
 
 
-const ProfileDataLoder = async () => {
-    const response = await fetch(`${url}/user`, {
+const loaderData = async (customUrl: string) => {
+    const response = await fetch(customUrl, {
         method: "GET",
         credentials: "include"
     });
 
     // if unauthenticated user 
     if (response.status === 401) {
-        return { msg: "Unauthenticated" }
+        return { unauthenticated: true }
     }
-
-    const data = await response.json();
-
-    // if server error
-    if (response.status === 500) {
-        return json({ msg: data.msg }, { status: response.status, statusText: response.statusText });
-    }
-
-    return data;
-}
-
-const favouriteRecipesLoader = async () => {
-    const response = await fetch(`${url}/favourite`, {
-        method: "GET",
-        credentials: "include"
-    });
-
-    // if unauthenticated user 
-    if (response.status === 401) {
-        return { msg: "Unauthenticated" }
-    }
-
-    const data = await response.json();
-
-    // if server error
+    // if other error
     if (!response.ok) {
-        return json({ msg: data.msg }, { status: response.status, statusText: response.statusText });
+        return { error: true, response }
     }
 
+    const data = await response.json();
     return data;
 }
 
 export const loader: LoaderFunction = async () => {
-    const profile = await ProfileDataLoder();
-    if (profile.msg) {
+    const profileUrl = `${url}/user`;
+    const favouriteRecipesUrl = `${url}/favourite`;
+    const profile = await loaderData(profileUrl);
+
+    // unauthenticated
+    if (profile.unauthenticated) {
         return redirect("/login");
     }
+
+    // other errors
+    if (profile.error) {
+        throw json({ msg: "Something went wrong" }, { status: profile.response.status, statusText: profile.response.statusText })
+    }
+
     return defer({
         profile,
-        favouriteRecipes: favouriteRecipesLoader()
+        favouriteRecipes: loaderData(favouriteRecipesUrl)
     });
 }
