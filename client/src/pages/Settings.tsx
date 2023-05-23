@@ -45,6 +45,7 @@ export const action: ActionFunction = async ({ request }) => {
     const favouriteMeals = getAllMeals ? getAllMeals.split(",") : [];
     const name = formData.get("Name")!.toString();
     const bio = formData.get("Bio")!.toString();
+    const picture = formData.get("image")?.toString();
 
     // initial errors
     let errors: { name: boolean, bio: boolean, favouriteMeals: boolean } = {
@@ -82,7 +83,7 @@ export const action: ActionFunction = async ({ request }) => {
         method: request.method,
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, bio, favouriteMeals })
+        body: JSON.stringify({ name, bio, favouriteMeals, picture })
     });
 
     // if unauthenticated
@@ -95,5 +96,5 @@ export const action: ActionFunction = async ({ request }) => {
         return json({ msg: "Something went wrong.." }, { status: response.status, statusText: response.statusText })
     }
 
-    return null
+    return redirect("");
 }

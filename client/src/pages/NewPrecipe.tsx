@@ -25,14 +25,14 @@ const NewPrecipe = () => {
 export default NewPrecipe
 
 
-const uploadImage = async (images: Blob[]): Promise<{ src?: string[], msg?: string }> => {
+export const uploadImage = async (images: Blob[], customUrl: string, name: string): Promise<{ src?: string[], msg?: string }> => {
     const formData = new FormData();
 
     images.map(item => {
-        formData.append('images', item);
+        formData.append(name, item);
     });
 
-    const reponse = await fetch(`${url}/recipes/upload-images`, {
+    const reponse = await fetch(customUrl, {
         credentials: "include",
         method: "POST",
         body: formData
@@ -50,7 +50,8 @@ export const action: ActionFunction = async ({ request }) => {
     const { errors, value } = isValidInputs(formData);
 
     const images = formData.getAll("images") as Blob[];
-    const imagesData = await uploadImage(images);
+    const customUrl = `${url}/recipes/upload-images`;
+    const imagesData = await uploadImage(images, customUrl, "images");
     if (imagesData.msg) {
         errors.images = imagesData.msg;
     }
