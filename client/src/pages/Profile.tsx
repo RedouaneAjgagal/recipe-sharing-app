@@ -29,7 +29,7 @@ const ProfileDataLoder = async () => {
 
     // if unauthenticated user 
     if (response.status === 401) {
-        return redirect("/login");
+        return { msg: "Unauthenticated" }
     }
 
     const data = await response.json();
@@ -50,7 +50,7 @@ const favouriteRecipesLoader = async () => {
 
     // if unauthenticated user 
     if (response.status === 401) {
-        return redirect("/login");
+        return { msg: "Unauthenticated" }
     }
 
     const data = await response.json();
@@ -64,8 +64,12 @@ const favouriteRecipesLoader = async () => {
 }
 
 export const loader: LoaderFunction = async () => {
+    const profile = await ProfileDataLoder();
+    if (profile.msg) {
+        return redirect("/login");
+    }
     return defer({
-        profile: await ProfileDataLoder(),
+        profile,
         favouriteRecipes: favouriteRecipesLoader()
     });
 }
