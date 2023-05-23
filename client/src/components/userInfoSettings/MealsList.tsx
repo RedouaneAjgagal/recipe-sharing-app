@@ -1,14 +1,21 @@
 import { AiOutlinePlus } from "react-icons/ai"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+
+
 
 interface Props {
     meals: string[]
+    submit: "idle" | "loading" | "submitting"
 }
 
 const MealsList = (props: React.PropsWithoutRef<Props>) => {
     const meals = props.meals.map((meal) => <span key={crypto.randomUUID()} className="bg-amber-700 text-white rounded py-[0.15rem] px-2">{meal}</span>)
 
     const [inputMeals, setInputMeals] = useState<JSX.Element[]>([])
+
+    useEffect(() => {
+        setInputMeals([]);
+    }, [props.submit === "loading"]);
 
     // const addMealInputs = 
     const addFavouriteMeal = () => {

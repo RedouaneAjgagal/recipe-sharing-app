@@ -10,7 +10,7 @@ import NewRecipe, { action as createRecipeAction } from "./pages/NewPrecipe";
 import UpdateRecipe, { action as updateRecipeAction, loader as recipeDetailsLoader } from "./pages/UpdateRecipe";
 import { action as postCommentAction } from "./components/comments";
 import logoutAction from "./utils/logout";
-import Settings, { loader as settingsLoader } from "./pages/Settings";
+import Settings, { loader as settingsLoader, action as updateProfileAction } from "./pages/Settings";
 
 
 function App() {
@@ -75,7 +75,8 @@ function App() {
             {
               path: "settings",
               element: <Settings />,
-              loader: settingsLoader
+              loader: settingsLoader,
+              action: updateProfileAction
             },
             {
               path: "logout",

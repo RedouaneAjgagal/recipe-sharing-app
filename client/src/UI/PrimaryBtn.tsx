@@ -2,7 +2,7 @@
 
 interface Props {
     style: "black" | "white" | "orange"
-    onClick: () => void
+    onClick?: () => void
     disabled?: boolean
 }
 

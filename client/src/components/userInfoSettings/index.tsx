@@ -10,13 +10,16 @@ const ProfileSettings = () => {
   const profileData = useLoaderData() as ProfileData;
   const fetcher = useFetcher();
 
-  const updateProfileHandler = () => {
-    console.log("submit");
-    
+
+  const updateProfileHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    formData.append("favouriteMeals", profileData.favouriteMeals.toString());
+    fetcher.submit(formData, { method: "PATCH" });
   }
 
   return (
-    <fetcher.Form className="flex flex-col gap-4">
+    <fetcher.Form className="flex flex-col gap-4" onSubmit={updateProfileHandler}>
       <div className="bg-white p-4 rounded border">
         <h1 className="font-medium tracking-wider text-xl mb-3">PERSONAL</h1>
         <div className="flex flex-col gap-4">
@@ -24,10 +27,12 @@ const ProfileSettings = () => {
           <InputContainer label="Name" value={profileData.user.name} type="text" />
           <InputContainer label="Email" value={profileData.user.email} type="email" readOnly />
           <InputContainer label="Bio" value={profileData.bio} type="texterea" />
-          <MealsList meals={profileData.favouriteMeals} />
+          <MealsList meals={profileData.favouriteMeals} submit={fetcher.state} />
         </div>
       </div>
-      <PrimaryBtn style="orange" onClick={updateProfileHandler}>Update Profile</PrimaryBtn>
+      <div className="flex justify-end">
+        <PrimaryBtn disabled={fetcher.state !== "idle"} style="orange">Update Profile</PrimaryBtn>
+      </div>
     </fetcher.Form>
   )
 }
