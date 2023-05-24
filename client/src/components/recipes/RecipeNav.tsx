@@ -22,7 +22,7 @@ const RecipeNav = () => {
     }
 
     const addRecipeHandler = () => {
-        navigate("/profile/new-recipe");
+        navigate("/profile/recipes/new-recipe");
     }
 
     return (

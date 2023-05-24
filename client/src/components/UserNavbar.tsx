@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Link, useFetcher, useLocation } from "react-router-dom";
 import { AiFillCaretDown, AiOutlineUser, AiOutlineSetting, AiOutlineUpload } from "react-icons/ai";
+import { BiFoodMenu } from "react-icons/bi";
 
 interface Props {
     userInfo: {
@@ -31,9 +32,12 @@ const UserNavbar = (props: React.PropsWithoutRef<Props>) => {
                 <AiFillCaretDown className={`duration-300 ${isProfileOpen ? "rotate-180" : ""}`} />
             </button>
             {isProfileOpen ?
-                <ul className="flex flex-col absolute right-0 -bottom-[9.5rem] bg-white rounded border shadow-xl font-medium text-slate-700 w-44 z-50">
+                <ul className="flex flex-col absolute right-0 -bottom-[13rem] bg-white rounded border shadow-xl font-medium text-slate-700 w-44 z-50">
                     <li>
                         <Link to="/profile" className="flex items-center gap-1 border-b py-3 px-4"><AiOutlineUser />Profile</Link>
+                    </li>
+                    <li>
+                        <Link to="/profile/recipes" className="flex items-center gap-1 border-b py-3 px-4"><BiFoodMenu />My Recipes</Link>
                     </li>
                     <li>
                         <Link to="/profile/settings" className="flex items-center gap-1 border-b py-3 px-4"><AiOutlineSetting />Settings</Link>
