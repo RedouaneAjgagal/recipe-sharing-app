@@ -131,6 +131,11 @@ const singleRecipe: RequestHandler = async (req: CustomRequest, res) => {
     res.status(StatusCodes.OK).json(recipeDetail);
 }
 
+const userRecipes: RequestHandler = async (req: CustomRequest, res) => {
+    const recipes = await Recipe.find({ user: req.user!.id }, { images: true, title: true });
+    res.status(StatusCodes.OK).json(recipes);
+}
+
 
 
 const updateRecipe: RequestHandler = async (req: CustomRequest, res) => {
@@ -236,7 +241,7 @@ const recipeComments: RequestHandler = async (req, res) => {
 
     // chech if the user is loged in but not required
     const userInfo = getUser(accessToken);
-    
+
     if (userInfo) {
         // add new property if the comment belong to the current user
         const customComments = comments.map(objComment => {
@@ -256,6 +261,7 @@ const recipeComments: RequestHandler = async (req, res) => {
 export {
     allRecipes,
     singleRecipe,
+    userRecipes,
     createRecipe,
     updateRecipe,
     deleteRecipe,
