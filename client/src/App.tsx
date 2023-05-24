@@ -12,7 +12,7 @@ import { action as postCommentAction } from "./components/comments";
 import logoutAction from "./utils/logout";
 import Profile, { loader as profileLoader } from "./pages/Profile";
 import Settings, { action as updateProfileAction } from "./pages/Settings";
-import UserRecipes, {action as userRecipesAction} from "./pages/ProfileRecipes";
+import UserRecipes, { action as userRecipesAction, loader as userRecipesLoader } from "./pages/ProfileRecipes";
 
 
 function App() {
@@ -82,7 +82,8 @@ function App() {
                 {
                   index: true,
                   element: <UserRecipes />,
-                  action: userRecipesAction
+                  action: userRecipesAction,
+                  loader: userRecipesLoader
                 },
                 {
                   path: "new-recipe",

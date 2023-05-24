@@ -4,7 +4,7 @@ import DeleteComment from "../comments/DeleteComment";
 import UpdateComment from "../comments/UpdateComment";
 
 interface Props {
-    _id: string;
+    id: string;
     image: string
     title: string;
 }
@@ -27,7 +27,7 @@ const UserRecipe = (props: React.PropsWithoutRef<Props>) => {
             <div className="col-span-2 flex items-center justify-between p-2">
                 {isOpen ?
                     <div className="flex items-center gap-4">
-                        <DeleteComment recipeId={props._id} />
+                        <DeleteComment recipeId={props.id} />
                         <UpdateComment onClick={updateHandler} />
                     </div>
                     :
