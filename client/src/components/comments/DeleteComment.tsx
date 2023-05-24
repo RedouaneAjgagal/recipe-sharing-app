@@ -4,7 +4,8 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 
 interface Props {
-    commentId: string
+    recipeId?: string;
+    commentId?: string;
 }
 
 const DeleteComment = (props: React.PropsWithoutRef<Props>) => {
@@ -17,7 +18,7 @@ const DeleteComment = (props: React.PropsWithoutRef<Props>) => {
     const onCancel = () => {
         setIsDeleteOpen(false);
         document.body.style.overflow = "auto";
-    } 
+    }
 
     return (
         <>
@@ -27,7 +28,7 @@ const DeleteComment = (props: React.PropsWithoutRef<Props>) => {
             </button>
             {isDeleteOpen &&
                 createPortal(
-                    <DeleteCommentContainer commentId={props.commentId} onCancel={onCancel} />,
+                    props.commentId ? <DeleteCommentContainer commentId={props.commentId} onCancel={onCancel} /> : <DeleteCommentContainer recipeId={props.recipeId} onCancel={onCancel} />,
                     document.getElementById("overlay")!
                 )
             }

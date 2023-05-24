@@ -3,7 +3,8 @@ import { ImSpinner2 } from "react-icons/im";
 import Overlay from "../../UI/Overlay";
 
 interface Props {
-    commentId: string;
+    commentId?: string;
+    recipeId?: string;
     onCancel: () => void;
 }
 
@@ -11,17 +12,18 @@ const DeleteCommentContainer = (props: React.PropsWithoutRef<Props>) => {
     const fetcher = useFetcher();
 
     const deleteCommentHandler = () => {
-        // get the comment id
+        // get the id
         const formData = new FormData();
-        formData.set("commentId", props.commentId);
-        // submit deletion with comment id
+        props.commentId ? formData.set("commentId", props.commentId) : formData.set("recipeId", props.recipeId!);
+        
+        // submit deletion with the id
         fetcher.submit(formData, { method: "DELETE" });
     }
 
     const cancelDeleteHandler = () => {
         props.onCancel();
     }
-    
+
 
     return (
         <div className="relative">
