@@ -5,6 +5,7 @@ import { StatusCodes } from "http-status-codes"
 import User from "../models/user"
 import { UploadedFile } from "express-fileupload";
 import { uploadImage } from "../utils/uploadImg"
+import Recipe from "../models/recipe"
 
 
 interface CustomRequest extends Request {
@@ -42,12 +43,15 @@ const singleProfile: RequestHandler = async (req, res) => {
     const { userId } = req.params;
 
     // find the profile
-    const profile = await Profile.findById(userId).populate({ path: "user", select: "name -_id" });
+    const profile = await Profile.findById(userId).populate({ path: "user", select: "name" });
     if (!profile) {
         throw new NotFoundError(`There is no user with id ${userId}`);
     }
 
-    res.status(StatusCodes.OK).json(profile);
+    // find recipes published by this user
+    const recipes = await Recipe.find({ user: profile.user }, { images: true, title: true });
+
+    res.status(StatusCodes.OK).json({ profile, recipes });
 }
 
 const updateProfile: RequestHandler = async (req: CustomRequest, res) => {

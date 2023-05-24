@@ -2,7 +2,7 @@ import { BiDotsVerticalRounded, BiX } from "react-icons/bi";
 import { useState } from "react";
 import DeleteComment from "../comments/DeleteComment";
 import UpdateComment from "../comments/UpdateComment";
-import { useSubmit } from "react-router-dom";
+import { Link, useSubmit } from "react-router-dom";
 
 interface Props {
     id: string;
@@ -25,12 +25,12 @@ const UserRecipe = (props: React.PropsWithoutRef<Props>) => {
 
     return (
         <div className="bg-white grid grid-cols-3 rounded shadow-sm relative">
-            <div className="min-h-full h-20 w-full col-span-1">
+            <Link to={`/recipes/${props.id}`} className="min-h-full h-20 w-full col-span-1">
                 <img className="w-full h-full object-cover rounded-l" src={props.image} alt={props.title} />
-            </div>
+            </Link>
             <div className="col-span-2 flex items-center justify-between p-2">
                 {isOpen ?
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
                         <DeleteComment recipeId={props.id} />
                         <UpdateComment onClick={updateHandler} />
                     </div>

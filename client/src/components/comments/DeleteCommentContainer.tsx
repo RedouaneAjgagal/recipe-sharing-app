@@ -15,7 +15,7 @@ const DeleteCommentContainer = (props: React.PropsWithoutRef<Props>) => {
         // get the id
         const formData = new FormData();
         props.commentId ? formData.set("commentId", props.commentId) : formData.set("recipeId", props.recipeId!);
-        
+
         // submit deletion with the id
         fetcher.submit(formData, { method: "DELETE" });
     }
@@ -31,7 +31,7 @@ const DeleteCommentContainer = (props: React.PropsWithoutRef<Props>) => {
             <div className="fixed w-full max-w-sm bg-white z-20 left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 p-6 flex flex-col gap-4 rounded shadow-xl">
                 <h2 className="text-3xl font-medium ">Confirm Deletion</h2>
                 <div className="text-slate-500]">
-                    <p>Are you sure you want to delete this comment?</p>
+                    <p>Are you sure you want to delete this {props.commentId ? "comment?" : "recipe?"}</p>
                     <p>This action cannot be undone.</p>
                 </div>
                 <div className="self-end flex gap-4 font-medium">

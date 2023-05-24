@@ -22,7 +22,7 @@ const DeleteComment = (props: React.PropsWithoutRef<Props>) => {
 
     return (
         <>
-            <button onClick={deleteCommentHandler} className="flex items-center gap-1 font-medium text-red-600">
+            <button onClick={deleteCommentHandler} className="flex items-center gap-1 font-medium text-red-600 p-1">
                 <AiFillDelete className="text-lg" />
                 Delete
             </button>

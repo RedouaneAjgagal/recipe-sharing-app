@@ -11,7 +11,7 @@ const UpdateComment = (props: React.PropsWithoutRef<Props>) => {
     }
 
     return (
-        <button onClick={openUpdateHandler} className="flex items-center gap-1 font-medium text-blue-600">
+        <button onClick={openUpdateHandler} className="flex items-center gap-1 font-medium text-blue-600 p-1">
             <MdModeEditOutline className="text-lg" />
             Edit
         </button>

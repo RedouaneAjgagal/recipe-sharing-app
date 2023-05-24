@@ -102,7 +102,7 @@ const singleRecipe: RequestHandler = async (req: CustomRequest, res) => {
     }
 
     // find user profile picture
-    const profile = await Profile.findOne({ user: recipe.user }, { picture: true }).populate({ path: "user", select: "name _id" });
+    const profile = await Profile.findOne({ user: recipe.user }, { picture: true }).populate({ path: "user", select: "name" });
 
 
     // chech if the user is loged in but not required
@@ -126,7 +126,7 @@ const singleRecipe: RequestHandler = async (req: CustomRequest, res) => {
         }
     }
 
-    const recipeDetail = { user: { name: profile!.user.name, picture: profile!.picture }, recipe: { ...recipe.toObject(), isFavourited, rated } }
+    const recipeDetail = { user: { name: profile!.user.name, picture: profile!.picture, _id: profile!._id }, recipe: { ...recipe.toObject(), isFavourited, rated } }
 
     res.status(StatusCodes.OK).json(recipeDetail);
 }
