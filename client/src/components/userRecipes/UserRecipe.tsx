@@ -2,6 +2,7 @@ import { BiDotsVerticalRounded, BiX } from "react-icons/bi";
 import { useState } from "react";
 import DeleteComment from "../comments/DeleteComment";
 import UpdateComment from "../comments/UpdateComment";
+import { useSubmit } from "react-router-dom";
 
 interface Props {
     id: string;
@@ -11,12 +12,15 @@ interface Props {
 
 const UserRecipe = (props: React.PropsWithoutRef<Props>) => {
     const [isOpen, setIsOpen] = useState(false);
+    const submit = useSubmit();
     const openSettingHandler = () => {
         setIsOpen(prev => !prev);
     }
 
     const updateHandler = () => {
-
+        const formData = new FormData();
+        formData.append("recipeId", props.id);
+        submit(formData, { method: "GET", action: "/profile/recipes/edit", replace: false });
     }
 
     return (

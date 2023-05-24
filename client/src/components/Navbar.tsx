@@ -1,8 +1,9 @@
 import { Link, useRouteLoaderData } from "react-router-dom";
 import UserNavbar from "./UserNavbar";
+import { UUser } from "../pages/Root";
 
 const Navbar = () => {
-    const isUser = useRouteLoaderData("user") as null | { _id: string, name: string, picture: string };
+    const isUser = useRouteLoaderData("user") as null | UUser;
 
     return (
         <nav className="flex items-center justify-between px-4 py-6 border-b-[1px]">

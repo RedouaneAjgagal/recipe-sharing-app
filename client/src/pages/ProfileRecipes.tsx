@@ -48,7 +48,6 @@ export const action: ActionFunction = async ({ request }) => {
         if (!response.ok) {
             throw json({ msg: data.msg }, { status: response.status, statusText: response.statusText });
         }
-        console.log(data);
         document.body.style.overflow = "auto";
         return null;
     }

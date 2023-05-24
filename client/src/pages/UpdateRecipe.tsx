@@ -15,15 +15,19 @@ export default UpdateRecipe
 
 
 
-export const loader: LoaderFunction = async ({ params }) => {
-    const { recipeId } = params;
-    const recipeDetails = await loadRecipeDetails(recipeId!);
-    return { recipeDetails }
+export const loader: LoaderFunction = async ({ request }) => {
+    const recipeId = new URL(request.url).searchParams.get("recipeId");
+
+    if (!recipeId) {
+        return redirect("..");
+    }
+
+    const recipeDetails = await loadRecipeDetails(recipeId);
+
+    return recipeDetails
 }
 
-export const action: ActionFunction = async ({ request, params }) => {
-
-
+export const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData();
 
     // add validation
@@ -44,7 +48,8 @@ export const action: ActionFunction = async ({ request, params }) => {
     }
 
     // update recipe request
-    const { recipeId } = params;
+    const recipeId = new URL(request.url).searchParams.get("recipeId");
+
     const response = await fetch(`${url}/recipes/${recipeId}`, {
         method: request.method,
         headers: { "Content-Type": "application/json" },
@@ -58,6 +63,5 @@ export const action: ActionFunction = async ({ request, params }) => {
         return { response: { msg: data.msg, success: response.ok } }
     }
 
-
-    return redirect(`/recipes/${recipeId}`, { status: 303, statusText: "See Other" });
+    return redirect("..");
 }

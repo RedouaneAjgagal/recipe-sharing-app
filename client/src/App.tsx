@@ -51,21 +51,9 @@ function App() {
         },
         {
           path: "recipes/:recipeId",
+          element: <Recipe />,
           loader: recipeDetails,
-          id: "recipeDetails",
-          children: [
-            {
-              index: true,
-              element: <Recipe />,
-              action: postCommentAction
-            },
-            {
-              path: "update",
-              element: <UpdateRecipe />,
-              action: updateRecipeAction,
-              loader: recipeDetailsLoader
-            }
-          ]
+          action: postCommentAction
         },
         {
           path: "profile",
@@ -89,6 +77,12 @@ function App() {
                   path: "new-recipe",
                   element: <NewRecipe />,
                   action: createRecipeAction
+                },
+                {
+                  path: "edit",
+                  element: <UpdateRecipe />,
+                  action: updateRecipeAction,
+                  loader: recipeDetailsLoader
                 }
               ]
             },

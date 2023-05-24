@@ -1,4 +1,4 @@
-import { LoaderFunction, defer, json, useRouteLoaderData, Await } from "react-router-dom";
+import { LoaderFunction, defer, json, useLoaderData, Await } from "react-router-dom";
 import { Suspense } from "react";
 import RecipeDetails from "../components/recipeDetails";
 import Comments from "../components/comments";
@@ -63,7 +63,7 @@ export interface UComment {
 }
 
 const Recipe = () => {
-    const { recipeDetails, recipeComments } = useRouteLoaderData("recipeDetails") as { recipeDetails: URecipeDetails, recipeComments: UComment[] };
+    const { recipeDetails, recipeComments } = useLoaderData() as { recipeDetails: URecipeDetails, recipeComments: UComment[] };
 
     return (
         <div className="p-4">

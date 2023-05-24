@@ -2,6 +2,12 @@ import { LoaderFunction, Outlet } from "react-router-dom"
 import Navbar from "../components/Navbar"
 import url from "../config/url";
 
+export interface UUser {
+    _id: string;
+    name: string;
+    picture: string;
+}
+
 const Root = () => {
 
     return (
@@ -25,7 +31,7 @@ export const loader: LoaderFunction = async () => {
     if (!response.ok) {
         return null
     }
-    const data = await response.json() as { user: { _id: string, name: string, picture: string } };
+    const data = await response.json() as { user: UUser };
 
     return data.user;
 }

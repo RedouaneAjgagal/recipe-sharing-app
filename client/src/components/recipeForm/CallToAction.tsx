@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom"
-import { useParams } from 'react-router-dom';
 
 interface Props {
   for: "newRecipe" | "updateRecipe"
@@ -7,9 +6,8 @@ interface Props {
 
 const CallToAction = (props: React.PropsWithoutRef<Props>) => {
   const navigate = useNavigate();
-  const { recipeId } = useParams();
   const cancelHandler = () => {
-    navigate({ pathname: `/recipes/${recipeId}` });
+    navigate("..");
   }
 
   return (
