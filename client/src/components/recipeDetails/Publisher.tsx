@@ -13,7 +13,9 @@ const Publisher = (props: React.PropsWithoutRef<Props>) => {
 
     return (
         <div className="flex items-center gap-3 text-sm">
-            <div><img src={props.publisher.picture} alt={`${props.publisher.name}'s profile picture`} className="w-full max-w-[2.2rem] rounded-full" /></div>
+            <div className="w-11 h-11">
+                <img src={props.publisher.picture} alt={`${props.publisher.name}'s profile picture`} className="w-full h-full object-cover rounded-full" />
+            </div>
             <div className="flex flex-col gap-[0.15rem]">
                 <h5 className="text-[#565656] font-medium">By <span className="text-amber-950 font-medium tracking-wider underline underline-offset-2">{props.publisher.name.toUpperCase()}</span></h5>
                 <p className="text-slate-500">Updated {updatedAt}</p>

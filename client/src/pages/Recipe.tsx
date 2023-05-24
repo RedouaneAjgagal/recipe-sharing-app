@@ -66,7 +66,7 @@ const Recipe = () => {
     const { recipeDetails, recipeComments } = useRouteLoaderData("recipeDetails") as { recipeDetails: URecipeDetails, recipeComments: UComment[] };
 
     return (
-        <>
+        <div className="p-4">
             <Suspense fallback={<p className="text-center">Loading..</p>}>
                 <Await resolve={recipeDetails} key={0}>
                     {(loadedDetails) => <RecipeDetails recipeDetails={loadedDetails} />}
@@ -78,7 +78,7 @@ const Recipe = () => {
                 </Await>
             </Suspense>
 
-        </>
+        </div>
     )
 }
 
@@ -107,7 +107,7 @@ const loadRecipeComments = async (recipeId: string, isNewest: boolean) => {
     if (!response.ok) {
         throw json({ msg: data.msg, }, { status: response.status, statusText: response.statusText });
     }
-    
+
     // set back overflow to auto after deleting a comment
     document.body.style.overflow = "auto";
 
@@ -116,8 +116,8 @@ const loadRecipeComments = async (recipeId: string, isNewest: boolean) => {
 
 export const loader: LoaderFunction = async ({ params, request }) => {
     const { recipeId } = params;
-    const isNewest = new URL(request.url).searchParams.get("newest") === "true";    
-    
+    const isNewest = new URL(request.url).searchParams.get("newest") === "true";
+
     return defer({
         recipeDetails: await loadRecipeDetails(recipeId!),
         recipeComments: loadRecipeComments(recipeId!, isNewest)

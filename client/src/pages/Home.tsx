@@ -12,7 +12,7 @@ const Home = () => {
 
 
   return (
-    <div className="px-3">
+    <div className="p-4">
       {recipes && recipes.length ?
         <>
           <RecipeNav />

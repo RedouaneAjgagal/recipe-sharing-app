@@ -26,8 +26,8 @@ const ProfileSettings = () => {
   }
 
   return (
-    <fetcher.Form className="flex flex-col gap-4" onSubmit={updateProfileHandler}>
-      <div className="bg-white p-4 rounded border">
+    <fetcher.Form className="flex flex-col gap-4 pb-4" onSubmit={updateProfileHandler}>
+      <div className="bg-white p-4 border-b">
         <h1 className="font-medium tracking-wider text-xl mb-3">PERSONAL</h1>
         <div className="flex flex-col gap-4">
           <UserImage profilePicture={profile.picture} alt={`${profile.user.name}'s profile picture`} getUploadingState={isUploadingImgHandler} />
@@ -37,7 +37,7 @@ const ProfileSettings = () => {
           <MealsList meals={profile.favouriteMeals} submit={fetcher.state} />
         </div>
       </div>
-      <div className="flex justify-end">
+      <div className="px-4">
         <PrimaryBtn disabled={fetcher.state !== "idle" || isUploadingImg} style="orange">Update Profile</PrimaryBtn>
       </div>
     </fetcher.Form>

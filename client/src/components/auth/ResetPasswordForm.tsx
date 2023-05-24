@@ -19,7 +19,7 @@ const ResetPasswordForm = (props: React.PropsWithoutRef<Props>) => {
     } = fetcher.data;
 
     return (
-        <div className="flex flex-col min-h-[75vh] justify-center items-center">
+        <div className="flex flex-col min-h-[75vh] justify-center items-center p-4">
             <div className='w-full pt-20 relative'>
                 {responseMsg?.msg && <StatusResponse success={responseMsg?.success} message={responseMsg.msg} />}
                 <fetcher.Form method="POST" noValidate className="bg-white px-4 py-6 rounded shadow-lg flex flex-col">

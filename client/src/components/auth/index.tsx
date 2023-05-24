@@ -7,7 +7,7 @@ interface Props {
 
 const Auth = (props: React.PropsWithoutRef<Props>) => {
     return (
-        <div className="flex flex-col min-h-[75vh] justify-center items-center">
+        <div className="flex flex-col min-h-[75vh] justify-center items-center p-4">
             <Form for={props.for} />
             {props.for === "login" ?
                 <p className="mt-4 text-black">You dont have an account yet? <Link to={"/register"} className="text-amber-700 font-medium">Join now</Link></p>
