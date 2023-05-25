@@ -13,6 +13,7 @@ import logoutAction from "./utils/logout";
 import Profile, { loader as profileLoader } from "./pages/Profile";
 import Settings, { action as updateProfileAction } from "./pages/Settings";
 import UserRecipes, { action as userRecipesAction, loader as userRecipesLoader } from "./pages/ProfileRecipes";
+import UsersProfle, { loader as userProfileLoader } from "./pages/UsersProfle";
 
 
 function App() {
@@ -96,6 +97,11 @@ function App() {
               action: logoutAction
             }
           ]
+        },
+        {
+          path: "users/:profileId",
+          element: <UsersProfle />,
+          loader: userProfileLoader
         }
       ]
     }

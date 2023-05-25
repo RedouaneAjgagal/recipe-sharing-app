@@ -45,9 +45,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const customUrl = `${url}/recipes/?${sort}${page}`;
   const response = await fetch(customUrl);
   if (!response.ok) {
-    if (response.status === 404 || response.status === 400) {
-      return redirect("/", { status: 302 });
-    }
     throw json({ msg: response.statusText }, { status: response.status })
   }
   const data = await response.json();
