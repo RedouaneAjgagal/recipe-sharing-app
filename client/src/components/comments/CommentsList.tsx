@@ -8,7 +8,7 @@ interface Props {
 
 const CommentsList = (props: React.PropsWithoutRef<Props>) => {
 
-    const comments = props.recipeComments.map(comment => <Comment comment={comment} key={comment._id} />)
+    const comments = props.recipeComments.map(comment => <Comment comment={comment} id={comment._id} key={comment._id} />)
     return (
         <ul className="flex flex-col gap-4">
             {comments}

@@ -1,24 +1,35 @@
 import { AiOutlineHeart } from "react-icons/ai"
 import { AiFillHeart } from "react-icons/ai"
 import { UComment } from "../../pages/Recipe"
-import { useFetcher } from "react-router-dom";
+import { useFetcher, useRouteLoaderData } from "react-router-dom";
 import DeleteComment from "./DeleteComment";
 import UpdateComment from "./UpdateComment";
 import { useEffect, useState } from "react";
 import UpdateCommentContainer from "./UpdateCommentContainer";
 import PrimaryBtn from "../../UI/PrimaryBtn";
+import { UUser } from "../../pages/Root";
 
 interface Props {
-    comment: UComment
+    id: string;
+    comment: UComment;
 }
 
 const Comment = (props: React.PropsWithoutRef<Props>) => {
     const [isUpdate, setIsUpdate] = useState(false);
     const [updatedComment, setUpdatedComment] = useState({ value: "", error: false });
+    const user = useRouteLoaderData("user") as UUser;
 
     const fetcher = useFetcher();
 
-    const currentUser = "humala";
+    const isLike = props.comment.userLike.some(comment => {
+        if (comment.isLike === true && comment.user === user?._id) {
+            return true;
+        }
+        return false;
+    })
+    
+    
+    
 
     const likeHandler = () => {
         const formData = new FormData();
@@ -84,7 +95,7 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
             </div>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-amber-900">
-                    <button className="flex text-2xl" onClick={likeHandler}>{props.comment.userLike[0]?.user === currentUser && props.comment.userLike[0].isLike ? <AiFillHeart /> : <AiOutlineHeart />}</button>
+                    <button className="flex text-2xl" onClick={likeHandler}>{isLike ? <AiFillHeart /> : <AiOutlineHeart />}</button>
                     <span className="font-medium">{props.comment.likes}</span>
                 </div>
                 {props.comment.belongToUser ?
