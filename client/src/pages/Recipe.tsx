@@ -15,6 +15,7 @@ export interface UMethods {
 
 export interface URecipeDetails {
     user: {
+        _id: string
         name: string
         picture: string
     }

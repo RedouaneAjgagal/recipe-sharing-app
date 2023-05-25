@@ -1,13 +1,21 @@
 import { LoaderFunction, json } from "react-router-dom"
 import url from "../config/url"
+import UserProfile from "../components/usersProfiles"
+import { ProfileData } from "./Profile"
+import { URecipe } from "../components/recipes/Recipe";
 
-const UsersProfle = () => {
+export interface UUserProfile {
+    profile: ProfileData;
+    recipes: { recipe: URecipe }[];
+}
+
+const UsersProfile = () => {
     return (
-        <div>UsersProfle</div>
+        <UserProfile />
     )
 }
 
-export default UsersProfle
+export default UsersProfile
 
 export const loader: LoaderFunction = async ({ params }) => {
     const { profileId } = params;
@@ -16,7 +24,6 @@ export const loader: LoaderFunction = async ({ params }) => {
     if (!response.ok) {
         throw json({ msg: data.msg }, { status: response.status, statusText: response.statusText });
     }
-    console.log(data);
 
-    return null
+    return data;
 }

@@ -49,7 +49,9 @@ const singleProfile: RequestHandler = async (req, res) => {
     }
 
     // find recipes published by this user
-    const recipes = await Recipe.find({ user: profile.user }, { images: true, title: true });
+    const getRecipes = await Recipe.find({ user: profile.user }).populate({ path: "user", select: "name" }).select("images title totalTime avgRating user").sort("-createdAt").lean();
+
+    const recipes = getRecipes.map(recipe => ({ recipe }));
 
     res.status(StatusCodes.OK).json({ profile, recipes });
 }

@@ -5,6 +5,7 @@ import Publisher from "./Publisher"
 interface Props {
   avgRating: number;
   publisher: {
+    _id: string;
     name: string;
     picture: string;
   },

@@ -17,7 +17,7 @@ const ProfileInfo = () => {
             </Suspense>
             <Suspense fallback={<p className="text-center">Loading..</p>}>
                 <Await resolve={favouriteRecipes}>
-                    {(recipes) => <FavouriteRecipes recipes={recipes} />}
+                    {(recipes) => <FavouriteRecipes recipes={recipes} favourited />}
                 </Await>
             </Suspense>
         </>

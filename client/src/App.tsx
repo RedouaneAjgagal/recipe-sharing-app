@@ -13,7 +13,7 @@ import logoutAction from "./utils/logout";
 import Profile, { loader as profileLoader } from "./pages/Profile";
 import Settings, { action as updateProfileAction } from "./pages/Settings";
 import UserRecipes, { action as userRecipesAction, loader as userRecipesLoader } from "./pages/ProfileRecipes";
-import UsersProfle, { loader as userProfileLoader } from "./pages/UsersProfle";
+import UsersProfile, { loader as userProfileLoader } from "./pages/UsersProfile";
 
 
 function App() {
@@ -100,7 +100,7 @@ function App() {
         },
         {
           path: "users/:profileId",
-          element: <UsersProfle />,
+          element: <UsersProfile />,
           loader: userProfileLoader
         }
       ]
