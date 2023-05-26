@@ -36,6 +36,9 @@ export const action: ActionFunction = async ({ request }) => {
         return { errors }
     }
 
+    const images = formData.get("images")?.toString().split(",");
+
+
     // get all inputs data
     const recipeDetails = {
         title: value.title,
@@ -45,6 +48,7 @@ export const action: ActionFunction = async ({ request }) => {
         cookTime: Number(value.cookTime),
         ingredients: value.ingredients,
         methods: value.methods,
+        images
     }
 
     // update recipe request
