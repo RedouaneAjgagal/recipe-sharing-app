@@ -12,17 +12,26 @@ const ProfileSettings = () => {
   const fetcher = useFetcher();
   const [isUploadingImg, setIsUploadingImg] = useState(false);
 
+  const [favouriteMeals, setFavouriteMeals] = useState(profile.favouriteMeals);
+
 
   const updateProfileHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isUploadingImg) return;
     const formData = new FormData(e.currentTarget);
-    formData.append("favouriteMeals", profile.favouriteMeals.toString());
+    formData.append("favouriteMeals", favouriteMeals.toString());
     fetcher.submit(formData, { method: "PATCH" });
   }
 
   const isUploadingImgHandler = (isUploading: boolean) => {
     setIsUploadingImg(isUploading);
+  }
+
+  const removeFavouriteMeal = (removedIndex: number) => {
+    setFavouriteMeals(meals => {
+      const updatedMeals = meals.filter((_, index) => index !== removedIndex);
+      return updatedMeals;
+    });
   }
 
   return (
@@ -34,7 +43,7 @@ const ProfileSettings = () => {
           <InputContainer label="Name" value={profile.user.name} type="text" />
           <InputContainer label="Email" value={profile.user.email} type="email" readOnly />
           <InputContainer label="Bio" value={profile.bio} type="texterea" />
-          <MealsList meals={profile.favouriteMeals} submit={fetcher.state} />
+          <MealsList meals={favouriteMeals} submit={fetcher.state} onRemove={removeFavouriteMeal} />
         </div>
       </div>
       <div className="px-4">
