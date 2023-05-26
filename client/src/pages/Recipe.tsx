@@ -66,6 +66,9 @@ export interface UComment {
 const Recipe = () => {
     const { recipeDetails, recipeComments } = useLoaderData() as { recipeDetails: URecipeDetails, recipeComments: UComment[] };
 
+    console.log(recipeDetails.recipe.images);
+    
+
     return (
         <div className="p-4">
             <Suspense fallback={<p className="text-center">Loading..</p>}>
