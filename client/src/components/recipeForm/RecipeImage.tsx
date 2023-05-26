@@ -13,7 +13,7 @@ const RecipeImage = (props: React.PropsWithoutRef<Props>) => {
     return (
         <div className="h-[5rem] w-full max-w-[5rem] relative">
             <img src={props.src} alt="a meal" className="h-full w-full object-cover rounded shadow-md" />
-            {props.length > 1 ? <button type="button" onClick={removeImgHandler} className="bg-white text-black text-lg p-1 rounded-full flex absolute -top-2 -right-2"><BiX /></button> : null}
+            {props.length > 1 ? <button type="button" onClick={removeImgHandler} className="bg-white text-black text-lg p-1 rounded-full flex absolute -top-3 -left-3"><BiX /></button> : null}
         </div>
     )
 }

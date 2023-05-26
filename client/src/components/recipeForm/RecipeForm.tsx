@@ -11,6 +11,9 @@ import { URecipeDetails } from '../../pages/Recipe';
 import { UUser } from '../../pages/Root';
 import RecipeImage from './RecipeImage';
 import { useState } from "react";
+import url from '../../config/url';
+import { AiOutlinePlus } from "react-icons/ai"
+import { ImSpinner2 } from "react-icons/im";
 
 interface Props {
     for: "newRecipe" | "updateRecipe"
@@ -25,8 +28,8 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
 
     const user = useRouteLoaderData("user") as UUser;
     const [recipesImgs, setRecipeImgs] = useState<string[] | undefined>(recipeDetails?.recipe?.images);
+    const [isLoading, setIsLoading] = useState(false);
 
-    // console.log(recipesImgs);
 
     const removeImgHandler = (value: string) => {
         setRecipeImgs(images => {
@@ -35,6 +38,40 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
         })
 
     }
+
+    const addImagesHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const images = e.currentTarget.files;
+        const isLimited = e.currentTarget.files!.length + recipesImgs!.length > 3;
+        if (!images || images.length < 1) {
+            return;
+        }
+        if (isLimited) {
+            return;
+        }
+        for (let i = 0; i < images.length; i++) {
+            const image = images.item(i)!;
+            const maxSize = 1024 * 1024;
+            if (image.size > maxSize || !image.type.startsWith("image")) {
+                return;
+            }
+            setIsLoading(true);
+            const formData = new FormData();
+            formData.append("images", image);
+            const response = await fetch(`${url}/recipes/upload-images`, {
+                method: "POST",
+                credentials: "include",
+                body: formData
+            });
+            const data = await response.json();
+            const src: string[] = data.src;
+            setRecipeImgs(imgs => {
+                return imgs?.concat(src[0]);
+            });
+            setIsLoading(false);
+            e.target.value = "";
+        }
+    }
+
 
 
     // if the current user is not recipe publisher
@@ -53,9 +90,17 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
             {responseData?.msg && <StatusResponse success={responseData?.success} message={responseData?.msg} />}
             <fetcher.Form method={props.for === "newRecipe" ? "POST" : "PATCH"} encType='multipart/form-data' className={`${props.for === "updateRecipe" ? "mb-16" : "mb-0"}`}>
                 {recipesImgs ?
-                    <div className='flex gap-2 pb-7'>
-                        {recipesImgs.map(img => <RecipeImage src={img} onRemove={removeImgHandler} length={recipesImgs.length} />)}
-                        <input type="text" hidden value={recipesImgs} name='images' readOnly/>
+                    <div className='pb-7'>
+                        <div className='flex gap-4'>
+                            {recipesImgs.map(img => <RecipeImage key={crypto.randomUUID()} src={img} onRemove={removeImgHandler} length={recipesImgs.length} />)}
+                            <input type="text" hidden value={recipesImgs} name='images' readOnly />
+                            <div className='flex justify-center items-center'>
+                                <label htmlFor="addImages" className='cursor-pointer'>
+                                    {recipesImgs.length < 3 && (isLoading ? <ImSpinner2 className="text-2xl animate-spin" /> : <AiOutlinePlus className="text-2xl" />)}
+                                    <input type="file" className='sr-only' id='addImages' onChange={addImagesHandler} accept='image/*' multiple disabled={isLoading} />
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     : null}
                 <div className='pb-7 relative'>
