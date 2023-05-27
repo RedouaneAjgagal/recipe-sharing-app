@@ -1,7 +1,10 @@
-import { LoaderFunction, defer, json, useLoaderData, Await } from "react-router-dom";
-import { Suspense } from "react";
+import { useParams } from "react-router-dom";
 import RecipeDetails from "../components/recipeDetails";
 import Comments from "../components/comments";
+import { useQueries } from "@tanstack/react-query";
+import getSingleRecipe from "../fetchers/getSingleRecipe";
+import getRecipeComments from "../fetchers/getRecipeComments";
+import Loading from "../UI/Loading";
 
 export interface UIngredients {
     title: string,
@@ -64,66 +67,35 @@ export interface UComment {
 }
 
 const Recipe = () => {
-    const { recipeDetails, recipeComments } = useLoaderData() as { recipeDetails: URecipeDetails, recipeComments: UComment[] };
-
-    console.log(recipeDetails.recipe.images);
+    const { recipeId } = useParams();
     
+    const [recipeQuery, commentsQuery] = useQueries({
+        queries: [
+            {
+                queryKey: ["recipe", { recipeId }],
+                queryFn: () => getSingleRecipe(recipeId!)
+            },
+            {
+                queryKey: ["recipeComments", { recipeId }],
+                queryFn: () => getRecipeComments(recipeId!, "newest")
+            }
+        ]
+    });
+    const recipeDetails: URecipeDetails = recipeQuery.data;
+    const recipeComments: UComment[] = commentsQuery.data;
+
+
+    if (recipeQuery.isLoading || commentsQuery.isLoading) {
+        return <Loading />
+    }
+
 
     return (
         <div className="p-4">
-            <Suspense fallback={<p className="text-center">Loading..</p>}>
-                <Await resolve={recipeDetails} key={0}>
-                    {(loadedDetails) => <RecipeDetails recipeDetails={loadedDetails} />}
-                </Await>
-            </Suspense>
-            <Suspense fallback={<p className="text-center">Loading..</p>}>
-                <Await resolve={recipeComments} key={1}>
-                    {(loadedComments) => <Comments recipeComments={loadedComments} />}
-                </Await>
-            </Suspense>
-
+            <RecipeDetails recipeDetails={recipeDetails} />
+            <Comments recipeComments={recipeComments} />
         </div>
     )
 }
 
 export default Recipe
-
-
-export const loadRecipeDetails = async (recipeId: string) => {
-    const url = `http://localhost:5000/api/v1/recipes/${recipeId}`;
-    const response = await fetch(url, {
-        credentials: "include"
-    });
-    const data = await response.json();
-    if (!response.ok) {
-        throw json({ msg: data.msg }, { status: response.status, statusText: response.statusText });
-    }
-    return data;
-}
-
-const loadRecipeComments = async (recipeId: string, isNewest: boolean) => {
-    const sorting = isNewest ? "?newest=true" : ""
-    const url = `http://localhost:5000/api/v1/recipes/${recipeId}/comments${sorting}`;
-    const response = await fetch(url, {
-        credentials: "include"
-    });
-    const data = await response.json();
-    if (!response.ok) {
-        throw json({ msg: data.msg, }, { status: response.status, statusText: response.statusText });
-    }
-
-    // set back overflow to auto after deleting a comment
-    document.body.style.overflow = "auto";
-
-    return data;
-}
-
-export const loader: LoaderFunction = async ({ params, request }) => {
-    const { recipeId } = params;
-    const isNewest = new URL(request.url).searchParams.get("newest") === "true";
-
-    return defer({
-        recipeDetails: await loadRecipeDetails(recipeId!),
-        recipeComments: loadRecipeComments(recipeId!, isNewest)
-    });
-}

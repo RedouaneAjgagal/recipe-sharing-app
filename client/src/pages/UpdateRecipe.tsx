@@ -2,8 +2,7 @@ import { ActionFunction, LoaderFunction, redirect } from "react-router-dom"
 import RecipeFormContainer from "../components/recipeForm"
 import { isValidInputs } from "../utils/recipeFormValidation"
 import url from "../config/url"
-import { loadRecipeDetails } from "./Recipe"
-
+import getSingleRecipe from "../fetchers/getSingleRecipe"
 const UpdateRecipe = () => {
     return (
         <RecipeFormContainer for="updateRecipe" />
@@ -22,7 +21,7 @@ export const loader: LoaderFunction = async ({ request }) => {
         return redirect("..");
     }
 
-    const recipeDetails = await loadRecipeDetails(recipeId);
+    const recipeDetails = await getSingleRecipe(recipeId);
 
     return recipeDetails
 }

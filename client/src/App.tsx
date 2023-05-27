@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root, { loader as authLoader } from "./pages/Root";
 import Home from "./pages/Home";
-import Recipe, { loader as recipeDetails } from "./pages/Recipe";
+import Recipe from "./pages/Recipe";
 import Login, { action as loginAction } from "./pages/Login";
 import Register, { action as registerAction } from "./pages/Register";
 import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPassword";
@@ -52,7 +52,6 @@ function App() {
         {
           path: "recipes/:recipeId",
           element: <Recipe />,
-          loader: recipeDetails,
           action: postCommentAction
         },
         {
