@@ -5,6 +5,7 @@ import { useQueries } from "@tanstack/react-query";
 import getSingleRecipe from "../fetchers/getSingleRecipe";
 import getRecipeComments from "../fetchers/getRecipeComments";
 import Loading from "../UI/Loading";
+import { useState } from "react";
 
 export interface UIngredients {
     title: string,
@@ -68,7 +69,7 @@ export interface UComment {
 
 const Recipe = () => {
     const { recipeId } = useParams();
-    
+    const [commentSort, setCommentSort] = useState<"popular" | "newest">("popular");
     const [recipeQuery, commentsQuery] = useQueries({
         queries: [
             {
@@ -76,8 +77,10 @@ const Recipe = () => {
                 queryFn: () => getSingleRecipe(recipeId!)
             },
             {
-                queryKey: ["recipeComments", { recipeId }],
-                queryFn: () => getRecipeComments(recipeId!, "newest")
+                queryKey: ["recipeComments", { recipeId, sort: commentSort }],
+                queryFn: () => getRecipeComments(recipeId!, commentSort),
+                keepPreviousData: true
+
             }
         ]
     });
@@ -85,15 +88,18 @@ const Recipe = () => {
     const recipeComments: UComment[] = commentsQuery.data;
 
 
-    if (recipeQuery.isLoading || commentsQuery.isLoading) {
+    if (recipeQuery.isLoading) {
         return <Loading />
     }
 
+    const getCommentSorting = (sort: "popular" | "newest") => {
+        setCommentSort(sort);
+    }
 
     return (
         <div className="p-4">
             <RecipeDetails recipeDetails={recipeDetails} />
-            <Comments recipeComments={recipeComments} />
+            <Comments recipeComments={recipeComments} onSort={getCommentSorting} />
         </div>
     )
 }

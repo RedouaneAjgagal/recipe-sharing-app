@@ -225,7 +225,7 @@ const uploadRecipeImages: RequestHandler = async (req, res) => {
 const recipeComments: RequestHandler = async (req, res) => {
     const { accessToken } = req.signedCookies;
     const { recipeId } = req.params;
-    const { newest } = req.query;
+    const { sort } = req.query;
 
     // find recipe
     const recipe = await Recipe.findById(recipeId);
@@ -234,7 +234,7 @@ const recipeComments: RequestHandler = async (req, res) => {
     }
 
     // sort TOP by default else by NEW
-    const sorting = newest === "true" ? "-createdAt" : "-likes -createdAt";
+    const sorting = sort === "newest" ? "-createdAt" : "-likes -createdAt";
 
     // find comments
     const comments = await Comment.find({ recipe: recipe._id }).populate({ path: "user profile", select: "name role picture", options: {} }).select('-recipe -updatedAt').sort(sorting);

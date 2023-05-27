@@ -7,13 +7,19 @@ import url from "../../config/url"
 import StatusResponse from "../StatusResponse"
 
 interface Props {
-    recipeComments: UComment[]
+    recipeComments: UComment[];
+    onSort: (sort: "popular" | "newest") => void;
 }
 
 const CommentSection = (props: React.PropsWithoutRef<Props>) => {
 
     const numOfComments = props.recipeComments?.length
     const actionData = useActionData() as { msg: string, success: boolean } | null;
+
+    const onSort = (sort: "popular" | "newest") => {
+        props.onSort(sort);
+    }
+    
 
     return (
         <section className="py-8">
@@ -23,7 +29,7 @@ const CommentSection = (props: React.PropsWithoutRef<Props>) => {
             <article>
                 {numOfComments ?
                     <>
-                        <CommentsNav />
+                        <CommentsNav onSort={onSort} />
                         <CommentsList recipeComments={props.recipeComments} />
                     </>
                     :

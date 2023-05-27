@@ -15,7 +15,8 @@ const Home = () => {
 
   const query = useQuery({
     queryKey: ["recipes", { page, sort }],
-    queryFn: () => getRecipes(page, sort)
+    queryFn: () => getRecipes(page, sort),
+    keepPreviousData: true
   });
 
   if (query.isError) {

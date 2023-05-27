@@ -1,30 +1,28 @@
 import PrimaryBtn from '../../UI/PrimaryBtn'
-import { useSearchParams } from 'react-router-dom';
+import { useState } from "react";
 
-const CommentsNav = () => {
+interface Props {
+    onSort: (sort: "popular" | "newest") => void;
+}
 
-    const [searchParams, setSearchParams] = useSearchParams();
+const CommentsNav = (props: React.PropsWithoutRef<Props>) => {
 
-    const isNewest = searchParams.get("newest") === "true";
+    const [isRecent, setIsRecent] = useState(false);
 
     const topHandler = () => {
-        setSearchParams(prev => {
-            prev.delete("newest");
-            return prev;
-        });
+        setIsRecent(false);
+        props.onSort("popular");
     }
 
     const recentHandler = () => {
-        setSearchParams(prev => {
-            prev.set("newest", "true");
-            return prev;
-        });
+        setIsRecent(true);
+        props.onSort("newest");
     }
 
     return (
         <nav className='flex gap-4 mb-5'>
-            <PrimaryBtn onClick={topHandler} style={`${isNewest ? "white" : "black"}`}>TOP</PrimaryBtn>
-            <PrimaryBtn onClick={recentHandler} style={`${isNewest ? "black" : "white"}`}>RECENT</PrimaryBtn>
+            <PrimaryBtn onClick={topHandler} style={`${isRecent ? "white" : "black"}`}>TOP</PrimaryBtn>
+            <PrimaryBtn onClick={recentHandler} style={`${isRecent ? "black" : "white"}`}>RECENT</PrimaryBtn>
         </nav>
     )
 }
