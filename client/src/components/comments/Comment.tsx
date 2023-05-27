@@ -12,6 +12,7 @@ import { UUser } from "../../pages/Root";
 interface Props {
     id: string;
     comment: UComment;
+    recipeId: string;
 }
 
 const Comment = (props: React.PropsWithoutRef<Props>) => {
@@ -27,8 +28,6 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
         }
         return false;
     })
-    
-    
     
 
     const likeHandler = () => {
@@ -106,7 +105,7 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
                         </div>
                         :
                         <div className="flex items-center gap-6">
-                            <DeleteComment commentId={props.comment._id} />
+                            <DeleteComment commentId={props.comment._id} recipeId={props.recipeId} />
                             <UpdateComment onClick={openUpdateHandler} />
                         </div>)
                     : null

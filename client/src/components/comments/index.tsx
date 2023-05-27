@@ -9,6 +9,7 @@ import StatusResponse from "../StatusResponse"
 interface Props {
     recipeComments: UComment[];
     onSort: (sort: "popular" | "newest") => void;
+    recipeId: string
 }
 
 const CommentSection = (props: React.PropsWithoutRef<Props>) => {
@@ -30,7 +31,7 @@ const CommentSection = (props: React.PropsWithoutRef<Props>) => {
                 {numOfComments ?
                     <>
                         <CommentsNav onSort={onSort} />
-                        <CommentsList recipeComments={props.recipeComments} />
+                        <CommentsList recipeComments={props.recipeComments} recipeId={props.recipeId} />
                     </>
                     :
                     <div className="text-slate-500 leading-7 text-lg">
@@ -61,20 +62,6 @@ const updateComment = async (updatedContent: string, commentId: string) => {
 }
 
 
-const deleteComment = async (commentId: string) => {
-    const response = await fetch(`${url}/comments/${commentId}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include"
-    });
-    const data = await response.json();
-    if (!response.ok) {
-        return { msg: data.msg, success: response.ok }
-    }
-    return { msg: data.msg, success: response.ok }
-}
-
-
 const likeComment = async (commentId: string) => {
     // like comment request
     const response = await fetch(`${url}/comments/${commentId}/like`, {
@@ -97,12 +84,6 @@ export const action: ActionFunction = async ({ request }) => {
     const updatedContent = formData.get("updatedContent") as string;
     if (request.method === "PATCH" && updatedContent) {
         const response = await updateComment(updatedContent, commentId);
-        return response
-    }
-
-    // Delete a comment
-    if (request.method === "DELETE") {
-        const response = await deleteComment(commentId);
         return response
     }
 

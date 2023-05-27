@@ -99,7 +99,7 @@ const Recipe = () => {
     return (
         <div className="p-4">
             <RecipeDetails recipeDetails={recipeDetails} />
-            <Comments recipeComments={recipeComments} onSort={getCommentSorting} />
+            <Comments recipeComments={recipeComments} recipeId={recipeDetails.recipe._id} onSort={getCommentSorting} />
         </div>
     )
 }

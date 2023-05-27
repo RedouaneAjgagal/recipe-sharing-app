@@ -1,26 +1,31 @@
-import { useFetcher } from "react-router-dom";
 import { ImSpinner2 } from "react-icons/im";
 import Overlay from "../../UI/Overlay";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import deleteComment from "../../fetchers/deleteComment";
 
 interface Props {
     commentId?: string;
-    recipeId?: string;
+    recipeId: string;
     onCancel: () => void;
 }
 
 const DeleteCommentContainer = (props: React.PropsWithoutRef<Props>) => {
-    const fetcher = useFetcher();
-
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+        mutationFn: deleteComment,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["recipeComments", { recipeId: props.recipeId }] })
+        }
+    })
     const deleteCommentHandler = () => {
-        // get the id
-        const formData = new FormData();
-        props.commentId ? formData.set("commentId", props.commentId) : formData.set("recipeId", props.recipeId!);
-
-        // submit deletion with the id
-        fetcher.submit(formData, { method: "DELETE" });
+        // props.commentId ? formData.set("commentId", props.commentId) : formData.set("recipeId", props.recipeId!);
+        mutation.mutate(props.commentId!);
     }
 
     const cancelDeleteHandler = () => {
+        if (!mutation.isIdle) {
+            return;
+        }
         props.onCancel();
     }
 
@@ -35,8 +40,8 @@ const DeleteCommentContainer = (props: React.PropsWithoutRef<Props>) => {
                     <p>This action cannot be undone.</p>
                 </div>
                 <div className="self-end flex gap-4 font-medium">
-                    <button disabled={fetcher.state !== "idle"} className="bg-gray-500 text-white py-2 w-24 rounded shadow-lg" onClick={cancelDeleteHandler}>Cancel</button>
-                    <button disabled={fetcher.state !== "idle"} className="bg-red-600 text-white py-2 w-24 rounded shadow-lg flex justify-center items-center" onClick={deleteCommentHandler}>{fetcher.state !== "idle" ? <ImSpinner2 className="animate-spin text-2xl" /> : "Delete"}</button>
+                    <button disabled={!mutation.isIdle} className="bg-gray-500 text-white py-2 w-24 rounded shadow-lg" onClick={cancelDeleteHandler}>Cancel</button>
+                    <button disabled={!mutation.isIdle} className="bg-red-600 text-white py-2 w-24 rounded shadow-lg flex justify-center items-center" onClick={deleteCommentHandler}>{!mutation.isIdle ? <ImSpinner2 className="animate-spin text-2xl" /> : "Delete"}</button>
                 </div>
             </div>
         </div>
