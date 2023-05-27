@@ -19,7 +19,7 @@ const CommentSection = (props: React.PropsWithoutRef<Props>) => {
     const onSort = (sort: "popular" | "newest") => {
         props.onSort(sort);
     }
-    
+
 
     return (
         <section className="py-8">
@@ -44,26 +44,6 @@ const CommentSection = (props: React.PropsWithoutRef<Props>) => {
 }
 
 export default CommentSection
-
-
-
-const createComment = async (recipeId: string | undefined, formData: FormData) => {
-    const comment = formData.get("comment") as string;
-
-    // create comment request
-    const response = await fetch(`${url}/comments`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-            recipe: recipeId,
-            content: comment
-        })
-    });
-
-    const data = await response.json();
-    return { msg: data.msg, success: response.ok };
-}
 
 
 const updateComment = async (updatedContent: string, commentId: string) => {
@@ -109,16 +89,9 @@ const likeComment = async (commentId: string) => {
 }
 
 
-export const action: ActionFunction = async ({ request, params }) => {
-    const { recipeId } = params;
+export const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData();
     const commentId = formData.get("commentId") as string;
-
-    // Add new comment
-    if (request.method === "POST") {
-        const response = await createComment(recipeId, formData);
-        return { response }
-    }
 
     // update a comment
     const updatedContent = formData.get("updatedContent") as string;
