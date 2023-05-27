@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root, { loader as authLoader } from "./pages/Root";
-import Home, { loader as recipes } from "./pages/Home";
+import Home from "./pages/Home";
 import Recipe, { loader as recipeDetails } from "./pages/Recipe";
 import Login, { action as loginAction } from "./pages/Login";
 import Register, { action as registerAction } from "./pages/Register";
@@ -27,8 +27,7 @@ function App() {
       children: [
         {
           index: true,
-          element: <Home />,
-          loader: recipes
+          element: <Home />
         },
         {
           path: "login",

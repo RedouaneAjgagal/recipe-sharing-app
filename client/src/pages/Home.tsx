@@ -1,23 +1,46 @@
 import RecipeNav from "../components/recipes/RecipeNav";
 import Recipes from "../components/recipes";
 import ChangePages from "../components/recipes/ChangePages";
-import { LoaderFunction, json, useLoaderData } from "react-router-dom";
+import getRecipes from "../fetchers/getRecipes";
+import { useQuery } from "@tanstack/react-query";
 import { URecipe } from "../components/recipes/Recipe";
-import url from "../config/url";
-
+import { ImSpinner2 } from "react-icons/im";
+import { useSearchParams } from "react-router-dom";
 
 const Home = () => {
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get("page") || "1";
+  const sort = searchParams.get("sort") || "popular";
 
-  const { recipes, numOfPages } = useLoaderData() as { recipes: URecipe[], numOfPages: number };
+
+  const query = useQuery({
+    queryKey: ["recipes", { page, sort }],
+    queryFn: () => getRecipes(page, sort)
+  });
+
+  if (query.isLoading) {
+    return (
+      <div className="flex justify-center w-full mt-10">
+        <ImSpinner2 className="animate-spin text-3xl">Loading..</ImSpinner2>
+      </div>
+    )
+  }
+
+  if (query.isError) {
+    return <p>error</p>
+  }
+
+
+  const data: { numOfPages: number, recipes: URecipe[] } = query.data;
 
 
   return (
     <div className="p-4">
-      {recipes && recipes.length ?
+      {data.recipes && data.recipes.length ?
         <>
           <RecipeNav />
-          <Recipes recipes={recipes} />
-          <ChangePages numOfPages={numOfPages} />
+          <Recipes recipes={data.recipes} />
+          <ChangePages numOfPages={data.numOfPages} />
         </>
         :
         <h1 className="text-xl font-medium text-center">There is no recipe to show</h1>
@@ -27,27 +50,3 @@ const Home = () => {
 }
 
 export default Home
-
-
-export const loader: LoaderFunction = async ({ request }) => {
-  const isSorting = new URL(request.url).searchParams.has("sort");
-  const isPages = new URL(request.url).searchParams.has("page");
-  let sort = "";
-  let page = ""
-  if (isSorting) {
-    const sortValue = new URL(request.url).searchParams.get("sort")!
-    sort = `sort=${sortValue}`;
-  }
-  if (isPages) {
-    const pageNum = new URL(request.url).searchParams.get("page")!
-    page = isPages ? `&page=${pageNum}` : `page=${pageNum}`
-  }
-  const customUrl = `${url}/recipes/?${sort}${page}`;
-  const response = await fetch(customUrl);
-  if (!response.ok) {
-    throw json({ msg: response.statusText }, { status: response.status })
-  }
-  const data = await response.json();
-  return data
-
-}
