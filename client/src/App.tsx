@@ -11,7 +11,7 @@ import UpdateRecipe, { loader as recipeDetailsLoader } from "./pages/UpdateRecip
 import logoutAction from "./utils/logout";
 import Profile, { loader as profileLoader } from "./pages/Profile";
 import Settings, { action as updateProfileAction } from "./pages/Settings";
-import UserRecipes, { action as userRecipesAction, loader as userRecipesLoader } from "./pages/ProfileRecipes";
+import UserRecipes, { loader as userRecipesLoader } from "./pages/ProfileRecipes";
 import UsersProfile, { loader as userProfileLoader } from "./pages/UsersProfile";
 
 
@@ -67,7 +67,6 @@ function App() {
                 {
                   index: true,
                   element: <UserRecipes />,
-                  action: userRecipesAction,
                   loader: userRecipesLoader
                 },
                 {

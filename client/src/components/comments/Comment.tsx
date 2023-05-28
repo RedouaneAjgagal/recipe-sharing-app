@@ -2,7 +2,7 @@ import { AiOutlineHeart } from "react-icons/ai"
 import { AiFillHeart } from "react-icons/ai"
 import { UComment } from "../../pages/Recipe"
 import { useRouteLoaderData } from "react-router-dom";
-import DeleteComment from "./DeleteComment";
+import DeleteContainer from "../DeleteContainer";
 import UpdateComment from "./UpdateComment";
 import { useEffect, useState } from "react";
 import UpdateCommentContainer from "./UpdateCommentContainer";
@@ -120,7 +120,7 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
                             </div>
                             :
                             <div className="flex items-center gap-6">
-                                <DeleteComment commentId={props.comment._id} recipeId={props.recipeId} />
+                                <DeleteContainer commentId={props.comment._id} recipeId={props.recipeId} />
                                 <UpdateComment onClick={openUpdateHandler} />
                             </div>)
                         : null

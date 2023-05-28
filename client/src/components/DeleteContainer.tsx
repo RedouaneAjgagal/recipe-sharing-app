@@ -1,5 +1,5 @@
 import { AiFillDelete } from "react-icons/ai";
-import DeleteCommentContainer from "./DeleteCommentContainer";
+import Delete from "./Delete";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -8,7 +8,7 @@ interface Props {
     commentId?: string;
 }
 
-const DeleteComment = (props: React.PropsWithoutRef<Props>) => {
+const DeleteContainer = (props: React.PropsWithoutRef<Props>) => {
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const deleteCommentHandler = () => {
         setIsDeleteOpen(true);
@@ -28,7 +28,7 @@ const DeleteComment = (props: React.PropsWithoutRef<Props>) => {
             </button>
             {isDeleteOpen &&
                 createPortal(
-                    props.commentId ? <DeleteCommentContainer recipeId={props.recipeId} commentId={props.commentId} onCancel={onCancel} /> : <DeleteCommentContainer recipeId={props.recipeId} onCancel={onCancel} />,
+                    props.commentId ? <Delete recipeId={props.recipeId} commentId={props.commentId} onCancel={onCancel} /> : <Delete recipeId={props.recipeId} onCancel={onCancel} />,
                     document.getElementById("overlay")!
                 )
             }
@@ -36,4 +36,4 @@ const DeleteComment = (props: React.PropsWithoutRef<Props>) => {
     )
 }
 
-export default DeleteComment;
+export default DeleteContainer;

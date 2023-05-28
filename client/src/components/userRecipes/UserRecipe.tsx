@@ -1,6 +1,6 @@
 import { BiDotsVerticalRounded, BiX } from "react-icons/bi";
 import { useState } from "react";
-import DeleteComment from "../comments/DeleteComment";
+import DeleteContainer from "../DeleteContainer";
 import UpdateComment from "../comments/UpdateComment";
 import { Link, useSubmit } from "react-router-dom";
 
@@ -31,7 +31,7 @@ const UserRecipe = (props: React.PropsWithoutRef<Props>) => {
             <div className="col-span-2 flex items-center justify-between p-2">
                 {isOpen ?
                     <div className="flex items-center gap-2">
-                        <DeleteComment recipeId={props.id} />
+                        <DeleteContainer recipeId={props.id} />
                         <UpdateComment onClick={updateHandler} />
                     </div>
                     :
