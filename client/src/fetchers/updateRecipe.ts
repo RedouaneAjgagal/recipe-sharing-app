@@ -1,41 +1,33 @@
-import uploadImages from "./uploadImages";
 import url from "../config/url";
 import { isValidInputs } from "../utils/recipeFormValidation";
 
-const postRecipe = async (formData: FormData) => {
-
-    // Add validations
+const updateRecipe = async (formData: FormData) => {
+    // add validation
     const { errors, value } = isValidInputs(formData);
-
-    const images = formData.getAll("images") as Blob[];
-
-    const customUrl = `${url}/recipes/upload-images`;
-
     if (Object.keys(errors).length) {
         return { errors }
     }
 
-    const imagesData = await uploadImages(images, customUrl, "images");
-    if (imagesData.msg) {
-        errors.images = imagesData.msg;
-        return { errors }
-    }
+    const images = formData.get("images")?.toString().split(",");
+
 
     // get all inputs data
     const recipeDetails = {
         title: value.title,
-        description: formData.get("description")?.toString(),
-        note: formData.get("note")?.toString(),
+        description: formData.get("description") as string,
+        note: formData.get("note") as string,
         preparationTime: Number(value.prepTime),
         cookTime: Number(value.cookTime),
-        images: imagesData.src,
         ingredients: value.ingredients,
         methods: value.methods,
+        images
     }
 
-    // creqte recipe request
-    const response = await fetch(`${url}/recipes`, {
-        method: "POST",
+    // update recipe request
+    const recipeId = new URL(window.location.href).searchParams.get("recipeId");
+
+    const response = await fetch(`${url}/recipes/${recipeId}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(recipeDetails)
@@ -47,7 +39,7 @@ const postRecipe = async (formData: FormData) => {
         throw new Error(data.msg);
     }
 
-    return null
+    return null;
 }
 
-export default postRecipe;
+export default updateRecipe;

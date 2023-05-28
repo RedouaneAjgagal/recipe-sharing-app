@@ -14,7 +14,8 @@ import { useState } from "react";
 import url from '../../config/url';
 import { AiOutlinePlus } from "react-icons/ai"
 import { ImSpinner2 } from "react-icons/im";
-import { postRecipe } from '../../fetchers/postRecipe';
+import postRecipe from '../../fetchers/postRecipe';
+import updateRecipe from '../../fetchers/updateRecipe';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface Props {
@@ -87,14 +88,14 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
     }
 
     const mutation = useMutation({
-        mutationFn: postRecipe,
+        mutationFn: props.for === "newRecipe" ? postRecipe : updateRecipe,
         onSuccess: (data) => {
             queryClient.invalidateQueries(["recipes"]);
             if (data?.errors) {
                 setFormErrors({ errors: data.errors });
                 return;
             }
-            navigate("/?sort=newest");
+            props.for === "newRecipe" ? navigate("/?sort=newest") : navigate("..");
         }
     });
 
@@ -107,7 +108,7 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
     return (
         <>
             {mutation.isError && <StatusResponse success={false} message={(mutation.error as Error).message} />}
-            <form onSubmit={postCommentHandler} method={props.for === "newRecipe" ? "POST" : "PATCH"} encType='multipart/form-data' className={`${props.for === "updateRecipe" ? "mb-16" : "mb-0"}`}>
+            <form onSubmit={postCommentHandler} encType='multipart/form-data' className={`${props.for === "updateRecipe" ? "mb-16" : "mb-0"}`}>
                 {recipesImgs ?
                     <div className='pb-7'>
                         <div className='flex gap-4'>
