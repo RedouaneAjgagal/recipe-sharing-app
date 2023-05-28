@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import url from "../../config/url";
-import { uploadImage } from "../../pages/NewPrecipe";
+import uploadImages from "../../fetchers/uploadImages";
 import { ImSpinner2 } from "react-icons/im";
 
 interface Props {
@@ -30,7 +30,7 @@ const UserImage = (props: React.PropsWithoutRef<Props>) => {
         const uploadImageFun = async () => {
             setIsLoading(true);
             const customUrl = `${url}/user`;
-            const imageData = await uploadImage([image], customUrl, "picture");
+            const imageData = await uploadImages([image], customUrl, "picture");
             if (imageData.msg) {
                 setIsError(true);
                 setIsLoading(false);

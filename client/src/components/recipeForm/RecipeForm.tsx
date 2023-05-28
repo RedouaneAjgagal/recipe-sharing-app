@@ -1,4 +1,4 @@
-import { Link, useFetcher, useLoaderData, useRouteLoaderData } from 'react-router-dom'
+import { Link, useLoaderData, useRouteLoaderData, useNavigate } from 'react-router-dom'
 import Input from '../Input';
 import NoteInput from './NoteInput';
 import IngredientsList from './IngredientsList';
@@ -14,29 +14,31 @@ import { useState } from "react";
 import url from '../../config/url';
 import { AiOutlinePlus } from "react-icons/ai"
 import { ImSpinner2 } from "react-icons/im";
+import { postRecipe } from '../../fetchers/postRecipe';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface Props {
     for: "newRecipe" | "updateRecipe"
 }
 
 const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
-    const fetcher = useFetcher();
-    const errorsData = fetcher.data?.errors as UErrorsForm;
-    const responseData = fetcher.data?.response as { msg: string, success: boolean };
+    const [isLoading, setIsLoading] = useState(false);
+    const [formErrors, setFormErrors] = useState<{ errors: UErrorsForm } | null>(null);
+
+    const queryClient = useQueryClient();
+    const navigate = useNavigate();
+    const errorsData = formErrors?.errors;
+
 
     const recipeDetails = useLoaderData() as URecipeDetails;
+    const [recipesImgs, setRecipeImgs] = useState<string[] | undefined>(recipeDetails?.recipe?.images);
 
     const user = useRouteLoaderData("user") as UUser;
-    const [recipesImgs, setRecipeImgs] = useState<string[] | undefined>(recipeDetails?.recipe?.images);
-    const [isLoading, setIsLoading] = useState(false);
-
-
     const removeImgHandler = (value: string) => {
         setRecipeImgs(images => {
             const updatedImages = images?.filter(img => img !== value);
             return updatedImages
         })
-
     }
 
     const addImagesHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,11 +86,28 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
         </>)
     }
 
+    const mutation = useMutation({
+        mutationFn: postRecipe,
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(["recipes"]);
+            if (data?.errors) {
+                setFormErrors({ errors: data.errors });
+                return;
+            }
+            navigate("/?sort=newest");
+        }
+    });
+
+    const postCommentHandler = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        mutation.mutate(formData);
+    }
 
     return (
         <>
-            {responseData?.msg && <StatusResponse success={responseData?.success} message={responseData?.msg} />}
-            <fetcher.Form method={props.for === "newRecipe" ? "POST" : "PATCH"} encType='multipart/form-data' className={`${props.for === "updateRecipe" ? "mb-16" : "mb-0"}`}>
+            {mutation.isError && <StatusResponse success={false} message={(mutation.error as Error).message} />}
+            <form onSubmit={postCommentHandler} method={props.for === "newRecipe" ? "POST" : "PATCH"} encType='multipart/form-data' className={`${props.for === "updateRecipe" ? "mb-16" : "mb-0"}`}>
                 {recipesImgs ?
                     <div className='pb-7'>
                         <div className='flex gap-4'>
@@ -125,7 +144,7 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
                 <MethodsList errors={errorsData?.methods} methods={props.for === "updateRecipe" ? recipeDetails.recipe.methods : undefined} />
                 {props.for === "newRecipe" && <UploadImage errorMsg={errorsData?.images} />}
                 <CallToAction for={props.for} />
-            </fetcher.Form>
+            </form>
         </>
     )
 }

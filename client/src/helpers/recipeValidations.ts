@@ -1,5 +1,5 @@
 const validIngredients = (ingredients: { title: string, sub: string[] }[]) => {
-    const isValidIngredients = ingredients?.length > 0 && ingredients.every((ingredient, index) => ingredient.title?.trim().length > 0 && ingredient.sub?.length > 0 && ingredient.sub.every(item => item.trim().length > 0));
+    const isValidIngredients = ingredients?.length > 0 && ingredients.every((ingredient) => ingredient.title?.trim().length > 0 && ingredient.sub?.length > 0 && ingredient.sub.every(item => item.trim().length > 0));
     return isValidIngredients
 }
 

@@ -1,8 +1,5 @@
-import { ActionFunction, redirect } from "react-router-dom"
 import RecipeFormContainer from "../components/recipeForm"
 import CreateRecipeNav from "../components/recipeForm/CreateRecipeNav"
-import url from "../config/url"
-import { isValidInputs } from "../utils/recipeFormValidation"
 
 export interface UErrorsForm {
     ingredients?: boolean;
@@ -22,69 +19,4 @@ const NewPrecipe = () => {
     )
 }
 
-export default NewPrecipe
-
-
-export const uploadImage = async (images: Blob[], customUrl: string, name: string): Promise<{ src?: string[], msg?: string }> => {
-    const formData = new FormData();
-
-    images.map(item => {
-        formData.append(name, item);
-    });
-
-    const reponse = await fetch(customUrl, {
-        credentials: "include",
-        method: "POST",
-        body: formData
-    });
-
-    const data = await reponse.json();
-    return data
-}
-
-
-export const action: ActionFunction = async ({ request }) => {
-    const formData = await request.formData();
-
-    // Add validations
-    const { errors, value } = isValidInputs(formData);
-
-    const images = formData.getAll("images") as Blob[];
-    const customUrl = `${url}/recipes/upload-images`;
-    const imagesData = await uploadImage(images, customUrl, "images");
-    if (imagesData.msg) {
-        errors.images = imagesData.msg;
-    }
-
-    if (Object.keys(errors).length) {
-        return { errors }
-    }
-
-    // get all inputs data
-    const recipeDetails = {
-        title: value.title,
-        description: formData.get("description") as string,
-        note: formData.get("note") as string,
-        preparationTime: Number(value.prepTime),
-        cookTime: Number(value.cookTime),
-        images: imagesData.src,
-        ingredients: value.ingredients,
-        methods: value.methods,
-    }
-
-    // creqte recipe request
-    const response = await fetch(`${url}/recipes`, {
-        method: request.method,
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(recipeDetails)
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-        return { response: { msg: data.msg, success: response.ok } }
-    }
-
-    return redirect("/", { status: 302, statusText: "Found" });
-}
+export default NewPrecipe;
