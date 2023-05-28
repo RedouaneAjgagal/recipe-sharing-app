@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import RecipeDetails from "../components/recipeDetails";
 import Comments from "../components/comments";
-import { useQueries } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import getSingleRecipe from "../fetchers/getSingleRecipe";
 import getRecipeComments from "../fetchers/getRecipeComments";
 import Loading from "../UI/Loading";
@@ -70,19 +70,16 @@ export interface UComment {
 const Recipe = () => {
     const { recipeId } = useParams();
     const [commentSort, setCommentSort] = useState<"popular" | "newest">("popular");
-    const [recipeQuery, commentsQuery] = useQueries({
-        queries: [
-            {
-                queryKey: ["recipe", { recipeId }],
-                queryFn: () => getSingleRecipe(recipeId!)
-            },
-            {
-                queryKey: ["recipeComments", { recipeId, sort: commentSort }],
-                queryFn: () => getRecipeComments(recipeId!, commentSort),
-                keepPreviousData: true
+    const recipeQuery = useQuery({
+        queryKey: ["recipe", { recipeId }],
+        queryFn: () => getSingleRecipe(recipeId!)
+    });
 
-            }
-        ]
+    const commentsQuery = useQuery({
+        queryKey: ["recipeComments", { recipeId, sort: commentSort }],
+        queryFn: () => getRecipeComments(recipeId!, commentSort),
+        enabled: !recipeQuery.isFetching,
+        keepPreviousData: true
     });
     const recipeDetails: URecipeDetails = recipeQuery.data;
     const recipeComments: UComment[] = commentsQuery.data;
