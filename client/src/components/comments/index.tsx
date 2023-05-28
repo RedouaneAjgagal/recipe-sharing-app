@@ -47,21 +47,6 @@ const CommentSection = (props: React.PropsWithoutRef<Props>) => {
 export default CommentSection
 
 
-const updateComment = async (updatedContent: string, commentId: string) => {
-    const response = await fetch(`${url}/comments/${commentId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ content: updatedContent })
-    });
-    const data = await response.json();
-    if (!response.ok) {
-        return { msg: data.msg, success: response.ok } as { msg: string, success: boolean }
-    }
-    return { updatedComment: data.updatedComment, success: response.ok } as { updatedComment: string, success: boolean }
-}
-
-
 const likeComment = async (commentId: string) => {
     // like comment request
     const response = await fetch(`${url}/comments/${commentId}/like`, {
@@ -79,13 +64,6 @@ const likeComment = async (commentId: string) => {
 export const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData();
     const commentId = formData.get("commentId") as string;
-
-    // update a comment
-    const updatedContent = formData.get("updatedContent") as string;
-    if (request.method === "PATCH" && updatedContent) {
-        const response = await updateComment(updatedContent, commentId);
-        return response
-    }
 
     // like a comment
     if (request.method === "PATCH") {
