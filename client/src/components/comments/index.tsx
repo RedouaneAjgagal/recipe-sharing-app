@@ -2,8 +2,7 @@ import PostComment from "./PostComment"
 import CommentsNav from "./CommentsNav"
 import CommentsList from "./CommentsList"
 import { UComment } from "../../pages/Recipe"
-import { ActionFunction, useActionData } from "react-router-dom"
-import url from "../../config/url"
+import { useActionData } from "react-router-dom"
 import StatusResponse from "../StatusResponse"
 
 interface Props {

@@ -70,6 +70,7 @@ export interface UComment {
 const Recipe = () => {
     const { recipeId } = useParams();
     const [commentSort, setCommentSort] = useState<"popular" | "newest">("popular");
+
     const recipeQuery = useQuery({
         queryKey: ["recipe", { recipeId }],
         queryFn: () => getSingleRecipe(recipeId!)
@@ -78,7 +79,6 @@ const Recipe = () => {
     const commentsQuery = useQuery({
         queryKey: ["recipeComments", { recipeId, sort: commentSort }],
         queryFn: () => getRecipeComments(recipeId!, commentSort),
-        enabled: !recipeQuery.isFetching,
         keepPreviousData: true
     });
     const recipeDetails: URecipeDetails = recipeQuery.data;

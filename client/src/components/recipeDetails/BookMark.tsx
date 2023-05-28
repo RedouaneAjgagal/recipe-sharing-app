@@ -1,7 +1,7 @@
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
-import url from "../../config/url";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import bookmarkRecipe from "../../fetchers/bookmarkRecipe";
+import { useMutation } from "@tanstack/react-query";
 
 interface Props {
     recipeId: string;
@@ -9,34 +9,26 @@ interface Props {
 }
 
 const BookMark = (props: React.PropsWithoutRef<Props>) => {
-    const [isFavourite, setIsFavourite] = useState(props.isFavourited);
     const navigate = useNavigate();
-
-    const bookmarkHandler = async () => {
-        const response = await fetch(`${url}/favourite`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify({ recipe: props.recipeId })
-        });
-
-        // redirect unauthenticated users
-        if (response.status === 401) {
+    const mutation = useMutation({
+        mutationKey: ["recipe", { recipeId: props.recipeId }],
+        mutationFn: () => bookmarkRecipe(props.recipeId),
+        onError: () => {
             navigate("/login");
         }
+    })
 
-        const data = await response.json() as { msg: string, added: boolean, removed: null } | { msg: string, removed: boolean, added: null };
-        
-        setIsFavourite(data.added ? true : false)
+    const bookmarkHandler = () => {
+        mutation.mutate();
     }
 
     return (
         <button onClick={bookmarkHandler} className="flex justify-center items-center w-full max-w-[3rem] h-full min-h-[3rem] bg-white rounded-full shadow-xl text-amber-900 text-[1.55rem]">
-            {isFavourite ? 
-                <BsBookmarkFill />
+            {mutation.isSuccess ?
+                mutation.data.added ? <BsBookmarkFill /> : <BsBookmark />
                 :
-                <BsBookmark />    
-        }
+                props.isFavourited ? <BsBookmarkFill /> : <BsBookmark />
+            }
         </button>
     )
 }
