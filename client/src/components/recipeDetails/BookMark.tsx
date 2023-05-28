@@ -11,7 +11,6 @@ interface Props {
 const BookMark = (props: React.PropsWithoutRef<Props>) => {
     const navigate = useNavigate();
     const mutation = useMutation({
-        mutationKey: ["recipe", { recipeId: props.recipeId }],
         mutationFn: () => bookmarkRecipe(props.recipeId),
         onError: () => {
             navigate("/login");

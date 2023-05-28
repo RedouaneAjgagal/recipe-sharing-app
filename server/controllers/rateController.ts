@@ -4,7 +4,6 @@ import Rate from "../models/rate";
 import { RequestHandler } from "express";
 import { CustomRequest } from "./userController";
 import Recipe from "../models/recipe";
-import checkPermission from "../utils/permissionChecker";
 import User from "../models/user";
 
 
@@ -44,34 +43,8 @@ const rateRecipe: RequestHandler = async (req: CustomRequest, res) => {
         await Rate.create({ user: Object(req.user!.id), recipe: recipe._id, rate });
     }
 
-    res.status(StatusCodes.OK).json({ msg: "rate a recipe" });
+    res.status(StatusCodes.OK).json({ rate });
 }
-
-
-// const updateRate: RequestHandler = async (req: CustomRequest, res) => {
-//     const { rateId } = req.params;
-//     const { rate: updatedRate } = req.body;
-
-//     // check if valid rate
-//     if (updatedRate < 1 || updatedRate > 5) {
-//         throw new BadRequestError('Rating must be between 1 and 5');
-//     }
-
-//     // find rate
-//     const rate = await Rate.findById(rateId);
-//     if (!rate) {
-//         throw new NotFoundError(`Found no rate with id ${rateId}`);
-//     }
-
-//     // check if rate belon to the user
-//     checkPermission(rate.user.toString(), req.user!.id);
-
-//     // update the rate
-//     rate.rate = updatedRate
-//     await rate.save();
-
-//     res.status(StatusCodes.OK).json({ msg: "update a rate" });
-// }
 
 export {
     rateRecipe,
