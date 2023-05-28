@@ -8,7 +8,6 @@ import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPa
 import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
 import NewRecipe, { action as createRecipeAction } from "./pages/NewPrecipe";
 import UpdateRecipe, { action as updateRecipeAction, loader as recipeDetailsLoader } from "./pages/UpdateRecipe";
-import { action as postCommentAction } from "./components/comments";
 import logoutAction from "./utils/logout";
 import Profile, { loader as profileLoader } from "./pages/Profile";
 import Settings, { action as updateProfileAction } from "./pages/Settings";
@@ -51,8 +50,7 @@ function App() {
         },
         {
           path: "recipes/:recipeId",
-          element: <Recipe />,
-          action: postCommentAction
+          element: <Recipe />
         },
         {
           path: "profile",

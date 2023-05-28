@@ -1,7 +1,7 @@
 import { AiOutlineHeart } from "react-icons/ai"
 import { AiFillHeart } from "react-icons/ai"
 import { UComment } from "../../pages/Recipe"
-import { useFetcher, useRouteLoaderData } from "react-router-dom";
+import { useRouteLoaderData } from "react-router-dom";
 import DeleteComment from "./DeleteComment";
 import UpdateComment from "./UpdateComment";
 import { useEffect, useState } from "react";
@@ -9,6 +9,7 @@ import UpdateCommentContainer from "./UpdateCommentContainer";
 import PrimaryBtn from "../../UI/PrimaryBtn";
 import { UUser } from "../../pages/Root";
 import updateComment from "../../fetchers/updateComment";
+import likeComment from "../../fetchers/likeComment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import StatusResponse from "../StatusResponse";
 
@@ -23,7 +24,6 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
     const [updatedComment, setUpdatedComment] = useState({ value: "", error: false });
     const user = useRouteLoaderData("user") as UUser;
 
-    const fetcher = useFetcher();
     const queryClient = useQueryClient();
 
 
@@ -34,11 +34,15 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
         return false;
     })
 
+    const likeMutation = useMutation({
+        mutationFn: () => likeComment(props.comment._id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["recipeComments", { recipeId: props.recipeId }] });
+        }
+    })
 
     const likeHandler = () => {
-        const formData = new FormData();
-        formData.set("commentId", props.comment._id);
-        fetcher.submit(formData, { method: "PATCH" });
+        likeMutation.mutate();
     }
 
     const createdAt = new Date(props.comment.createdAt).toLocaleDateString("en", { year: "numeric", month: "short", day: "2-digit" });
@@ -52,12 +56,12 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
         setIsUpdate(false);
     }
 
-    const mutation = useMutation({
+    const updateMutation = useMutation({
         mutationFn: () => updateComment(updatedComment.value, props.comment._id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["recipeComments", { recipeId: props.recipeId }] })
         }
-    })
+    });
 
     const updateCommentHandler = () => {
         if (updatedComment.value.trim() === "" || updatedComment.value.length > 250) {
@@ -66,7 +70,7 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
             });
             return;
         }
-        mutation.mutate();
+        updateMutation.mutate();
     }
 
     const getUpdatedContent = (value: string) => {
@@ -75,11 +79,11 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
 
     useEffect(() => {
         cancelUpdateHandler();
-    }, [mutation.data]);
+    }, [updateMutation.data]);
 
     return (
         <>
-            {mutation.data?.msg && <StatusResponse message={mutation.data.msg} success={false} />}
+            {updateMutation.data?.msg || likeMutation.isError && <StatusResponse message={updateMutation.data?.msg ? updateMutation.data.msg : (likeMutation.error as Error).message} success={false} />}
             <li className="bg-[#ffffff] border border-amber-700/80 p-4 flex flex-col gap-3 rounded-md">
                 <div className="flex items-center gap-3 flex-wrap">
                     <div className="min-h-full h-14 flex items-center">
@@ -100,7 +104,7 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
                     {isUpdate ?
                         <UpdateCommentContainer isError={updatedComment.error} content={props.comment.content} updatedContent={getUpdatedContent} />
                         :
-                        <p className="text-slate-500/90 text-[1.05rem]">{mutation.isSuccess && !mutation.data.msg ? mutation.data : props.comment.content}</p>
+                        <p className="text-slate-500/90 text-[1.05rem]">{updateMutation.isSuccess && !updateMutation.data.msg ? updateMutation.data : props.comment.content}</p>
                     }
                 </div>
                 <div className="flex items-center justify-between">
@@ -112,7 +116,7 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
                         (isUpdate ?
                             <div className="flex items-center gap-4">
                                 <button onClick={cancelUpdateHandler} className="text-[.95rem] font-medium text-slate-500">Cancel</button>
-                                <PrimaryBtn disabled={mutation.isLoading} onClick={updateCommentHandler} style="orange">Update</PrimaryBtn>
+                                <PrimaryBtn disabled={updateMutation.isLoading} onClick={updateCommentHandler} style="orange">Update</PrimaryBtn>
                             </div>
                             :
                             <div className="flex items-center gap-6">

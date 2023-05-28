@@ -44,33 +44,4 @@ const CommentSection = (props: React.PropsWithoutRef<Props>) => {
     )
 }
 
-export default CommentSection
-
-
-const likeComment = async (commentId: string) => {
-    // like comment request
-    const response = await fetch(`${url}/comments/${commentId}/like`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include"
-    });
-
-    const data = await response.json();
-
-    return { msg: data.msg, success: response.ok };
-}
-
-
-export const action: ActionFunction = async ({ request }) => {
-    const formData = await request.formData();
-    const commentId = formData.get("commentId") as string;
-
-    // like a comment
-    if (request.method === "PATCH") {
-        const response = await likeComment(commentId);
-        if (!response.success) {
-            return response
-        }
-        return null
-    }
-}
+export default CommentSection;
