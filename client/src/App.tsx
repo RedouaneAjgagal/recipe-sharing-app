@@ -7,7 +7,7 @@ import Register, { action as registerAction } from "./pages/Register";
 import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPassword";
 import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
 import NewRecipe from "./pages/NewPrecipe";
-import UpdateRecipe, { loader as recipeDetailsLoader } from "./pages/UpdateRecipe";
+import UpdateRecipe from "./pages/UpdateRecipe";
 import logoutAction from "./utils/logout";
 import Profile, { loader as profileLoader } from "./pages/Profile";
 import Settings, { action as updateProfileAction } from "./pages/Settings";
@@ -75,8 +75,7 @@ function App() {
                 },
                 {
                   path: "edit",
-                  element: <UpdateRecipe />,
-                  loader: recipeDetailsLoader
+                  element: <UpdateRecipe />
                 }
               ]
             },

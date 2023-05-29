@@ -1,4 +1,4 @@
-import { Link, useLoaderData, useRouteLoaderData, useNavigate } from 'react-router-dom'
+import { Link, useRouteLoaderData, useNavigate } from 'react-router-dom'
 import Input from '../Input';
 import NoteInput from './NoteInput';
 import IngredientsList from './IngredientsList';
@@ -19,20 +19,20 @@ import updateRecipe from '../../fetchers/updateRecipe';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface Props {
-    for: "newRecipe" | "updateRecipe"
+    for: "newRecipe" | "updateRecipe";
+    recipeDetails?: URecipeDetails;
+    recipeId?: string | null;
 }
 
 const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
+    // const [recipeDetails, setRecipeDetails] = useState<URecipeDetails>();
     const [isLoading, setIsLoading] = useState(false);
     const [formErrors, setFormErrors] = useState<{ errors: UErrorsForm } | null>(null);
 
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const errorsData = formErrors?.errors;
-
-
-    const recipeDetails = useLoaderData() as URecipeDetails;
-    const [recipesImgs, setRecipeImgs] = useState<string[] | undefined>(recipeDetails?.recipe?.images);
+    const [recipesImgs, setRecipeImgs] = useState<string[] | undefined>(props.recipeDetails?.recipe?.images);
 
     const user = useRouteLoaderData("user") as UUser;
     const removeImgHandler = (value: string) => {
@@ -78,7 +78,7 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
 
 
     // if the current user is not recipe publisher
-    if (props.for === "updateRecipe" && recipeDetails.recipe.user !== user._id) {
+    if (props.for === "updateRecipe" && props.recipeDetails?.recipe.user !== user._id) {
         return (<>
             <h2 className='text-xl text-red-600'>Forbiden</h2>
             <div>
@@ -96,6 +96,7 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
                 return;
             }
             props.for === "newRecipe" ? navigate("/?sort=newest") : navigate("..");
+            queryClient.invalidateQueries(["recipe", { recipeId: props.recipeId }]);
         }
     });
 
@@ -124,25 +125,25 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
                     </div>
                     : null}
                 <div className='pb-7 relative'>
-                    <Input name='title' placeHolder='Title' type='text' success={errorsData?.title ? false : true} value={props.for === "updateRecipe" ? recipeDetails.recipe.title : undefined} />
+                    <Input name='title' placeHolder='Title' type='text' success={errorsData?.title ? false : true} value={props.for === "updateRecipe" ? props.recipeDetails?.recipe.title : undefined} />
                     {errorsData?.title && <span className="absolute bottom-2 left-0 text-sm text-red-700">Title is required</span>}
                 </div>
                 <div className='pb-7'>
-                    <Input name='description' placeHolder='Description' type='text' success={true} value={props.for === "updateRecipe" ? recipeDetails.recipe.description : undefined} />
+                    <Input name='description' placeHolder='Description' type='text' success={true} value={props.for === "updateRecipe" ? props.recipeDetails?.recipe.description : undefined} />
                 </div>
                 <div className='flex gap-2'>
                     <div className='pb-7 relative'>
-                        <Input name='prepTime' placeHolder='Preparation time' type='number' success={errorsData?.prepTime ? false : true} value={props.for === "updateRecipe" ? recipeDetails.recipe.preparationTime : undefined} />
+                        <Input name='prepTime' placeHolder='Preparation time' type='number' success={errorsData?.prepTime ? false : true} value={props.for === "updateRecipe" ? props.recipeDetails?.recipe.preparationTime : undefined} />
                         {errorsData?.prepTime && <span className="absolute bottom-2 left-0 text-sm text-red-700">Provide a valid number</span>}
                     </div>
                     <div className='pb-7 relative'>
-                        <Input name='cookTime' placeHolder='Cook time' type='number' success={errorsData?.cookTime ? false : true} value={props.for === "updateRecipe" ? recipeDetails.recipe.cookTime : undefined} />
+                        <Input name='cookTime' placeHolder='Cook time' type='number' success={errorsData?.cookTime ? false : true} value={props.for === "updateRecipe" ? props.recipeDetails?.recipe.cookTime : undefined} />
                         {errorsData?.cookTime && <span className="absolute bottom-2 left-0 text-sm text-red-700">Provide a valid number</span>}
                     </div>
                 </div>
-                <NoteInput value={props.for === "updateRecipe" ? recipeDetails.recipe.note : undefined} />
-                <IngredientsList errors={errorsData?.ingredients} ingredients={props.for === "updateRecipe" ? recipeDetails.recipe.ingredients : undefined} />
-                <MethodsList errors={errorsData?.methods} methods={props.for === "updateRecipe" ? recipeDetails.recipe.methods : undefined} />
+                <NoteInput value={props.for === "updateRecipe" ? props.recipeDetails?.recipe.note : undefined} />
+                <IngredientsList errors={errorsData?.ingredients} ingredients={props.for === "updateRecipe" ? props.recipeDetails?.recipe.ingredients : undefined} />
+                <MethodsList errors={errorsData?.methods} methods={props.for === "updateRecipe" ? props.recipeDetails?.recipe.methods : undefined} />
                 {props.for === "newRecipe" && <UploadImage errorMsg={errorsData?.images} />}
                 <CallToAction for={props.for} />
             </form>
