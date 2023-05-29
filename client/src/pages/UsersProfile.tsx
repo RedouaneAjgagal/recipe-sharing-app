@@ -1,8 +1,10 @@
-import { LoaderFunction, json } from "react-router-dom"
-import url from "../config/url"
 import UserProfile from "../components/usersProfiles"
 import { ProfileData } from "./Profile"
 import { URecipe } from "../components/recipes/Recipe";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import getUserInfo from "../fetchers/getUserInfo";
+import Loading from "../UI/Loading";
 
 export interface UUserProfile {
     profile: ProfileData;
@@ -10,20 +12,17 @@ export interface UUserProfile {
 }
 
 const UsersProfile = () => {
+    const { profileId } = useParams();
+    const userInfoQuery = useQuery({
+        queryKey: ["usersProfile", { profileId }],
+        queryFn: () => getUserInfo(profileId!)
+    })
     return (
-        <UserProfile />
+        userInfoQuery.isLoading ?
+            <Loading />
+            :
+            <UserProfile userInfo={userInfoQuery.data as UUserProfile} />
     )
 }
 
-export default UsersProfile
-
-export const loader: LoaderFunction = async ({ params }) => {
-    const { profileId } = params;
-    const response = await fetch(`${url}/user/${profileId}`);
-    const data = await response.json();
-    if (!response.ok) {
-        throw json({ msg: data.msg }, { status: response.status, statusText: response.statusText });
-    }
-
-    return data;
-}
+export default UsersProfile;

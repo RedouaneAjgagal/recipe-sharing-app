@@ -3,13 +3,16 @@ import { UUserProfile } from "../../pages/UsersProfile";
 import ProfileDetails from "../profile/ProfileDetails";
 import FavouriteRecipes from "../profile/FavouriteRecipes";
 
-const UserProfile = () => {
-    const { profile, recipes } = useLoaderData() as UUserProfile;
+interface Props {
+    userInfo: UUserProfile;
+}
+
+const UserProfile = (props: React.PropsWithoutRef<Props>) => {
 
     return (
         <div>
-            <ProfileDetails profile={profile} readonly />
-            <FavouriteRecipes recipes={recipes} />
+            <ProfileDetails profile={props.userInfo.profile} readonly />
+            <FavouriteRecipes recipes={props.userInfo.recipes} />
         </div>
     )
 }

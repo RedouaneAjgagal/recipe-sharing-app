@@ -12,7 +12,7 @@ import logoutAction from "./utils/logout";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import UserRecipes from "./pages/ProfileRecipes";
-import UsersProfile, { loader as userProfileLoader } from "./pages/UsersProfile";
+import UsersProfile from "./pages/UsersProfile";
 
 
 function App() {
@@ -89,8 +89,7 @@ function App() {
         },
         {
           path: "users/:profileId",
-          element: <UsersProfile />,
-          loader: userProfileLoader
+          element: <UsersProfile />
         }
       ]
     }
