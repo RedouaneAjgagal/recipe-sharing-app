@@ -9,7 +9,7 @@ import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassw
 import NewRecipe from "./pages/NewPrecipe";
 import UpdateRecipe from "./pages/UpdateRecipe";
 import logoutAction from "./utils/logout";
-import Profile, { loader as profileLoader } from "./pages/Profile";
+import Profile from "./pages/Profile";
 import Settings, { action as updateProfileAction } from "./pages/Settings";
 import UserRecipes, { loader as userRecipesLoader } from "./pages/ProfileRecipes";
 import UsersProfile, { loader as userProfileLoader } from "./pages/UsersProfile";
@@ -54,7 +54,6 @@ function App() {
         },
         {
           path: "profile",
-          loader: profileLoader,
           id: "profileInfo",
           children: [
             {

@@ -1,10 +1,23 @@
 import { ActionFunction, json, redirect } from 'react-router-dom'
 import ProfileSettings from '../components/userInfoSettings'
 import url from '../config/url'
+import { useQuery } from '@tanstack/react-query';
+import getProfileInfo from '../fetchers/getProfileInfo';
+import Loading from '../UI/Loading';
+import { ProfileData } from './Profile';
 
 const Settings = () => {
+
+    const profileQuery = useQuery({
+        queryKey: ["profile"],
+        queryFn: () => getProfileInfo("user")
+    });
+
     return (
-        <ProfileSettings />
+        profileQuery.isLoading ?
+            <Loading />
+            :
+            <ProfileSettings profileInfo={profileQuery.data as ProfileData} />
     )
 }
 

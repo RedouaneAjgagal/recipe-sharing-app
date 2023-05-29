@@ -1,4 +1,3 @@
-import { useRouteLoaderData } from "react-router-dom"
 import UserImage from "./UserImage"
 import { ProfileData } from "../../pages/Profile";
 import InputContainer from "./InputContainer";
@@ -7,12 +6,15 @@ import PrimaryBtn from "../../UI/PrimaryBtn";
 import { useFetcher } from "react-router-dom";
 import { useState } from "react";
 
-const ProfileSettings = () => {
-  const { profile } = useRouteLoaderData("profileInfo") as { profile: ProfileData };
+interface Props {
+  profileInfo: ProfileData;
+}
+
+const ProfileSettings = (props: React.PropsWithoutRef<Props>) => {
   const fetcher = useFetcher();
   const [isUploadingImg, setIsUploadingImg] = useState(false);
 
-  const [favouriteMeals, setFavouriteMeals] = useState(profile.favouriteMeals);
+  const [favouriteMeals, setFavouriteMeals] = useState(props.profileInfo.favouriteMeals);
 
 
   const updateProfileHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,10 +41,10 @@ const ProfileSettings = () => {
       <div className="bg-white p-4 border-b">
         <h1 className="font-medium tracking-wider text-xl mb-3">PERSONAL</h1>
         <div className="flex flex-col gap-4">
-          <UserImage profilePicture={profile.picture} alt={`${profile.user.name}'s profile picture`} getUploadingState={isUploadingImgHandler} />
-          <InputContainer label="Name" value={profile.user.name} type="text" />
-          <InputContainer label="Email" value={profile.user.email} type="email" readOnly />
-          <InputContainer label="Bio" value={profile.bio} type="texterea" />
+          <UserImage profilePicture={props.profileInfo.picture} alt={`${props.profileInfo.user.name}'s profile picture`} getUploadingState={isUploadingImgHandler} />
+          <InputContainer label="Name" value={props.profileInfo.user.name} type="text" />
+          <InputContainer label="Email" value={props.profileInfo.user.email} type="email" readOnly />
+          <InputContainer label="Bio" value={props.profileInfo.bio} type="texterea" />
           <MealsList meals={favouriteMeals} submit={fetcher.state} onRemove={removeFavouriteMeal} />
         </div>
       </div>

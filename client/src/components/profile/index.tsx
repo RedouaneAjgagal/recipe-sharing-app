@@ -1,25 +1,30 @@
-import { useRouteLoaderData, Await } from "react-router-dom";
-import { Suspense } from "react";
 import { ProfileData } from "../../pages/Profile";
 import ProfileDetails from "./ProfileDetails";
 import FavouriteRecipes from "./FavouriteRecipes";
 import { URecipe } from "../recipes/Recipe";
+import { useQuery } from "@tanstack/react-query";
+import getProfileInfo from "../../fetchers/getProfileInfo";
+import Loading from "../../UI/Loading";
 
-const ProfileInfo = () => {
-    const { profile, favouriteRecipes } = useRouteLoaderData("profileInfo") as { profile: ProfileData, favouriteRecipes: { recipe: URecipe }[] };
+interface Props {
+    profileInfo: ProfileData;
+}
+
+const ProfileInfo = (props: React.PropsWithoutRef<Props>) => {
+
+    const favouriteRecipesQuery = useQuery({
+        queryKey: ["favouriteRecipes"],
+        queryFn: () => getProfileInfo("favourite")
+    });
 
     return (
         <>
-            <Suspense>
-                <Await resolve={profile}>
-                    {(loaderProfile) => <ProfileDetails profile={loaderProfile} />}
-                </Await>
-            </Suspense>
-            <Suspense fallback={<p className="text-center">Loading..</p>}>
-                <Await resolve={favouriteRecipes}>
-                    {(recipes) => <FavouriteRecipes recipes={recipes} favourited />}
-                </Await>
-            </Suspense>
+            <ProfileDetails profile={props.profileInfo} />
+            {favouriteRecipesQuery.isLoading ?
+                <Loading />
+                :
+                <FavouriteRecipes recipes={favouriteRecipesQuery.data as { recipe: URecipe }[]} favourited />}
+
         </>
     )
 }
