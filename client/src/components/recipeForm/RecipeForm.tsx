@@ -90,13 +90,12 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
     const mutation = useMutation({
         mutationFn: props.for === "newRecipe" ? postRecipe : updateRecipe,
         onSuccess: (data) => {
-            queryClient.invalidateQueries(["recipes"]);
             if (data?.errors) {
                 setFormErrors({ errors: data.errors });
                 return;
             }
-            props.for === "newRecipe" ? navigate("/?sort=newest") : navigate("..");
             queryClient.invalidateQueries(["recipe", { recipeId: props.recipeId }]);
+            props.for === "newRecipe" ? navigate("/?sort=newest") : navigate("..");
         }
     });
 

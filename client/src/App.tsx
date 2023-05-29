@@ -11,7 +11,7 @@ import UpdateRecipe from "./pages/UpdateRecipe";
 import logoutAction from "./utils/logout";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
-import UserRecipes, { loader as userRecipesLoader } from "./pages/ProfileRecipes";
+import UserRecipes from "./pages/ProfileRecipes";
 import UsersProfile, { loader as userProfileLoader } from "./pages/UsersProfile";
 
 
@@ -65,8 +65,7 @@ function App() {
               children: [
                 {
                   index: true,
-                  element: <UserRecipes />,
-                  loader: userRecipesLoader
+                  element: <UserRecipes />
                 },
                 {
                   path: "new-recipe",
