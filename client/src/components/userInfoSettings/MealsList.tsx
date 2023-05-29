@@ -1,12 +1,12 @@
 import { AiOutlinePlus } from "react-icons/ai"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Meal from "./Meal"
 
 
 interface Props {
     meals: string[]
-    submit: "idle" | "loading" | "submitting";
     onRemove: (index: number) => void;
+    isError?: boolean;
 }
 
 const MealsList = (props: React.PropsWithoutRef<Props>) => {
@@ -20,11 +20,6 @@ const MealsList = (props: React.PropsWithoutRef<Props>) => {
         const id = crypto.randomUUID();
         return <Meal content={meal} key={id} onRemove={onRemove} index={index} />
     });
-
-
-    useEffect(() => {
-        setInputMeals([]);
-    }, [props.submit === "loading"]);
 
     // const addMealInputs = 
     const addFavouriteMeal = () => {
@@ -46,6 +41,7 @@ const MealsList = (props: React.PropsWithoutRef<Props>) => {
                 {inputMeals}
                 <button onClick={addFavouriteMeal} type="button" className="flex border border-amber-700/50 text-amber-700 p-[0.35rem] rounded"><AiOutlinePlus /></button>
             </div>
+            {props.isError && <p className="text-xs text-red-600">Accept only to 15 meals</p>}
         </div>
     )
 }

@@ -10,7 +10,7 @@ import NewRecipe from "./pages/NewPrecipe";
 import UpdateRecipe from "./pages/UpdateRecipe";
 import logoutAction from "./utils/logout";
 import Profile from "./pages/Profile";
-import Settings, { action as updateProfileAction } from "./pages/Settings";
+import Settings from "./pages/Settings";
 import UserRecipes, { loader as userRecipesLoader } from "./pages/ProfileRecipes";
 import UsersProfile, { loader as userProfileLoader } from "./pages/UsersProfile";
 
@@ -80,8 +80,7 @@ function App() {
             },
             {
               path: "settings",
-              element: <Settings />,
-              action: updateProfileAction
+              element: <Settings />
             },
             {
               path: "logout",

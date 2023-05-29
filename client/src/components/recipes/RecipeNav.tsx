@@ -31,7 +31,9 @@ const RecipeNav = () => {
                 <PrimaryBtn onClick={popularHandler} style={`${isNewest ? "white" : "black"}`}>Popular</PrimaryBtn>
                 <PrimaryBtn onClick={newestHandler} style={`${isNewest ? "black" : "white"}`}>Newest</PrimaryBtn>
             </div>
-            <PrimaryBtn onClick={addRecipeHandler} style="orange">ADD RECIPE</PrimaryBtn>
+            <div>
+                <PrimaryBtn onClick={addRecipeHandler} style="orange">ADD RECIPE</PrimaryBtn>
+            </div>
         </div>
     )
 }
