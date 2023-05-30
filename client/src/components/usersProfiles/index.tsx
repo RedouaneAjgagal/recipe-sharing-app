@@ -1,4 +1,3 @@
-import { useLoaderData } from "react-router-dom";
 import { UUserProfile } from "../../pages/UsersProfile";
 import ProfileDetails from "../profile/ProfileDetails";
 import FavouriteRecipes from "../profile/FavouriteRecipes";

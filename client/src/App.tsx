@@ -3,7 +3,7 @@ import Root, { loader as authLoader } from "./pages/Root";
 import Home from "./pages/Home";
 import Recipe from "./pages/Recipe";
 import Login, { action as loginAction } from "./pages/Login";
-import Register, { action as registerAction } from "./pages/Register";
+import Register from "./pages/Register";
 import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPassword";
 import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
 import NewRecipe from "./pages/NewPrecipe";
@@ -35,8 +35,7 @@ function App() {
         },
         {
           path: "register",
-          element: <Register />,
-          action: registerAction
+          element: <Register />
         },
         {
           path: "forget-password",
