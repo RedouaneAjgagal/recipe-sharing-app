@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root, { loader as authLoader } from "./pages/Root";
 import Home from "./pages/Home";
 import Recipe from "./pages/Recipe";
-import Login, { action as loginAction } from "./pages/Login";
+import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPassword";
 import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
@@ -30,8 +30,7 @@ function App() {
         },
         {
           path: "login",
-          element: <Login />,
-          action: loginAction
+          element: <Login />
         },
         {
           path: "register",

@@ -4,6 +4,7 @@ import Input from "../Input"
 import { useMutation } from "@tanstack/react-query"
 import register from "../../fetchers/register"
 import { ImSpinner2 } from "react-icons/im"
+import login from "../../fetchers/login"
 
 
 interface Props {
@@ -14,10 +15,10 @@ interface Props {
 const Form = (props: React.PropsWithoutRef<Props>) => {
     const navigate = useNavigate();
     const mutation = useMutation({
-        mutationFn: register,
+        mutationFn: props.for === "register" ? register : login,
         onSuccess: (errors) => {
             if (errors) return;
-            navigate("/login");
+            props.for === "register" ? navigate("/login") : navigate("/");
         }
     });
 
@@ -27,9 +28,17 @@ const Form = (props: React.PropsWithoutRef<Props>) => {
         mutation.mutate(formData);
     }
 
+    const errors = mutation.data as {
+        msg?: string;
+        success?: boolean;
+        validName?: boolean;
+        validEmail?: boolean;
+        validPassword?: boolean;
+    }
+
     return (
         <section className="w-full pt-12 relative">
-            {mutation.data?.msg && <StatusResponse success={mutation.data.success} message={mutation.data.msg} />}
+            {errors?.msg && <StatusResponse success={errors.success!} message={errors.msg} />}
             <form action={props.for === "login" ? "/login" : "/register"} noValidate className="bg-white px-4 py-6 rounded shadow-lg flex flex-col" onSubmit={registerHandler}>
                 <article className="mb-6">
                     <h1 className="text-3xl font-medium mb-2">{props.for === "login" ? "Sign in" : "Sign up"}</h1>
@@ -38,18 +47,18 @@ const Form = (props: React.PropsWithoutRef<Props>) => {
                 <div>
                     {props.for === "register" &&
                         <div className="relative pb-7">
-                            <Input type="text" name="name" placeHolder="Name" success={mutation.data?.validName!} />
-                            {mutation.data?.validName === false && <span className="absolute bottom-2 left-0 text-sm text-red-700">Must be between 3 and 20 characters</span>}
+                            <Input type="text" name="name" placeHolder="Name" success={errors?.validName!} />
+                            {errors?.validName === false && <span className="absolute bottom-2 left-0 text-sm text-red-700">Must be between 3 and 20 characters</span>}
                         </div>
                     }
                     <div className="relative pb-7">
-                        <Input type="email" name="email" placeHolder="Email" success={mutation.data?.validEmail!} />
-                        {mutation.data?.validEmail === false && <span className="absolute bottom-2 left-0 text-sm text-red-700">Provide a valid email</span>}
+                        <Input type="email" name="email" placeHolder="Email" success={errors?.validEmail!} />
+                        {errors?.validEmail === false && <span className="absolute bottom-2 left-0 text-sm text-red-700">Provide a valid email</span>}
                     </div>
 
                     <div className="relative pb-7">
-                        <Input type="password" name="password" placeHolder="Password" success={mutation.data?.validPassword!} />
-                        {mutation.data?.validPassword === false && <span className="absolute bottom-2 left-0 text-sm text-red-700">Must be 6 characters and more</span>}
+                        <Input type="password" name="password" placeHolder="Password" success={errors?.validPassword!} />
+                        {errors?.validPassword === false && <span className="absolute bottom-2 left-0 text-sm text-red-700">Must be 6 characters and more</span>}
                     </div>
                 </div>
 
