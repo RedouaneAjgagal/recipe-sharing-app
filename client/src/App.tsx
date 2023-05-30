@@ -5,7 +5,7 @@ import Recipe from "./pages/Recipe";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgetPassword from "./pages/ForgetPassword";
-import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
+import ResetPassword from "./pages/ResetPassword";
 import NewRecipe from "./pages/NewPrecipe";
 import UpdateRecipe from "./pages/UpdateRecipe";
 import logoutAction from "./utils/logout";
@@ -42,8 +42,7 @@ function App() {
         },
         {
           path: "user/reset-password",
-          element: <ResetPassword />,
-          action: resetPasswordAction
+          element: <ResetPassword />
         },
         {
           path: "recipes/:recipeId",
