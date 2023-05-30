@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Recipe from "./pages/Recipe";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ForgetPassword, { action as forgetPasswordAction } from "./pages/ForgetPassword";
+import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword, { action as resetPasswordAction } from "./pages/ResetPassword";
 import NewRecipe from "./pages/NewPrecipe";
 import UpdateRecipe from "./pages/UpdateRecipe";
@@ -39,7 +39,6 @@ function App() {
         {
           path: "forget-password",
           element: <ForgetPassword />,
-          action: forgetPasswordAction
         },
         {
           path: "user/reset-password",
