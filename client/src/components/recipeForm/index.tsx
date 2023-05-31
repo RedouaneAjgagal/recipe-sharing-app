@@ -4,12 +4,13 @@ import getSingleRecipe from '../../fetchers/getSingleRecipe';
 import { URecipeDetails } from '../../pages/Recipe';
 import { useQuery } from '@tanstack/react-query';
 
+
 interface Props {
-    for: "newRecipe" | "updateRecipe"
+    for: "newRecipe" | "updateRecipe";
+    userId?: string;
 }
 
 const RecipeFormContainer = (props: React.PropsWithoutRef<Props>) => {
-
     const [searchParams] = useSearchParams();
     const recipeId = searchParams.get("recipeId");
 
@@ -25,7 +26,7 @@ const RecipeFormContainer = (props: React.PropsWithoutRef<Props>) => {
             <h1 className='text-3xl font-medium mb-2'>
                 {props.for === "newRecipe" ? "New Recipe" : "Update Recipe"}
             </h1>
-            {props.for === "updateRecipe" && updateQuery!.isSuccess && <RecipeForm for={props.for} recipeDetails={updateQuery!.data as URecipeDetails} recipeId={recipeId} />}
+            {props.for === "updateRecipe" && updateQuery!.isSuccess && <RecipeForm for={props.for} recipeDetails={updateQuery!.data as URecipeDetails} recipeId={recipeId} userId={props.userId} />}
             {props.for === "newRecipe" && <RecipeForm for={props.for} />}
 
         </section>

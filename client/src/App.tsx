@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Root, { loader as authLoader } from "./pages/Root";
+import Root from "./pages/Root";
 import Home from "./pages/Home";
 import Recipe from "./pages/Recipe";
 import Login from "./pages/Login";
@@ -8,7 +8,6 @@ import ForgetPassword from "./pages/ForgetPassword";
 import ResetPassword from "./pages/ResetPassword";
 import NewRecipe from "./pages/NewPrecipe";
 import UpdateRecipe from "./pages/UpdateRecipe";
-import logoutAction from "./utils/logout";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import UserRecipes from "./pages/ProfileRecipes";
@@ -21,8 +20,6 @@ function App() {
     {
       path: "/",
       element: <Root />,
-      loader: authLoader,
-      id: "user",
       children: [
         {
           index: true,
@@ -50,7 +47,6 @@ function App() {
         },
         {
           path: "profile",
-          id: "profileInfo",
           children: [
             {
               index: true,
@@ -76,10 +72,6 @@ function App() {
             {
               path: "settings",
               element: <Settings />
-            },
-            {
-              path: "logout",
-              action: logoutAction
             }
           ]
         },

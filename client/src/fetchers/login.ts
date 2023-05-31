@@ -35,7 +35,7 @@ export const login = async (formData: FormData) => {
         credentials: "include"
     });
 
-    const data = await response.json();
+    const data = await response.json() as { msg: string };
 
     if (!response.ok) {
         result.msg = data.msg;

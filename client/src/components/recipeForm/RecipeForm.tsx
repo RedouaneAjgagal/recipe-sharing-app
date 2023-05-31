@@ -1,4 +1,4 @@
-import { Link, useRouteLoaderData, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Input from '../Input';
 import NoteInput from './NoteInput';
 import IngredientsList from './IngredientsList';
@@ -8,7 +8,6 @@ import { UErrorsForm } from '../../pages/NewPrecipe';
 import StatusResponse from '../StatusResponse';
 import UploadImage from './UploadImage';
 import { URecipeDetails } from '../../pages/Recipe';
-import { UUser } from '../../pages/Root';
 import RecipeImage from './RecipeImage';
 import { useState } from "react";
 import url from '../../config/url';
@@ -22,6 +21,7 @@ interface Props {
     for: "newRecipe" | "updateRecipe";
     recipeDetails?: URecipeDetails;
     recipeId?: string | null;
+    userId?: string
 }
 
 const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
@@ -34,7 +34,6 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
     const errorsData = formErrors?.errors;
     const [recipesImgs, setRecipeImgs] = useState<string[] | undefined>(props.recipeDetails?.recipe?.images);
 
-    const user = useRouteLoaderData("user") as UUser;
     const removeImgHandler = (value: string) => {
         setRecipeImgs(images => {
             const updatedImages = images?.filter(img => img !== value);
@@ -78,7 +77,7 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
 
 
     // if the current user is not recipe publisher
-    if (props.for === "updateRecipe" && props.recipeDetails?.recipe.user !== user._id) {
+    if (props.for === "updateRecipe" && props.recipeDetails?.recipe.user !== props.userId) {
         return (<>
             <h2 className='text-xl text-red-600'>Forbiden</h2>
             <div>

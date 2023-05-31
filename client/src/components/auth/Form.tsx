@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom"
 import StatusResponse from "../StatusResponse"
 import Input from "../Input"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import register from "../../fetchers/register"
 import { ImSpinner2 } from "react-icons/im"
 import login from "../../fetchers/login"
@@ -14,11 +14,20 @@ interface Props {
 
 const Form = (props: React.PropsWithoutRef<Props>) => {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: props.for === "register" ? register : login,
         onSuccess: (errors) => {
             if (errors) return;
-            props.for === "register" ? navigate("/login") : navigate("/");
+            if (props.for === "register") {
+                navigate("/login");
+                return;
+            }
+            const expiresIn = 2 * 60 * 60 * 1000;
+            const expiresAt = new Date(Date.now() + expiresIn).toISOString();
+            localStorage.setItem("exp", expiresAt);
+            queryClient.invalidateQueries(["authentication"]);
+            navigate("/");
         }
     });
 

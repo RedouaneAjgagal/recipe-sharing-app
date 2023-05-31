@@ -3,19 +3,39 @@ import { useQuery } from "@tanstack/react-query";
 import getUserRecipes from "../../fetchers/getUserRecipes";
 import Loading from "../../UI/Loading";
 import { UProfileRecipes } from "../../pages/ProfileRecipes";
+import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import isAuthenticated from "../../fetchers/isAuthenticated";
 
 const UserRecipes = () => {
+    const navigate = useNavigate();
     const userRecipesQuery = useQuery({
         queryKey: ["userRecipes"],
         queryFn: getUserRecipes
     });
+
+    const authenticationQuery = useQuery({
+        queryKey: ["authentication"],
+        queryFn: isAuthenticated,
+        retry: 0
+    })
+
+    useEffect(() => {
+        if (authenticationQuery.isError && (authenticationQuery.error as Error).message === "Authentication failed") {
+            return navigate("/login");
+        }
+    }, [authenticationQuery.isError, authenticationQuery.error])
+
     return (
         <div className="p-4">
             <h1 className="text-xl font-medium tracking-wider mb-6">MY RECIPES</h1>
-            {userRecipesQuery.isLoading ?
-                <Loading />
+            {authenticationQuery.isSuccess ?
+                userRecipesQuery.isLoading ?
+                    <Loading />
+                    :
+                    <UserRecipesList userRecipes={userRecipesQuery.data as UProfileRecipes[]} />
                 :
-                <UserRecipesList userRecipes={userRecipesQuery.data as UProfileRecipes[]} />
+                null
             }
         </div>
     )
