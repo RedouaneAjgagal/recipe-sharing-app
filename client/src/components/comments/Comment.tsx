@@ -1,7 +1,6 @@
 import { AiOutlineHeart } from "react-icons/ai"
 import { AiFillHeart } from "react-icons/ai"
 import { UComment } from "../../pages/Recipe"
-import { useRouteLoaderData } from "react-router-dom";
 import DeleteContainer from "../DeleteContainer";
 import UpdateComment from "./UpdateComment";
 import { useEffect, useState } from "react";
@@ -22,17 +21,17 @@ interface Props {
 const Comment = (props: React.PropsWithoutRef<Props>) => {
     const [isUpdate, setIsUpdate] = useState(false);
     const [updatedComment, setUpdatedComment] = useState({ value: "", error: false });
-    const user = useRouteLoaderData("user") as UUser;
 
     const queryClient = useQueryClient();
-
+    const data = queryClient.getQueryData(["authentication"]) as { user: UUser } | undefined;
 
     const isLike = props.comment.userLike.some(comment => {
-        if (comment.isLike === true && comment.user === user?._id) {
+        if (comment.isLike === true && comment.user === data?.user._id) {
             return true;
         }
         return false;
     })
+
 
     const likeMutation = useMutation({
         mutationFn: () => likeComment(props.comment._id),

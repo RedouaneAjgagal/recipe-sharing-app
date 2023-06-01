@@ -2,7 +2,7 @@ import ProfileInfo from "../components/profile";
 import { useQuery } from "@tanstack/react-query";
 import getProfileInfo from "../fetchers/getProfileInfo";
 import Loading from "../UI/Loading";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 
@@ -22,11 +22,12 @@ const Profile = () => {
         queryFn: () => getProfileInfo("user")
     });
 
+    const authenticationQuery = useQuery(["authentication"])
     useEffect(() => {
-        if (profileQuery.isError && (profileQuery.error as Error).message === "Authentication failed") {
+        if (authenticationQuery.isError && (authenticationQuery.error as Error).message === "Authentication failed") {
             return navigate("/login");
         }
-    }, [profileQuery.isError, profileQuery.error])
+    }, [authenticationQuery.isError, authenticationQuery.error])
 
     return (
         profileQuery.isLoading ?
@@ -35,7 +36,7 @@ const Profile = () => {
             profileQuery.isSuccess ?
                 <ProfileInfo profileInfo={profileQuery.data as ProfileData} />
                 :
-                <p>{(profileQuery.error as Error).message}</p>
+                null
     )
 }
 

@@ -25,15 +25,16 @@ const UserNavbar = (props: React.PropsWithoutRef<Props>) => {
         setIsProfileOpen(false);
     }
 
-    const mutation = useMutation({
-        mutationKey: ["logout"],
+    queryClient.setMutationDefaults(["logout"], {
         mutationFn: logout,
         onSuccess: () => {
             localStorage.removeItem("exp");
+            queryClient.invalidateQueries(["recipeComments"]);
             queryClient.invalidateQueries(["authentication"]);
         }
-    })
+    });
 
+    const mutation = useMutation({ mutationKey: ["logout"] });
     const logoutHandler = () => {
         mutation.mutate();
         closeProfile();

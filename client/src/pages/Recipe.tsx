@@ -93,6 +93,8 @@ const Recipe = () => {
         setCommentSort(sort);
     }
 
+    console.log("recipe");
+    
     return (
         <div className="p-4">
             <RecipeDetails recipeDetails={recipeDetails} />

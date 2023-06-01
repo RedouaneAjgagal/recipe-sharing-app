@@ -23,7 +23,8 @@ const Form = (props: React.PropsWithoutRef<Props>) => {
                 navigate("/login");
                 return;
             }
-            const expiresIn = 2 * 60 * 60 * 1000;
+            // const expiresIn = 2 * 60 * 60 * 1000;
+            const expiresIn = 20 * 1000;
             const expiresAt = new Date(Date.now() + expiresIn).toISOString();
             localStorage.setItem("exp", expiresAt);
             queryClient.invalidateQueries(["authentication"]);

@@ -10,8 +10,8 @@ const CreateRecipeNav = () => {
     }
 
     return (
-        <div className="m-4 w-36">
-            <PrimaryBtn style="black" onClick={backHandler}><AiFillCaretLeft /> Go back</PrimaryBtn>
+        <div className="px-4 mt-6 w-36">
+            <PrimaryBtn style="black" onClick={backHandler}><AiFillCaretLeft />Go back</PrimaryBtn>
         </div>
     )
 }

@@ -5,7 +5,6 @@ import Loading from '../UI/Loading';
 import { ProfileData } from './Profile';
 import { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import isAuthenticated from '../fetchers/isAuthenticated';
 
 const Settings = () => {
     const navigate = useNavigate();
@@ -14,12 +13,7 @@ const Settings = () => {
         queryFn: () => getProfileInfo("user")
     });
 
-    const authenticationQuery = useQuery({
-        queryKey: ["authentication"],
-        queryFn: isAuthenticated,
-        retry: 0
-    })
-
+    const authenticationQuery = useQuery(["authentication"])
     useEffect(() => {
         if (authenticationQuery.isError && (authenticationQuery.error as Error).message === "Authentication failed") {
             return navigate("/login");

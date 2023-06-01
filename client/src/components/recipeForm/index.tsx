@@ -3,6 +3,7 @@ import RecipeForm from './RecipeForm';
 import getSingleRecipe from '../../fetchers/getSingleRecipe';
 import { URecipeDetails } from '../../pages/Recipe';
 import { useQuery } from '@tanstack/react-query';
+import Loading from '../../UI/Loading';
 
 
 interface Props {
@@ -26,8 +27,14 @@ const RecipeFormContainer = (props: React.PropsWithoutRef<Props>) => {
             <h1 className='text-3xl font-medium mb-2'>
                 {props.for === "newRecipe" ? "New Recipe" : "Update Recipe"}
             </h1>
-            {props.for === "updateRecipe" && updateQuery!.isSuccess && <RecipeForm for={props.for} recipeDetails={updateQuery!.data as URecipeDetails} recipeId={recipeId} userId={props.userId} />}
-            {props.for === "newRecipe" && <RecipeForm for={props.for} />}
+            {props.for === "updateRecipe" ?
+                updateQuery!.isLoading ?
+                    <Loading />
+                    :
+                    <RecipeForm for={props.for} recipeDetails={updateQuery!.data as URecipeDetails} recipeId={recipeId} userId={props.userId} />
+                :
+                <RecipeForm for={props.for} />
+            }
 
         </section>
     )

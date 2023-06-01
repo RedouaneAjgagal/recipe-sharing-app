@@ -2,8 +2,6 @@ import { Outlet } from "react-router-dom"
 import Navbar from "../components/Navbar"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import isAuthenticated from "../fetchers/isAuthenticated";
-import logout from "../fetchers/logout";
-import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 
 export interface UUser {
@@ -13,23 +11,12 @@ export interface UUser {
 }
 
 const Root = (() => {
+
+    const logoutMutation = useMutation({ mutationKey: ["logout"] });
     const queryClient = useQueryClient();
-    const location = useLocation();
-
-    const logoutMutation = useMutation({
-        mutationKey: ["logout"],
-        mutationFn: logout,
-        onSuccess: () => {
-            localStorage.removeItem("exp");
-            queryClient.invalidateQueries(["authentication"]);
-        }
-    });
-
-    const authenticationQuery = useQuery({
-        queryKey: ["authentication"],
-        queryFn: isAuthenticated,
-        retry: 0
-    })
+    queryClient.setQueryDefaults(["authentication"], { queryFn: isAuthenticated, retry: 0 })
+    const authenticationQuery = useQuery(["authentication"])
+    const data = authenticationQuery.data as { user: UUser } | undefined
 
     useEffect(() => {
         const expiresTime = localStorage.getItem("exp");
@@ -38,18 +25,21 @@ const Root = (() => {
         }
         if (!expiresTime) {
             logoutMutation.mutate();
+            authenticationQuery.remove()
             return;
         }
         const getLeftTime = new Date(expiresTime).getTime() - new Date().getTime();
         if (getLeftTime < 0) {
             logoutMutation.mutate();
+            authenticationQuery.remove();
+            return;
         }
 
-    }, [location])
+    }, [authenticationQuery])
 
     return (
         <div>
-            <Navbar isSuccess={authenticationQuery.isSuccess} userInfo={authenticationQuery.data?.user} />
+            <Navbar isSuccess={authenticationQuery.isSuccess} userInfo={data?.user} />
             <main>
                 <Outlet />
             </main>

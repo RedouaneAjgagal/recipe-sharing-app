@@ -5,7 +5,6 @@ import Loading from "../../UI/Loading";
 import { UProfileRecipes } from "../../pages/ProfileRecipes";
 import { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import isAuthenticated from "../../fetchers/isAuthenticated";
 
 const UserRecipes = () => {
     const navigate = useNavigate();
@@ -14,11 +13,7 @@ const UserRecipes = () => {
         queryFn: getUserRecipes
     });
 
-    const authenticationQuery = useQuery({
-        queryKey: ["authentication"],
-        queryFn: isAuthenticated,
-        retry: 0
-    })
+    const authenticationQuery = useQuery(["authentication"])
 
     useEffect(() => {
         if (authenticationQuery.isError && (authenticationQuery.error as Error).message === "Authentication failed") {
