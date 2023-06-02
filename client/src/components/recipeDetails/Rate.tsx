@@ -3,7 +3,6 @@ import StatusResponse from "../StatusResponse";
 import rateRecipe from "../../fetchers/rateRecipe";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-
 interface Props {
     recipeId: string;
     ratedValue: number;

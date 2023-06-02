@@ -3,9 +3,7 @@ import RecipeDetails from "../components/recipeDetails";
 import Comments from "../components/comments";
 import { useQuery } from "@tanstack/react-query";
 import getSingleRecipe from "../fetchers/getSingleRecipe";
-import getRecipeComments from "../fetchers/getRecipeComments";
 import Loading from "../UI/Loading";
-import { useState } from "react";
 
 export interface UIngredients {
     title: string,
@@ -69,34 +67,25 @@ export interface UComment {
 
 const Recipe = () => {
     const { recipeId } = useParams();
-    const [commentSort, setCommentSort] = useState<"popular" | "newest">("popular");
 
     const recipeQuery = useQuery({
         queryKey: ["recipe", { recipeId }],
         queryFn: () => getSingleRecipe(recipeId!)
     });
-
-    const commentsQuery = useQuery({
-        queryKey: ["recipeComments", { recipeId, sort: commentSort }],
-        queryFn: () => getRecipeComments(recipeId!, commentSort),
-        keepPreviousData: true
-    });
     const recipeDetails: URecipeDetails = recipeQuery.data;
-    const recipeComments: UComment[] = commentsQuery.data;
-
-
-    if (recipeQuery.isLoading) {
-        return <Loading />
-    }
-
-    const getCommentSorting = (sort: "popular" | "newest") => {
-        setCommentSort(sort);
-    }
 
     return (
         <div className="p-4">
-            <RecipeDetails recipeDetails={recipeDetails} />
-            <Comments recipeComments={recipeComments} recipeId={recipeDetails.recipe._id} onSort={getCommentSorting} />
+            {recipeQuery.isLoading ?
+                <Loading />
+                :
+                <RecipeDetails recipeDetails={recipeDetails} />
+            }
+            {recipeQuery.isSuccess ?
+                <Comments recipeId={recipeDetails.recipe._id} />
+                :
+                null
+            }
         </div>
     )
 }

@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Link } from "react-router-dom";
 import { AiFillCaretDown, AiOutlineUser, AiOutlineSetting, AiOutlineUpload } from "react-icons/ai";
 import { BiFoodMenu } from "react-icons/bi";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import logout from "../fetchers/logout";
 
 interface Props {
@@ -10,12 +10,24 @@ interface Props {
         _id: string;
         name: string;
         picture: string;
-    }
+    };
+    onLogout: () => void;
 }
 
 const UserNavbar = (props: React.PropsWithoutRef<Props>) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
+
     const queryClient = useQueryClient();
+
+    queryClient.setMutationDefaults(["logout"], {
+        mutationFn: logout,
+        retry: 0,
+        onSuccess: async () => {
+            queryClient.invalidateQueries(["authentication"]);
+            queryClient.invalidateQueries(["recipe"]);
+            queryClient.invalidateQueries(["recipeComments"]);
+        }
+    });
 
     const openProfileHandler = () => {
         setIsProfileOpen(prev => !prev);
@@ -25,18 +37,8 @@ const UserNavbar = (props: React.PropsWithoutRef<Props>) => {
         setIsProfileOpen(false);
     }
 
-    queryClient.setMutationDefaults(["logout"], {
-        mutationFn: logout,
-        onSuccess: () => {
-            queryClient.invalidateQueries(["authentication"]);
-            queryClient.invalidateQueries(["recipe"]);
-            queryClient.invalidateQueries(["recipeComments"]);
-        }
-    });
-
-    const mutation = useMutation({ mutationKey: ["logout"] });
     const logoutHandler = () => {
-        mutation.mutate();
+        props.onLogout();
         closeProfile();
     }
 

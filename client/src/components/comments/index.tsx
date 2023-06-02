@@ -2,44 +2,53 @@ import PostComment from "./PostComment"
 import CommentsNav from "./CommentsNav"
 import CommentsList from "./CommentsList"
 import { UComment } from "../../pages/Recipe"
-import { useActionData } from "react-router-dom"
 import StatusResponse from "../StatusResponse"
+import { useQuery } from "@tanstack/react-query"
+import getRecipeComments from "../../fetchers/getRecipeComments"
+import { useState } from "react";
+import Loading from "../../UI/Loading"
 
 interface Props {
-    recipeComments: UComment[];
-    onSort: (sort: "popular" | "newest") => void;
     recipeId: string
 }
 
 const CommentSection = (props: React.PropsWithoutRef<Props>) => {
+    const [commentSort, setCommentSort] = useState<"popular" | "newest">("popular");
 
-    const numOfComments = props.recipeComments?.length
-    const actionData = useActionData() as { msg: string, success: boolean } | null;
+    const commentsQuery = useQuery({
+        queryKey: ["recipeComments", { recipeId: props.recipeId, sort: commentSort }],
+        queryFn: () => getRecipeComments(props.recipeId, commentSort),
+        keepPreviousData: true
+    });
+    const recipeComments: UComment[] = commentsQuery.data;
 
     const onSort = (sort: "popular" | "newest") => {
-        props.onSort(sort);
+        setCommentSort(sort);
     }
 
 
     return (
-        <section className="py-8">
-            {actionData && <StatusResponse message={actionData.msg} success={actionData.success} />}
-            <h3 className="text-xl text-slate-900 font-medium tracking-wide pb-4 border-b border-slate-800/50">{numOfComments} Comments</h3>
-            <PostComment />
-            <article>
-                {numOfComments ?
-                    <>
-                        <CommentsNav onSort={onSort} />
-                        <CommentsList recipeComments={props.recipeComments} recipeId={props.recipeId} />
-                    </>
-                    :
-                    <div className="text-slate-500 leading-7 text-lg">
-                        <p>So empty..</p>
-                        <p>Be the first to comment</p>
-                    </div>
-                }
-            </article>
-        </section>
+        commentsQuery.isLoading ?
+            <Loading />
+            :
+            <section className="py-8">
+                {commentsQuery.isError && <StatusResponse message={(commentsQuery.error as Error).message} success={false} />}
+                <h3 className="text-xl text-slate-900 font-medium tracking-wide pb-4 border-b border-slate-800/50">{recipeComments.length} Comments</h3>
+                <PostComment />
+                <article>
+                    {recipeComments.length ?
+                        <>
+                            <CommentsNav onSort={onSort} />
+                            <CommentsList recipeComments={recipeComments} recipeId={props.recipeId} />
+                        </>
+                        :
+                        <div className="text-slate-500 leading-7 text-lg">
+                            <p>So empty..</p>
+                            <p>Be the first to comment</p>
+                        </div>
+                    }
+                </article>
+            </section>
     )
 }
 

@@ -1,6 +1,6 @@
 import Auth from "../components/auth";
 
-const Login = () => {
+const Login = () => {  
   return (
     <Auth for="login" />
   )
