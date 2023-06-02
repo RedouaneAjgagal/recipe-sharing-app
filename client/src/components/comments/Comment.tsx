@@ -6,7 +6,6 @@ import UpdateComment from "./UpdateComment";
 import { useEffect, useState } from "react";
 import UpdateCommentContainer from "./UpdateCommentContainer";
 import PrimaryBtn from "../../UI/PrimaryBtn";
-import { UUser } from "../../pages/Root";
 import updateComment from "../../fetchers/updateComment";
 import likeComment from "../../fetchers/likeComment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -16,6 +15,8 @@ interface Props {
     id: string;
     comment: UComment;
     recipeId: string;
+    userId: string | undefined;
+    isUser: boolean;
 }
 
 const Comment = (props: React.PropsWithoutRef<Props>) => {
@@ -23,14 +24,13 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
     const [updatedComment, setUpdatedComment] = useState({ value: "", error: false });
 
     const queryClient = useQueryClient();
-    const data = queryClient.getQueryData(["authentication"]) as { user: UUser } | undefined;
 
     const isLike = props.comment.userLike.some(comment => {
-        if (comment.isLike === true && comment.user === data?.user._id) {
+        if (comment.isLike === true && props.isUser && comment.user === props.userId) {
             return true;
         }
         return false;
-    })
+    });
 
 
     const likeMutation = useMutation({

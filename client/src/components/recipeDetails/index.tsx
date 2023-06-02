@@ -19,6 +19,9 @@ const RecipeDetails = (props: React.PropsWithoutRef<Props>) => {
     const prepTime = props.recipeDetails.recipe.preparationTime.toString().padStart(2, "0");
     const cookTime = props.recipeDetails.recipe.cookTime.toString().padStart(2, "0");
 
+    console.log(props.recipeDetails.recipe.rated);
+    
+
     return (
         <article className="py-6 flex flex-col gap-6 text-[#535353] leading-relaxed">
             <RecipeDetailsNav avgRating={props.recipeDetails.recipe.avgRating} publisher={props.recipeDetails.user} updatedAt={props.recipeDetails.recipe.updatedAt} recipeId={props.recipeDetails.recipe._id} isFavourited={props.recipeDetails.recipe.isFavourited} />

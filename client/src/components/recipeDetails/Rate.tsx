@@ -1,6 +1,5 @@
 import { BsStarFill, BsStar } from "react-icons/bs";
 import StatusResponse from "../StatusResponse";
-import { useState } from "react";
 import rateRecipe from "../../fetchers/rateRecipe";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -11,16 +10,13 @@ interface Props {
 }
 
 const Rate = (props: React.PropsWithoutRef<Props>) => {
-    const [ratedValue, setRatedValue] = useState(props.ratedValue);
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: rateRecipe,
-        onSuccess: (rate) => {
-            setRatedValue(rate!);
+        onSuccess: () => {
             queryClient.invalidateQueries(["recipe", { recipeId: props.recipeId }]);
         }
-    })
-
+    });
 
     const rateHandler = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         const rate = e.currentTarget.value;
@@ -28,7 +24,7 @@ const Rate = (props: React.PropsWithoutRef<Props>) => {
     }
 
     const unRatedStars = Array.from({ length: 5 }, (_, i) => {
-        if (ratedValue > i) {
+        if (props.ratedValue > i) {
             return <button key={i} onClick={rateHandler} value={i + 1}><BsStarFill className="p-1" /></button>
         } else {
             return <button key={i} onClick={rateHandler} value={i + 1}><BsStar className="p-1" /></button>

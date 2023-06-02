@@ -28,9 +28,9 @@ const UserNavbar = (props: React.PropsWithoutRef<Props>) => {
     queryClient.setMutationDefaults(["logout"], {
         mutationFn: logout,
         onSuccess: () => {
-            localStorage.removeItem("exp");
-            queryClient.invalidateQueries(["recipeComments"]);
             queryClient.invalidateQueries(["authentication"]);
+            queryClient.invalidateQueries(["recipe"]);
+            queryClient.invalidateQueries(["recipeComments"]);
         }
     });
 
