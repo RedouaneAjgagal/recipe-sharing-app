@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AiFillCaretDown, AiOutlineUser, AiOutlineSetting, AiOutlineUpload } from "react-icons/ai";
 import { BiFoodMenu } from "react-icons/bi";
 import { useQueryClient } from "@tanstack/react-query";
-import logout from "../fetchers/logout";
+import logout from "../features/logout";
 
 interface Props {
     userInfo: {

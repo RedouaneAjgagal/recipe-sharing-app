@@ -2,8 +2,8 @@ import { Link, useNavigate } from "react-router-dom"
 import Input from "../Input";
 import StatusResponse from "../StatusResponse";
 import { useMutation } from "@tanstack/react-query";
-import forgetPassword from "../../fetchers/forgetPassword";
-import resetPassword from "../../fetchers/resetPassword";
+import forgetPassword from "../../features/forgetPassword";
+import resetPassword from "../../features/resetPassword";
 import { ImSpinner2 } from "react-icons/im";
 
 

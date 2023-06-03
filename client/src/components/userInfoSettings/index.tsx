@@ -6,7 +6,7 @@ import PrimaryBtn from "../../UI/PrimaryBtn";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import updateProfile from "../../fetchers/updateProfile";
+import updateProfile from "../../features/updateProfile";
 import { ImSpinner2 } from "react-icons/im";
 
 interface Props {

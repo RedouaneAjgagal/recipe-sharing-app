@@ -1,8 +1,8 @@
 import { ImSpinner2 } from "react-icons/im";
 import Overlay from "../UI/Overlay";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import deleteComment from "../fetchers/deleteComment";
-import deleteRecipe from "../fetchers/deleteRecipe";
+import deleteComment from "../features/deleteComment";
+import deleteRecipe from "../features/deleteRecipe";
 
 interface Props {
     commentId?: string;
@@ -19,6 +19,7 @@ const Delete = (props: React.PropsWithoutRef<Props>) => {
                 queryClient.invalidateQueries({ queryKey: ["recipeComments", { recipeId: props.recipeId }] })
             } else {
                 queryClient.invalidateQueries({ queryKey: ["recipes"] })
+                queryClient.invalidateQueries({ queryKey: ["userRecipes"] })
             }
         },
         onSettled: () => props.onCancel()

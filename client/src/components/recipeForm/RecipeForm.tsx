@@ -13,8 +13,8 @@ import { useState } from "react";
 import url from '../../config/url';
 import { AiOutlinePlus } from "react-icons/ai"
 import { ImSpinner2 } from "react-icons/im";
-import postRecipe from '../../fetchers/postRecipe';
-import updateRecipe from '../../fetchers/updateRecipe';
+import postRecipe from '../../features/postRecipe';
+import updateRecipe from '../../features/updateRecipe';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface Props {

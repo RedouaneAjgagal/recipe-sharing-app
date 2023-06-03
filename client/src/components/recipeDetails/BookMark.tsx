@@ -1,6 +1,6 @@
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import bookmarkRecipe from "../../fetchers/bookmarkRecipe";
+import bookmarkRecipe from "../../features/bookmarkRecipe";
 import { useMutation } from "@tanstack/react-query";
 
 interface Props {

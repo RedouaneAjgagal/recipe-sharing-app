@@ -6,8 +6,8 @@ import UpdateComment from "./UpdateComment";
 import { useEffect, useState } from "react";
 import UpdateCommentContainer from "./UpdateCommentContainer";
 import PrimaryBtn from "../../UI/PrimaryBtn";
-import updateComment from "../../fetchers/updateComment";
-import likeComment from "../../fetchers/likeComment";
+import updateComment from "../../features/updateComment";
+import likeComment from "../../features/likeComment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import StatusResponse from "../StatusResponse";
 

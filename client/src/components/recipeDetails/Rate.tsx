@@ -1,6 +1,6 @@
 import { BsStarFill, BsStar } from "react-icons/bs";
 import StatusResponse from "../StatusResponse";
-import rateRecipe from "../../fetchers/rateRecipe";
+import rateRecipe from "../../features/rateRecipe";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {

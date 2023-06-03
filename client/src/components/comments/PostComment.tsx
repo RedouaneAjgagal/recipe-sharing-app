@@ -1,5 +1,5 @@
 import { useState } from "react";
-import postComment from "../../fetchers/postComment";
+import postComment from "../../features/postComment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { ImSpinner2 } from "react-icons/im";

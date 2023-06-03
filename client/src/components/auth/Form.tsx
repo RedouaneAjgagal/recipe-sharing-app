@@ -2,9 +2,9 @@ import { Link, useNavigate } from "react-router-dom"
 import StatusResponse from "../StatusResponse"
 import Input from "../Input"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import register from "../../fetchers/register"
+import register from "../../features/register"
 import { ImSpinner2 } from "react-icons/im"
-import login from "../../fetchers/login"
+import login from "../../features/login"
 
 
 interface Props {

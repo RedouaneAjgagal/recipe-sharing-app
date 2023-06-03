@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import url from "../../config/url";
-import uploadImages from "../../fetchers/uploadImages";
+import uploadImages from "../../features/uploadImages";
 import { ImSpinner2 } from "react-icons/im";
 
 interface Props {
