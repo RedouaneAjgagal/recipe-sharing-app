@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate,  } from 'react-router-dom'
 import Input from '../Input';
 import NoteInput from './NoteInput';
 import IngredientsList from './IngredientsList';
@@ -143,7 +143,7 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
                 <IngredientsList errors={errorsData?.ingredients} ingredients={props.for === "updateRecipe" ? props.recipeDetails?.recipe.ingredients : undefined} />
                 <MethodsList errors={errorsData?.methods} methods={props.for === "updateRecipe" ? props.recipeDetails?.recipe.methods : undefined} />
                 {props.for === "newRecipe" && <UploadImage errorMsg={errorsData?.images} />}
-                <CallToAction for={props.for} />
+                <CallToAction for={props.for} isSubmitting={mutation.isLoading} />
             </form>
         </>
     )

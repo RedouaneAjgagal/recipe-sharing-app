@@ -5,6 +5,7 @@ import Loading from "../../UI/Loading";
 import { UProfileRecipes } from "../../pages/ProfileRecipes";
 import { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import PrimaryBtn from "../../UI/PrimaryBtn";
 
 const UserRecipes = () => {
     const navigate = useNavigate();
@@ -21,9 +22,18 @@ const UserRecipes = () => {
         }
     }, [authenticationQuery.isError, authenticationQuery.error])
 
+    const addRecipeHandler = () => {
+        navigate("new-recipe");
+    }
+
     return (
         <div className="p-4">
-            <h1 className="text-xl font-medium tracking-wider mb-6">MY RECIPES</h1>
+            <div className="mb-6 flex justify-between items-center">
+                <h1 className="text-xl font-medium tracking-wider">MY RECIPES</h1>
+                <div>
+                    <PrimaryBtn style="orange" onClick={addRecipeHandler}>ADD RECIPE</PrimaryBtn>
+                </div>
+            </div>
             {authenticationQuery.isSuccess ?
                 userRecipesQuery.isLoading ?
                     <Loading />
