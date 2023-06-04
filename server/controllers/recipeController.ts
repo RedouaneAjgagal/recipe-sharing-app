@@ -44,7 +44,8 @@ const createRecipe: RequestHandler = async (req: CustomRequest, res) => {
         cookTime,
         ingredients,
         methods,
-        user: Object(req.user!.id)
+        user: Object(req.user!.id),
+        totalTime: cookTime + preparationTime
     }
     if (description && description.trim() !== "") {
         recipeDetails.description = description;
@@ -152,39 +153,36 @@ const updateRecipe: RequestHandler = async (req: CustomRequest, res) => {
     checkPermission(recipe.user.toString(), req.user!.id);
 
     // insert valid values to new obj
-    const updatedRecipe: PartialRecipe = {}
     const isValidImages = validImages(images);
     const isValidIngredients = validIngredients(ingredients);
     const isValidMethods = validMethods(methods);
     const isValidPreparationTime = validNumber(preparationTime);
     const isValidCookTime = validNumber(cookTime);
-    if (isValidImages) {
-        updatedRecipe.images = images;
+    if (!title || title.trim() === "" || !isValidImages || !isValidIngredients || !isValidMethods || !isValidPreparationTime || !isValidCookTime) {
+        throw new BadRequestError("must provide valid values");
     }
-    if (isValidIngredients) {
-        updatedRecipe.ingredients = ingredients;
+    const updatedRecipe: PartialRecipe = {
+        title,
+        images,
+        cookTime,
+        preparationTime,
+        ingredients,
+        methods,
+        user: Object(req.user!.id),
+        avgRating: recipe.avgRating,
+        totalTime: preparationTime + cookTime,
+        createdAt: recipe.createdAt
     }
-    if (isValidMethods) {
-        updatedRecipe.methods = methods;
-    }
-    if (title && title.trim() !== "") {
-        updatedRecipe.title = title;
-    }
+
     if (description && description.trim() !== "") {
         updatedRecipe.description = description;
     }
     if (note && note.trim() !== "") {
         updatedRecipe.note = note;
     }
-    if (isValidPreparationTime) {
-        updatedRecipe.preparationTime = preparationTime;
-    }
-    if (isValidCookTime) {
-        updatedRecipe.cookTime = cookTime;
-    }
 
     // update the recipe
-    await recipe.updateOne(updatedRecipe, { runValidators: true });
+    await recipe.replaceOne(updatedRecipe, { runValidators: true });
 
     res.status(StatusCodes.OK).json({ msg: "You have updated the recipe successfully" });
 }

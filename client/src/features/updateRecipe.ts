@@ -3,19 +3,21 @@ import { isValidInputs } from "../utils/recipeFormValidation";
 
 const updateRecipe = async (formData: FormData) => {
     // add validation
+    console.log(formData.get("note"));
     const { errors, value } = isValidInputs(formData);
     if (Object.keys(errors).length) {
         return { errors }
     }
 
     const images = formData.get("images")?.toString().split(",");
+    const note = formData.get("note") ? formData.get("note")!.toString() : ""
 
 
     // get all inputs data
     const recipeDetails = {
         title: value.title,
-        description: formData.get("description") as string,
-        note: formData.get("note") as string,
+        description: formData.get("description")?.toString(),
+        note,
         preparationTime: Number(value.prepTime),
         cookTime: Number(value.cookTime),
         ingredients: value.ingredients,
@@ -27,7 +29,7 @@ const updateRecipe = async (formData: FormData) => {
     const recipeId = new URL(window.location.href).searchParams.get("recipeId");
 
     const response = await fetch(`${url}/recipes/${recipeId}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(recipeDetails)

@@ -16,7 +16,7 @@ router.post('/upload-images', authenticateUser, uploadRecipeImages);
 
 router.route('/:recipeId')
     .get(singleRecipe)
-    .patch(authenticateUser, updateRecipe)
+    .put(authenticateUser, updateRecipe)
     .delete(authenticateUser, deleteRecipe);
 
 router.get('/:recipeId/comments', recipeComments);
