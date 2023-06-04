@@ -1,4 +1,4 @@
-import { Link, useNavigate,  } from 'react-router-dom'
+import { Link, useNavigate, } from 'react-router-dom'
 import Input from '../Input';
 import NoteInput from './NoteInput';
 import IngredientsList from './IngredientsList';
@@ -8,11 +8,7 @@ import { UErrorsForm } from '../../pages/NewPrecipe';
 import StatusResponse from '../StatusResponse';
 import UploadImage from './UploadImage';
 import { URecipeDetails } from '../../pages/Recipe';
-import RecipeImage from './RecipeImage';
 import { useState } from "react";
-import url from '../../config/url';
-import { AiOutlinePlus } from "react-icons/ai"
-import { ImSpinner2 } from "react-icons/im";
 import postRecipe from '../../features/postRecipe';
 import updateRecipe from '../../features/updateRecipe';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -25,56 +21,11 @@ interface Props {
 }
 
 const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
-    // const [recipeDetails, setRecipeDetails] = useState<URecipeDetails>();
-    const [isLoading, setIsLoading] = useState(false);
     const [formErrors, setFormErrors] = useState<{ errors: UErrorsForm } | null>(null);
+    const [isImageLoading, setIsImageLoading] = useState<boolean>(false);
 
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const errorsData = formErrors?.errors;
-    const [recipesImgs, setRecipeImgs] = useState<string[] | undefined>(props.recipeDetails?.recipe?.images);
-
-    const removeImgHandler = (value: string) => {
-        setRecipeImgs(images => {
-            const updatedImages = images?.filter(img => img !== value);
-            return updatedImages
-        })
-    }
-
-    const addImagesHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const images = e.currentTarget.files;
-        const isLimited = e.currentTarget.files!.length + recipesImgs!.length > 3;
-        if (!images || images.length < 1) {
-            return;
-        }
-        if (isLimited) {
-            return;
-        }
-        for (let i = 0; i < images.length; i++) {
-            const image = images.item(i)!;
-            const maxSize = 1024 * 1024;
-            if (image.size > maxSize || !image.type.startsWith("image")) {
-                return;
-            }
-            setIsLoading(true);
-            const formData = new FormData();
-            formData.append("images", image);
-            const response = await fetch(`${url}/recipes/upload-images`, {
-                method: "POST",
-                credentials: "include",
-                body: formData
-            });
-            const data = await response.json();
-            const src: string[] = data.src;
-            setRecipeImgs(imgs => {
-                return imgs?.concat(src[0]);
-            });
-            setIsLoading(false);
-            e.target.value = "";
-        }
-    }
-
-
 
     // if the current user is not recipe publisher
     if (props.for === "updateRecipe" && props.recipeDetails?.recipe.user !== props.userId) {
@@ -97,6 +48,7 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
             props.for === "newRecipe" ? navigate("/?sort=newest") : navigate("..");
         }
     });
+    const errorsData = formErrors?.errors;
 
     const postCommentHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -104,24 +56,19 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
         mutation.mutate(formData);
     }
 
+    const onImageLoading = (isLoading: boolean) => {
+        setIsImageLoading(isLoading);
+    }
+
     return (
         <>
             {mutation.isError && <StatusResponse success={false} message={(mutation.error as Error).message} />}
             <form onSubmit={postCommentHandler} encType='multipart/form-data' className={`${props.for === "updateRecipe" ? "mb-16" : "mb-0"}`}>
-                {recipesImgs ?
+                {props.for === "updateRecipe" &&
                     <div className='pb-7'>
-                        <div className='flex gap-4'>
-                            {recipesImgs.map(img => <RecipeImage key={crypto.randomUUID()} src={img} onRemove={removeImgHandler} length={recipesImgs.length} />)}
-                            <input type="text" hidden value={recipesImgs} name='images' readOnly />
-                            <div className='flex justify-center items-center'>
-                                <label htmlFor="addImages" className='cursor-pointer'>
-                                    {recipesImgs.length < 3 && (isLoading ? <ImSpinner2 className="text-2xl animate-spin" /> : <AiOutlinePlus className="text-2xl" />)}
-                                    <input type="file" className='sr-only' id='addImages' onChange={addImagesHandler} accept='image/*' multiple disabled={isLoading} />
-                                </label>
-                            </div>
-                        </div>
+                        <UploadImage recipeImages={props.recipeDetails!.recipe.images} isLoading={isImageLoading} isImageLoading={onImageLoading} />
                     </div>
-                    : null}
+                }
                 <div className='pb-7 relative'>
                     <Input name='title' placeHolder='Title' type='text' success={errorsData?.title ? false : true} value={props.for === "updateRecipe" ? props.recipeDetails?.recipe.title : undefined} />
                     {errorsData?.title && <span className="absolute bottom-2 left-0 text-sm text-red-700">Title is required</span>}
@@ -142,8 +89,17 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
                 <NoteInput value={props.for === "updateRecipe" ? props.recipeDetails?.recipe.note : undefined} />
                 <IngredientsList errors={errorsData?.ingredients} ingredients={props.for === "updateRecipe" ? props.recipeDetails?.recipe.ingredients : undefined} />
                 <MethodsList errors={errorsData?.methods} methods={props.for === "updateRecipe" ? props.recipeDetails?.recipe.methods : undefined} />
-                {props.for === "newRecipe" && <UploadImage errorMsg={errorsData?.images} />}
-                <CallToAction for={props.for} isSubmitting={mutation.isLoading} />
+                {props.for === "newRecipe" &&
+                    <div className=' flex flex-col justify-center relative gap-4 pt-4'>
+                        <h2 className='text-2xl font-medium text-slate-700/90'>Image</h2>
+                        <label htmlFor="addImages" className="font-medium text-slate-600">Choose images for your recipe:</label>
+                        <div className='relative pb-6'>
+                            <UploadImage recipeImages={[]} isLoading={isImageLoading} isImageLoading={onImageLoading} />
+                            {errorsData?.isInvalidImg && <span className="absolute bottom-0 left-0 text-sm text-red-700">Provide a valid image</span>}
+                            
+                        </div>
+                    </div>}
+                <CallToAction for={props.for} isSubmitting={mutation.isLoading} disabled={isImageLoading} />
             </form>
         </>
     )

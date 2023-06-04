@@ -9,7 +9,7 @@ const validMethods = (methods: { title: string, sub: string }[]) => {
 }
 
 const validImages = (recipeImages: string[]) => {
-    const isValidRecipeImages = recipeImages?.length < 5 && recipeImages.every(item => item.trim().startsWith("https://res.cloudinary.com/dqfrgtxde/image/upload"));
+    const isValidRecipeImages = recipeImages?.length < 3 && recipeImages.every(item => item.trim().startsWith("https://res.cloudinary.com/dqfrgtxde/image/upload"));
     return isValidRecipeImages;
 }
 

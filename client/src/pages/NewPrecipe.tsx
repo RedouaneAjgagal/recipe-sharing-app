@@ -11,6 +11,7 @@ export interface UErrorsForm {
     prepTime?: boolean;
     cookTime?: boolean;
     title?: boolean;
+    isInvalidImg?: boolean; 
     images?: string;
 }
 

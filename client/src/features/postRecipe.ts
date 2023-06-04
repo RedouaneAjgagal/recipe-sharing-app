@@ -1,24 +1,22 @@
-import uploadImages from "./uploadImages";
 import url from "../config/url";
 import { isValidInputs } from "../utils/recipeFormValidation";
+import { validImages } from "../helpers/recipeValidations";
+
 
 const postRecipe = async (formData: FormData) => {
 
     // Add validations
     const { errors, value } = isValidInputs(formData);
 
-    const images = formData.getAll("images") as Blob[];
+    const images = formData.get("images")?.toString().split(",") || [];
 
-    const customUrl = `${url}/recipes/upload-images`;
-
-    if (Object.keys(errors).length) {
-        return { errors }
-    }
-
-    const imagesData = await uploadImages(images, customUrl, "images");
-    if (imagesData.msg) {
-        errors.images = imagesData.msg;
-        return { errors }
+    const isValidImages = validImages(images)
+    let isInvalidImg = false;
+    if (Object.keys(errors).length || !isValidImages) {
+        if (!isValidImages) {
+            isInvalidImg = true;
+        }
+        return { errors: { ...errors, isInvalidImg } }
     }
 
     // get all inputs data
@@ -28,9 +26,9 @@ const postRecipe = async (formData: FormData) => {
         note: formData.get("note")?.toString(),
         preparationTime: Number(value.prepTime),
         cookTime: Number(value.cookTime),
-        images: imagesData.src,
         ingredients: value.ingredients,
         methods: value.methods,
+        images
     }
 
     // creqte recipe request
