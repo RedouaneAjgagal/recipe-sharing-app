@@ -20,10 +20,10 @@ const IngredientsList = (props: React.PropsWithoutRef<Props>) => {
     const initialIngredients = props.ingredients ?
         props.ingredients.map((ingredient, index) => {
             const id = crypto.randomUUID();
-            return <Ingredients key={id} nameId={index} value={ingredient} ingredientContainerId={id} removeIngredientsContainer={removeIngredientContainer} ingredientsAmount={props.ingredients!.length} />
+            return <Ingredients key={id} index={index} value={ingredient} ingredientContainerId={id} removeIngredientsContainer={removeIngredientContainer} ingredientsAmount={props.ingredients!.length} />
         })
         :
-        [<Ingredients key={"0"} nameId={0} ingredientContainerId={"0"} removeIngredientsContainer={removeIngredientContainer} ingredientsAmount={0} />]
+        [<Ingredients key={"0"} index={0} ingredientContainerId={"0"} removeIngredientsContainer={removeIngredientContainer} ingredientsAmount={0} />]
 
 
     const [ingredients, setIngredients] = useState(initialIngredients);
@@ -31,7 +31,7 @@ const IngredientsList = (props: React.PropsWithoutRef<Props>) => {
     const anotherIngredientHandler = () => {
         const id = crypto.randomUUID();
         setIngredients((prev) => {
-            return [...prev, <Ingredients key={id} nameId={prev.length} ingredientContainerId={id} removeIngredientsContainer={removeIngredientContainer} ingredientsAmount={prev.length} />]
+            return [...prev, <Ingredients key={id} index={prev.length} ingredientContainerId={id} removeIngredientsContainer={removeIngredientContainer} ingredientsAmount={prev.length} />]
         });
     }
 

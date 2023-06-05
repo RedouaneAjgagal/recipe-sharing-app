@@ -5,7 +5,7 @@ import { AiOutlinePlus, AiFillDelete } from "react-icons/ai"
 import { UIngredients } from "../../pages/Recipe";
 
 interface Props {
-    nameId: number;
+    index: number;
     value?: UIngredients;
     ingredientContainerId: string;
     removeIngredientsContainer: (ingredientContainerId: string) => void;
@@ -52,7 +52,7 @@ const Ingredients = (props: React.PropsWithoutRef<Props>) => {
                 </div>
                 <button type="button" onClick={addIngredientHandler} className="flex items-center justify-center bg-slate-200/80 text-slate-700/90 font-medium rounded-full py-1 mt-2"><AiOutlinePlus /> Add New Ingredient</button>
             </div>
-            {props.nameId > 0 ?
+            {props.index !== 0 ?
                 <div className="flex justify-end font-medium text-xl text-red-500">
                     <button type="button" onClick={onRemoveIngredientsContainer} className="px-1">
                         <AiFillDelete />

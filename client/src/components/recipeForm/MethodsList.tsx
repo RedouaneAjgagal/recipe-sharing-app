@@ -10,16 +10,26 @@ interface Props {
 
 const MethodsList = (props: React.PropsWithoutRef<Props>) => {
 
-    const initalMethods = props.methods ? props.methods.map(method => <Method key={crypto.randomUUID()} value={method} />) : [<Method key={crypto.randomUUID()} />]
+    const removeMethodHandler = (methodId: string) => {
+        setMethods(prev => {
+            return prev.filter(method => method.key !== methodId);
+        });
+    }
+
+    const initalMethods = props.methods ? props.methods.map((method, index) => {
+        const id = crypto.randomUUID();
+        return <Method key={id} methodId={id} index={index} value={method} onRemoveMethod={removeMethodHandler} />
+    }) : [<Method key={crypto.randomUUID()} methodId="0" index={0} onRemoveMethod={removeMethodHandler} />]
 
     const [methods, setMethods] = useState(initalMethods);
 
     const addMethodHandler = () => {
         const id = crypto.randomUUID();
         setMethods((prev) => {
-            return [...prev, <Method key={id} />]
+            return [...prev, <Method key={id} methodId={id} index={prev.length} onRemoveMethod={removeMethodHandler} />]
         });
     }
+
 
     return (
         <>
