@@ -10,15 +10,28 @@ interface Props {
 }
 
 const IngredientsList = (props: React.PropsWithoutRef<Props>) => {
-    
-    const initialIngredients = props.ingredients ? props.ingredients.map((ingredient, index) => <Ingredients key={crypto.randomUUID()} nameId={index} value={ingredient} />) : [<Ingredients key={0} nameId={0} />]
+
+    const removeIngredientContainer = (ingredientContainerId: string) => {
+        setIngredients(prev => {
+            return prev.filter(ingredientContainer => ingredientContainer.key !== ingredientContainerId);
+        });
+    }
+
+    const initialIngredients = props.ingredients ?
+        props.ingredients.map((ingredient, index) => {
+            const id = crypto.randomUUID();
+            return <Ingredients key={id} nameId={index} value={ingredient} ingredientContainerId={id} removeIngredientsContainer={removeIngredientContainer} ingredientsAmount={props.ingredients!.length} />
+        })
+        :
+        [<Ingredients key={"0"} nameId={0} ingredientContainerId={"0"} removeIngredientsContainer={removeIngredientContainer} ingredientsAmount={0} />]
+
 
     const [ingredients, setIngredients] = useState(initialIngredients);
 
     const anotherIngredientHandler = () => {
         const id = crypto.randomUUID();
         setIngredients((prev) => {
-            return [...prev, <Ingredients key={id} nameId={prev.length} />]
+            return [...prev, <Ingredients key={id} nameId={prev.length} ingredientContainerId={id} removeIngredientsContainer={removeIngredientContainer} ingredientsAmount={prev.length} />]
         });
     }
 

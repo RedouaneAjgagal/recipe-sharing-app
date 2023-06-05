@@ -3,7 +3,6 @@ import { isValidInputs } from "../utils/recipeFormValidation";
 
 const updateRecipe = async (formData: FormData) => {
     // add validation
-    console.log(formData.get("note"));
     const { errors, value } = isValidInputs(formData);
     if (Object.keys(errors).length) {
         return { errors }

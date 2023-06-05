@@ -10,7 +10,7 @@ export const isValidInputs = (formData: FormData) => {
     }
 
     const prepTime = formData.get("prepTime") as string;
-    
+
     const isValidPrepTime = validNumber(Number(prepTime));
     if (prepTime.trim() === "" || !isValidPrepTime) {
         errors.prepTime = true
@@ -23,9 +23,9 @@ export const isValidInputs = (formData: FormData) => {
         errors.cookTime = true
     }
 
-    const ingredients = formData.getAll("ingredientTitle").map((title, index) => {
-        return { title, sub: formData.getAll(`ingredient-${index}`) }
-    }) as { title: string, sub: string[] }[];
+    const ingredients = formData.getAll("ingredientContainerId").map((id) => {
+        return { title: formData.get(`ingredientTitle_${id}`)!.toString(), sub: formData.getAll(`ingredient_${id}`) as string[] }
+    });
 
     const isValidIngredients = validIngredients(ingredients);
     if (!isValidIngredients) {
