@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import register from "../../features/register"
 import { ImSpinner2 } from "react-icons/im"
 import login from "../../features/login"
+import useStatusResponse from "../../hooks/useStatusResponse"
 
 
 interface Props {
@@ -43,9 +44,11 @@ const Form = (props: React.PropsWithoutRef<Props>) => {
         validPassword?: boolean;
     }
 
+    const isError = useStatusResponse(errors?.success === false);
+
     return (
         <section className="w-full pt-12 relative">
-            {errors?.msg && <StatusResponse success={errors.success!} message={errors.msg} />}
+            {isError && <StatusResponse success={false} message={errors?.msg!} />}
             <form action={props.for === "login" ? "/login" : "/register"} noValidate className="bg-white px-4 py-6 rounded shadow-lg flex flex-col" onSubmit={registerHandler}>
                 <article className="mb-6">
                     <h1 className="text-3xl font-medium mb-2">{props.for === "login" ? "Sign in" : "Sign up"}</h1>

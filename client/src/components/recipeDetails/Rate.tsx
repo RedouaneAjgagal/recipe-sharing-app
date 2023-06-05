@@ -2,6 +2,7 @@ import { BsStarFill, BsStar } from "react-icons/bs";
 import StatusResponse from "../StatusResponse";
 import rateRecipe from "../../features/rateRecipe";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import useStatusResponse from "../../hooks/useStatusResponse";
 
 interface Props {
     recipeId: string;
@@ -9,6 +10,8 @@ interface Props {
 }
 
 const Rate = (props: React.PropsWithoutRef<Props>) => {
+
+
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: rateRecipe,
@@ -30,9 +33,11 @@ const Rate = (props: React.PropsWithoutRef<Props>) => {
         }
     });
 
+    const isError = useStatusResponse(mutation.isError);
+
     return (
         <>
-            {mutation.isError && <StatusResponse message={(mutation.error as Error).message} success={false} />}
+            {isError && <StatusResponse message={(mutation.error as Error)?.message} success={false} />}
             <section className="mt-6" id="rate">
                 <h2 className="text-2xl text-slate-700 font-medium tracking-wide pb-2">Rate this recipe?</h2>
                 <p>Share with us your opinion and rate it</p>

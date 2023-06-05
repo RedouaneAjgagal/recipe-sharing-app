@@ -12,6 +12,7 @@ import { useState } from "react";
 import postRecipe from '../../features/postRecipe';
 import updateRecipe from '../../features/updateRecipe';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import useStatusResponse from '../../hooks/useStatusResponse';
 
 interface Props {
     for: "newRecipe" | "updateRecipe";
@@ -60,9 +61,11 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
         setIsImageLoading(isLoading);
     }
 
+    const isError = useStatusResponse(mutation.isError);
+
     return (
         <>
-            {mutation.isError && <StatusResponse success={false} message={(mutation.error as Error).message} />}
+            {isError && <StatusResponse success={false} message={(mutation.error as Error)?.message} />}
             <form onSubmit={postCommentHandler} encType='multipart/form-data' className={`${props.for === "updateRecipe" ? "mb-16" : "mb-0"}`}>
                 {props.for === "updateRecipe" &&
                     <div className='pb-7'>
@@ -92,11 +95,11 @@ const CreateRecipeForm = (props: React.PropsWithoutRef<Props>) => {
                 {props.for === "newRecipe" &&
                     <div className=' flex flex-col justify-center relative gap-4 pt-4'>
                         <h2 className='text-2xl font-medium text-slate-700/90'>Image</h2>
-                        <label htmlFor="addImages" className="font-medium text-slate-600">Choose images for your recipe:</label>
+                        <label htmlFor="addImages" className="font-medium text-slate-600">Choose images for your recipe: <span className='text-xs text-gray-400'>(less than 1MB)</span></label>
                         <div className='relative pb-6'>
                             <UploadImage recipeImages={[]} isLoading={isImageLoading} isImageLoading={onImageLoading} />
                             {errorsData?.isInvalidImg && <span className="absolute bottom-0 left-0 text-sm text-red-700">Provide a valid image</span>}
-                            
+
                         </div>
                     </div>}
                 <CallToAction for={props.for} isSubmitting={mutation.isLoading} disabled={isImageLoading} />

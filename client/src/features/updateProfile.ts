@@ -26,7 +26,7 @@ export const updateProfile = async (formData: FormData) => {
     if (favouriteMeals && favouriteMeals.length > 15) {
         errors.favouriteMeals = true;
     }
-    if (name.trim() === "") {
+    if (name.trim() === "" || name.trim().length < 3 || name.trim().length > 20) {
         errors.name = true
     }
     if (bio.trim() === "" || bio.length > 300) {

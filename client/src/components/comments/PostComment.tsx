@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { ImSpinner2 } from "react-icons/im";
 import StatusResponse from "../StatusResponse";
+import useStatusResponse from "../../hooks/useStatusResponse";
 
 const PostComment = () => {
     const { recipeId } = useParams();
@@ -40,9 +41,11 @@ const PostComment = () => {
         });
     }
 
+    const isError = useStatusResponse(mutation.isError);
+
     return (
         <>
-            {mutation.isError && <StatusResponse message={errorMsg.message} success={false} />}
+            {isError && <StatusResponse message={errorMsg?.message} success={false} />}
             <form method="POST" className='mt-8 mb-10' onSubmit={postCommentHandler}>
                 <div className="relative pb-4">
                     <textarea id="comment" autoComplete='off' placeholder='Join the discussion...' className={`${comment.error && "border-red-600 bg-red-100/25"} w-full resize-none border rounded-md py-2 px-4  min-h-[8rem] text-slate-600 `} onChange={commentValue} value={comment.value} maxLength={250}></textarea>

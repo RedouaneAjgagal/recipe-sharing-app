@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import forgetPassword from "../../features/forgetPassword";
 import resetPassword from "../../features/resetPassword";
 import { ImSpinner2 } from "react-icons/im";
+import useStatusResponse from "../../hooks/useStatusResponse";
 
 
 interface Props {
@@ -32,10 +33,12 @@ const ResetPasswordForm = (props: React.PropsWithoutRef<Props>) => {
 
     const responseData = mutation.data;
 
+    const isResponse = useStatusResponse(responseData?.msg ? true : false);
+
     return (
         <div className="flex flex-col min-h-[75vh] justify-center items-center p-4">
             <div className='w-full pt-20 relative'>
-                {responseData?.msg && <StatusResponse success={responseData.success} message={responseData.msg} />}
+                {isResponse && <StatusResponse success={responseData?.success!} message={responseData?.msg!} />}
                 <form onSubmit={submitHandler} noValidate className="bg-white px-4 py-6 rounded shadow-lg flex flex-col">
                     <article className="mb-6">
                         <h1 className="text-3xl font-medium mb-2">Reset Password</h1>

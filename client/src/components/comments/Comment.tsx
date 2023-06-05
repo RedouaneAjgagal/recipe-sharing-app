@@ -10,6 +10,7 @@ import updateComment from "../../features/updateComment";
 import likeComment from "../../features/likeComment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import StatusResponse from "../StatusResponse";
+import useStatusResponse from "../../hooks/useStatusResponse";
 
 interface Props {
     id: string;
@@ -80,9 +81,11 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
         cancelUpdateHandler();
     }, [updateMutation.data]);
 
+    const isError = useStatusResponse((updateMutation.data?.msg || likeMutation.isError));
+
     return (
         <>
-            {updateMutation.data?.msg || likeMutation.isError && <StatusResponse message={updateMutation.data?.msg ? updateMutation.data.msg : (likeMutation.error as Error).message} success={false} />}
+            {isError && <StatusResponse message={updateMutation.data?.msg ? updateMutation.data.msg : (likeMutation.error as Error)?.message} success={false} />}
             <li className="bg-[#ffffff] border border-amber-700/80 p-4 flex flex-col gap-3 rounded-md">
                 <div className="flex items-center gap-3 flex-wrap">
                     <div className="min-h-full h-14 flex items-center">
