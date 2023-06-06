@@ -22,7 +22,7 @@ const BookMark = (props: React.PropsWithoutRef<Props>) => {
     }
 
     return (
-        <button onClick={bookmarkHandler} className="flex justify-center items-center w-full max-w-[3rem] h-full min-h-[3rem] bg-white rounded-full shadow-xl text-amber-900 text-[1.55rem]">
+        <button onClick={bookmarkHandler} className="flex justify-center items-center w-12 h-12  bg-white rounded-full shadow-xl text-amber-900 text-[1.55rem]">
             {mutation.isSuccess ?
                 mutation.data.added ? <BsBookmarkFill /> : <BsBookmark />
                 :

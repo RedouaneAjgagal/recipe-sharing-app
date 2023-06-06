@@ -16,7 +16,7 @@ interface Props {
 
 const RecipeDetailsNav = (props: React.PropsWithoutRef<Props>) => {
   return (
-    <div className="flex justify-between items-center">
+    <div className="flex justify-between items-center md:mt-2">
       <div className="flex flex-col gap-2">
         <Publisher publisher={props.publisher} updatedAt={props.updatedAt} />
         <Ratings avgRating={props.avgRating} />

@@ -21,8 +21,12 @@ const CommentsNav = (props: React.PropsWithoutRef<Props>) => {
 
     return (
         <nav className='flex gap-4 mb-5'>
-            <PrimaryBtn onClick={topHandler} style={`${isRecent ? "white" : "black"}`}>TOP</PrimaryBtn>
-            <PrimaryBtn onClick={recentHandler} style={`${isRecent ? "black" : "white"}`}>RECENT</PrimaryBtn>
+            <div className='w-24'>
+                <PrimaryBtn onClick={topHandler} style={`${isRecent ? "white" : "black"}`}>TOP</PrimaryBtn>
+            </div>
+            <div className='w-24'>
+                <PrimaryBtn onClick={recentHandler} style={`${isRecent ? "black" : "white"}`}>RECENT</PrimaryBtn>
+            </div>
         </nav>
     )
 }

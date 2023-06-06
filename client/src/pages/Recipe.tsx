@@ -83,12 +83,12 @@ const Recipe = () => {
     }
 
     return (
-        <div className="p-4">
+        <div className="p-4 sm:w-full sm:max-w-[31rem] sm:m-auto md:max-w-full md:px-8">
             {recipeQuery.isLoading ?
                 <Loading />
                 :
                 <>
-                    <div className="w-28">
+                    <div className="w-28 mt-2 md:mt-4">
                         <PrimaryBtn style="black" onClick={backHandler}><AiFillCaretLeft />Go back</PrimaryBtn>
                     </div>
                     <RecipeDetails recipeDetails={recipeDetails} />

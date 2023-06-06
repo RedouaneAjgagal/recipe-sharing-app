@@ -51,9 +51,11 @@ const PostComment = () => {
                     <textarea id="comment" autoComplete='off' placeholder='Join the discussion...' className={`${comment.error && "border-red-600 bg-red-100/25"} w-full resize-none border rounded-md py-2 px-4  min-h-[8rem] text-slate-600 `} onChange={commentValue} value={comment.value} maxLength={250}></textarea>
                     <p className="absolute right-0 bottom-0 text-sm text-slate-400">{comment.value.length}/250</p>
                 </div>
-                <button disabled={mutation.isLoading} className="w-full px-2 py-[.15rem] rounded-md font-medium bg-[#FFEBCC] text-black border border-[#FFC877] mt-2 flex items-center justify-center">
-                    {mutation.isLoading ? <ImSpinner2 className="animate-spin text-2xl" /> : "NEW COMMENT"}
-                </button>
+                <div className="flex md:justify-end">
+                    <button disabled={mutation.isLoading} className="w-full px-2 py-[.15rem] rounded-md font-medium bg-[#FFEBCC] text-black border border-[#FFC877] mt-2 flex items-center justify-center md:w-48">
+                        {mutation.isLoading ? <ImSpinner2 className="animate-spin text-2xl" /> : "NEW COMMENT"}
+                    </button>
+                </div>
 
             </form>
         </>
