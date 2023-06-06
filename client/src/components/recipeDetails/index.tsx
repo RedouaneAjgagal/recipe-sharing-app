@@ -3,9 +3,8 @@ import RecipeImages from "./RecipeImages"
 import RecipeStats from "./RecipeStats"
 import Ingredients from "./Ingredients"
 import Methods from "./Methods"
-import RecipeDetailsNav from "./RecipeDetailsNav";
+import RecipeDetailsNav from "./RecipeDetailsNav"
 import Rate from "./Rate"
-// import { useQueryClient } from "@tanstack/react-query"
 
 interface Props {
     recipeDetails: URecipeDetails
@@ -19,11 +18,6 @@ const RecipeDetails = (props: React.PropsWithoutRef<Props>) => {
 
     const prepTime = props.recipeDetails.recipe.preparationTime.toString().padStart(2, "0");
     const cookTime = props.recipeDetails.recipe.cookTime.toString().padStart(2, "0");
-
-
-    // const queryClient = useQueryClient();
-    // const user = queryClient.getQueryData(["authentication"]);
-    // console.log(user);
 
     return (
         <article className="py-6 flex flex-col gap-6 text-[#535353] leading-relaxed">

@@ -12,7 +12,7 @@ const RecipeStars = (props: React.PropsWithoutRef<Props>) => {
     
 
     return (
-        <div className="flex col-span-1 justify-end">
+        <div className="flex">
             {stars}
             {outlineStars}
         </div>

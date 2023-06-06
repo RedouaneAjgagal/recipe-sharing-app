@@ -15,7 +15,7 @@ const Root = (() => {
     return (
         <div>
             <Navbar />
-            <main>
+            <main className="w-full max-w-[64rem] m-auto">
                 <Outlet />
             </main>
         </div>

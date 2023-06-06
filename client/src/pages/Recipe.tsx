@@ -1,9 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import RecipeDetails from "../components/recipeDetails";
 import Comments from "../components/comments";
 import { useQuery } from "@tanstack/react-query";
 import getSingleRecipe from "../fetchers/getSingleRecipe";
 import Loading from "../UI/Loading";
+import PrimaryBtn from "../UI/PrimaryBtn";
+import { AiFillCaretLeft } from "react-icons/ai";
 
 export interface UIngredients {
     title: string,
@@ -74,12 +76,23 @@ const Recipe = () => {
     });
     const recipeDetails: URecipeDetails = recipeQuery.data;
 
+
+    const navigate = useNavigate();
+    const backHandler = () => {
+        navigate(-1);
+    }
+
     return (
         <div className="p-4">
             {recipeQuery.isLoading ?
                 <Loading />
                 :
-                <RecipeDetails recipeDetails={recipeDetails} />
+                <>
+                    <div className="w-28">
+                        <PrimaryBtn style="black" onClick={backHandler}><AiFillCaretLeft />Go back</PrimaryBtn>
+                    </div>
+                    <RecipeDetails recipeDetails={recipeDetails} />
+                </>
             }
             {recipeQuery.isSuccess ?
                 <Comments recipeId={recipeDetails.recipe._id} />
