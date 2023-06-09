@@ -20,7 +20,9 @@ const UpdateRecipe = () => {
 
     return (
         authenticationQuery.isSuccess ?
-            <RecipeFormContainer for="updateRecipe" userId={authenticationQuery.data.user._id} />
+            <div className="w-full max-w-[40rem] m-auto">
+                <RecipeFormContainer for="updateRecipe" userId={authenticationQuery.data.user._id} />
+            </div>
             :
             null
     )
