@@ -14,7 +14,7 @@ export interface URecipe {
 const Recipe = (props: React.PropsWithoutRef<URecipe>) => {
     return (
         <li>
-            <Link to={`/recipes/${props._id}`} className="group flex flex-col bg-white shadow-lg shadow-slate-300/10 rounded h-full justify-between">
+        <Link to={`/recipes/${props._id}`} className="group flex flex-col bg-white shadow-lg shadow-slate-300/10 rounded h-full justify-between">
                 <div>
                     <div className="overflow-hidden">
                         <img src={props.images[0]} alt="recipe" className="w-full max-w-full h-[13rem] object-cover rounded-t group-hover:scale-125 duration-500" />

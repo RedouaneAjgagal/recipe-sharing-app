@@ -49,8 +49,8 @@ const ProfileSettings = (props: React.PropsWithoutRef<Props>) => {
   }
 
   return (
-    <form className="flex flex-col gap-4 pb-4" onSubmit={updateProfileHandler}>
-      <div className="bg-white p-4 border-b flex flex-col gap-5">
+    <form className="flex flex-col gap-4 pb-4 mt-6" onSubmit={updateProfileHandler}>
+      <div className="bg-white p-4 border-b flex flex-col gap-5 rounded">
         <h1 className="font-medium tracking-wider text-xl">PERSONAL</h1>
         <div className="flex flex-col gap-4">
           <UserImage profilePicture={props.profileInfo.picture} alt={`${props.profileInfo.user.name}'s profile picture`} getUploadingState={isUploadingImgHandler} />
@@ -59,7 +59,9 @@ const ProfileSettings = (props: React.PropsWithoutRef<Props>) => {
           <InputContainer label="Bio" value={props.profileInfo.bio} type="texterea" isError={mutation.data?.bio} />
           <MealsList meals={favouriteMeals} onRemove={removeFavouriteMeal} isError={mutation.data?.favouriteMeals} />
         </div>
-        <PrimaryBtn disabled={mutation.isLoading || isUploadingImg} style="orange">{mutation.isLoading ? <ImSpinner2 className="animate-spin text-2xl" /> : "Update Profile"}</PrimaryBtn>
+        <div className="w-full sm:w-48">
+          <PrimaryBtn disabled={mutation.isLoading || isUploadingImg} style="orange">{mutation.isLoading ? <ImSpinner2 className="animate-spin text-2xl" /> : "Update Profile"}</PrimaryBtn>
+        </div>
       </div>
     </form>
   )
