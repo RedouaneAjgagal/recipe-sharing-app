@@ -3,6 +3,7 @@ import StatusResponse from "../StatusResponse";
 import rateRecipe from "../../features/rateRecipe";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useStatusResponse from "../../hooks/useStatusResponse";
+import { ImSpinner2 } from "react-icons/im";
 
 interface Props {
     recipeId: string;
@@ -10,7 +11,6 @@ interface Props {
 }
 
 const Rate = (props: React.PropsWithoutRef<Props>) => {
-
 
     const queryClient = useQueryClient();
     const mutation = useMutation({
@@ -25,7 +25,7 @@ const Rate = (props: React.PropsWithoutRef<Props>) => {
         mutation.mutate({ recipeId: props.recipeId, rateNum: Number(rate) })
     }
 
-    const unRatedStars = Array.from({ length: 5 }, (_, i) => {
+    const stars = Array.from({ length: 5 }, (_, i) => {
         if (props.ratedValue > i) {
             return <button key={i} onClick={rateHandler} value={i + 1}><BsStarFill className="p-1" /></button>
         } else {
@@ -42,7 +42,11 @@ const Rate = (props: React.PropsWithoutRef<Props>) => {
                 <h2 className="text-2xl text-slate-700 font-medium tracking-wide pb-2">Rate this recipe?</h2>
                 <p>Share with us your opinion and rate it</p>
                 <div className="flex items-center text-[2rem] py-3 text-amber-900">
-                    {unRatedStars}
+                    {mutation.isLoading ?
+                        <ImSpinner2 className="animate-spin text-3xl" />
+                        :
+                        stars
+                    }
                 </div>
             </section>
         </>

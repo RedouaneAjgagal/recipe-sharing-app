@@ -6,7 +6,6 @@ interface Props {
 
 const RecipeImage = (props: React.PropsWithoutRef<Props>) => {
     const translateX = (props.index - props.currentSlide) * 100;
-    console.log(translateX);
 
     return (
         <div style={{ transform: `translateX(${translateX}%)` }} className="w-full max-w-full h-full absolute duration-500">

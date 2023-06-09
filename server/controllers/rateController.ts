@@ -21,6 +21,11 @@ const rateRecipe: RequestHandler = async (req: CustomRequest, res) => {
         throw new NotFoundError(`Found no recipe with id ${recipeId}`);
     }
 
+    // unable to rate recipe if belong to this user
+    if (recipe.user.toString() === req.user!.id) {
+        throw new BadRequestError("Can not rate your own recipe");
+    }
+
     // check if valid rate
     if (rate < 1 || rate > 5) {
         throw new BadRequestError('Rating must be between 1 and 5');
@@ -34,6 +39,7 @@ const rateRecipe: RequestHandler = async (req: CustomRequest, res) => {
 
     // check if already rated
     const alreadyRated = await Rate.findOne({ recipe: recipe._id, user: req.user!.id });
+
     if (alreadyRated) {
         // upadate the rate
         await alreadyRated.updateOne({ rate });
@@ -47,6 +53,5 @@ const rateRecipe: RequestHandler = async (req: CustomRequest, res) => {
 }
 
 export {
-    rateRecipe,
-    // updateRate
+    rateRecipe
 }
