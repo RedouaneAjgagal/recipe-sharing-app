@@ -31,7 +31,7 @@ const NewPrecipe = () => {
 
     return (
         authenticationQuery.isSuccess ?
-            <div>
+            <div className="w-full max-w-[40rem] m-auto">
                 <CreateRecipeNav />
                 <RecipeFormContainer for="newRecipe" />
             </div>

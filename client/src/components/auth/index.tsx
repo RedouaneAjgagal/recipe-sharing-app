@@ -23,7 +23,7 @@ const Auth = (props: React.PropsWithoutRef<Props>) => {
     return (
         <>
             {isAuthenticated.isError ?
-                <div className="flex flex-col min-h-[75vh] justify-center items-center p-4">
+                <div className="flex flex-col min-h-[75vh] justify-center items-center p-4 w-full max-w-[40rem] m-auto">
                     <Form for={props.for} />
                     {props.for === "login" ?
                         <p className="mt-4 text-black">You dont have an account yet? <Link to={"/register"} className="text-amber-700 font-medium">Join now</Link></p>

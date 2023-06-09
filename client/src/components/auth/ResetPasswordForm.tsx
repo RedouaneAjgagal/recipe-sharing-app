@@ -36,7 +36,7 @@ const ResetPasswordForm = (props: React.PropsWithoutRef<Props>) => {
     const isResponse = useStatusResponse(responseData?.msg ? true : false);
 
     return (
-        <div className="flex flex-col min-h-[75vh] justify-center items-center p-4">
+        <div className="flex flex-col min-h-[75vh] justify-center items-center p-4 w-full max-w-[40rem] m-auto">
             <div className='w-full pt-20 relative'>
                 {isResponse && <StatusResponse success={responseData?.success!} message={responseData?.msg!} />}
                 <form onSubmit={submitHandler} noValidate className="bg-white px-4 py-6 rounded shadow-lg flex flex-col">
