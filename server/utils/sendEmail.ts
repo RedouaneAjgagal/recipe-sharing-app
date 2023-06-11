@@ -10,8 +10,9 @@ interface SendEmail {
 
 const sendEmail = ({ to, subject, html }: SendEmail) => {
     const transporter = nodemailer.createTransport(nodemailerConfig);
-    transporter.sendMail({
-        from: '"Recipe Sharing APP" <support@recipe.com>',
+
+    return transporter.sendMail({
+        from: `Recipe Sharing App <${process.env.EMAIL_SENDER}>`,
         to,
         subject,
         html,

@@ -1,9 +1,9 @@
 const nodemailerConfig = {
-    host: 'smtp.ethereal.email',
+    host: "smtp-relay.sendinblue.com",
     port: 587,
     auth: {
-        user: 'frida11@ethereal.email',
-        pass: 'cJrwkTYngq6SeEtfac'
+        user: process.env.BREVO_USER,
+        pass: process.env.BREVO_PASS
     }
 };
 
