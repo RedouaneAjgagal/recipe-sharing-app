@@ -23,19 +23,19 @@ const UserRecipe = (props: React.PropsWithoutRef<Props>) => {
 
     return (
         <div className="bg-white grid grid-cols-3 rounded shadow-sm relative">
-            <Link to={`/recipes/${props.id}`} className="min-h-full h-20 w-full col-span-1 sm:h-24">
+            <Link to={`/recipes/${props.id}`} className="min-h-full h-20 w-full col-span-1 sm:h-[5.5rem]">
                 <img className="w-full h-full object-cover rounded-l" src={props.image} alt={props.title} />
             </Link>
             <div className="col-span-2 flex items-center justify-between p-2 sm:px-4">
                 {isOpen ?
-                    <div className="flex items-center gap-2 sm:text-lg">
+                    <div className="flex items-center gap-2">
                         <DeleteContainer recipeId={props.id} />
                         <UpdateComment onClick={updateHandler} />
                     </div>
                     :
-                    <h2 className="font-medium text-lg sm:text-xl">{props.title}</h2>
+                    <h2 className="font-medium text-lg">{props.title}</h2>
                 }
-                <button onClick={openSettingHandler} className="text-2xl text-amber-600 h-full sm:text-3xl">
+                <button onClick={openSettingHandler} className="text-2xl text-amber-600 h-full sm:text-2xl">
                     {isOpen ? <BiX /> : <BiDotsVerticalRounded />}
                 </button>
             </div>

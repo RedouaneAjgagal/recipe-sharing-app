@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { Link, useSearchParams, useNavigate } from "react-router-dom"
+import { useSearchParams, useNavigate } from "react-router-dom"
 import verifyEmail from "../fetchers/verifyEmail";
 import Loading from "../UI/Loading";
 import PrimaryBtn from "../UI/PrimaryBtn";
