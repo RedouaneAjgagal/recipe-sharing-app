@@ -12,6 +12,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import UserRecipes from "./pages/ProfileRecipes";
 import UsersProfile from "./pages/UsersProfile";
+import VerifyEmail from "./pages/VerifyEmail";
 
 
 function App() {
@@ -40,6 +41,10 @@ function App() {
         {
           path: "user/reset-password",
           element: <ResetPassword />
+        },
+        {
+          path: "user/verify-email",
+          element: <VerifyEmail />
         },
         {
           path: "recipes/:recipeId",
