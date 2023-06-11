@@ -1,6 +1,8 @@
+import url from "../config/url";
+
 const getRecipeComments = async (recipeId: string, sort: string) => {
-    const url = `http://localhost:5000/api/v1/recipes/${recipeId}/comments?sort=${sort}`;
-    const response = await fetch(url, {
+    const customUrl = `${url}/recipes/${recipeId}/comments?sort=${sort}`;
+    const response = await fetch(customUrl, {
         credentials: "include"
     });
     const data = await response.json();

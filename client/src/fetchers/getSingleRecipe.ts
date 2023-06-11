@@ -1,14 +1,13 @@
-import { json } from "react-router-dom";
-
+import url from "../config/url";
 
 const getSingleRecipe = async (recipeId: string) => {
-    const url = `http://localhost:5000/api/v1/recipes/${recipeId}`;
-    const response = await fetch(url, {
+    const customUrl = `${url}/recipes/${recipeId}`;
+    const response = await fetch(customUrl, {
         credentials: "include"
     });
     const data = await response.json();
     if (!response.ok) {
-        throw json({ msg: data.msg }, { status: response.status, statusText: response.statusText })
+        throw new Error(data.msg);
     }
     return data;
 }

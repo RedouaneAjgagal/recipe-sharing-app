@@ -87,12 +87,16 @@ const Recipe = () => {
             {recipeQuery.isLoading ?
                 <Loading />
                 :
-                <>
-                    <div className="w-28 mt-2 md:mt-4">
-                        <PrimaryBtn style="black" onClick={backHandler}><AiFillCaretLeft />Go back</PrimaryBtn>
-                    </div>
-                    <RecipeDetails recipeDetails={recipeDetails} />
-                </>
+                (recipeQuery.isSuccess ?
+                    <>
+                        <div className="w-28 mt-2 md:mt-4">
+                            <PrimaryBtn style="black" onClick={backHandler}><AiFillCaretLeft />Go back</PrimaryBtn>
+                        </div>
+                        <RecipeDetails recipeDetails={recipeDetails} />
+                    </>
+                    :
+                    null
+                )
             }
             {recipeQuery.isSuccess ?
                 <Comments recipeId={recipeDetails.recipe._id} />

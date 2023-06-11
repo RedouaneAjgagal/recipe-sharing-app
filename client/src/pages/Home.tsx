@@ -19,11 +19,6 @@ const Home = () => {
     keepPreviousData: true
   });
 
-  if (query.isError) {
-    return <p>error</p>
-  }
-
-
   const data: { numOfPages: number, recipes: URecipe[] } = query.data;
 
 
@@ -32,13 +27,17 @@ const Home = () => {
       <RecipeNav />
       {query.isLoading ?
         <Loading /> :
-        data.recipes && data.recipes.length ?
-          <>
-            <Recipes recipes={data.recipes} />
-            <ChangePages numOfPages={data.numOfPages} />
-          </>
+        (query.isSuccess ?
+          data.recipes && data.recipes.length ?
+            <>
+              <Recipes recipes={data.recipes} />
+              <ChangePages numOfPages={data.numOfPages} />
+            </>
+            :
+            <h1 className="text-xl font-medium text-center">There is no recipe to show</h1>
           :
-          <h1 className="text-xl font-medium text-center">There is no recipe to show</h1>
+          <Loading />
+        )
       }
     </div>
   )
