@@ -11,6 +11,7 @@ import likeComment from "../../features/likeComment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import StatusResponse from "../StatusResponse";
 import useStatusResponse from "../../hooks/useStatusResponse";
+import createdAtFormated from "../../utils/CreatedAtFormated";
 
 interface Props {
     id: string;
@@ -45,7 +46,10 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
         likeMutation.mutate();
     }
 
-    const createdAt = new Date(props.comment.createdAt).toLocaleDateString("en", { year: "numeric", month: "short", day: "2-digit" });
+    // const createdAt = new Date(props.comment.createdAt).toLocaleDateString("en", { year: "numeric", month: "short", day: "2-digit" });
+
+    // console.log(props.comment.createdAt);
+    const createdAt = createdAtFormated(new Date(props.comment.createdAt))
 
 
     const openUpdateHandler = () => {
@@ -93,8 +97,9 @@ const Comment = (props: React.PropsWithoutRef<Props>) => {
                     </div>
                     <div className="min-h-full h-14 flex flex-col justify-center">
                         <div className="flex items-center gap-4">
-                            <h5 className={`font-medium ${props.comment.user.role === "admin" ? "text-amber-600 " : "text-black"}`}>{props.comment.user.name}</h5>
-                            {props.comment.publisher && <span className="bg-indigo-600  text-white px-2 text-sm">Publisher</span>}
+                            <h5 className={`font-medium text-black`}>{props.comment.user.name}</h5>
+                            {props.comment.publisher ? <span className="bg-indigo-600  text-white px-2 text-sm">Publisher</span> : null}
+                            {props.comment.user.role === "admin" ? <span className="bg-orange-600  text-white px-2 text-sm">MOD</span> : null}
                         </div>
                         <div className="flex items-center gap-2">
                             <p className="text-slate-500 text-sm">{createdAt}</p>
