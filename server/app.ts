@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import 'express-async-errors';
+import path from "path";
 
 // express
 import express from 'express';
@@ -10,26 +11,13 @@ const app = express();
 // db
 import connectDB from './db/connect';
 
-// configs
-import origin from './config/origin';
-
-
 // extra packages
 import cookieParser from 'cookie-parser';
 import mongoSanitize from 'express-mongo-sanitize';
 import helmet from "helmet";
 import xssCleaner from "xss-clean";
 import fileUpload from "express-fileupload";
-import rateLimit from 'express-rate-limit';
 import { v2 as cloudinary } from "cloudinary";
-import cors from "cors";
-
-const apiLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
 
 // middlewares
 import errorHandlerMiddleware from './middlewares/error-handler';
@@ -43,6 +31,7 @@ import recipeRouter from './routes/recipeRouter';
 import commentRouter from './routes/commentRouter';
 import rateRouter from './routes/rateRouter';
 import favouriteRouter from './routes/favouriteRouter';
+import rateLimiter from './utils/rateLimiter';
 
 
 
@@ -54,10 +43,7 @@ cloudinary.config({
     ssl_detected: true
 });
 
-app.use(cors({
-    origin,
-    credentials: true
-}));
+app.use(express.static(path.resolve(__dirname, "../../client/dist")));
 app.use(express.json());
 app.use(helmet());
 app.use(mongoSanitize());
@@ -66,15 +52,20 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(fileUpload({ useTempFiles: true, safeFileNames: true }));
 
 
-// app.use('/api/v1', apiLimiter);
+// Request Limiter
+const apiLimiter = rateLimiter({ windowMs: 15 * 60 * 1000, max: 100 });
+
+
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
-app.use('/api/v1/recipes', recipeRouter);
-app.use('/api/v1/comments', commentRouter);
-app.use('/api/v1/rates', rateRouter);
-app.use('/api/v1/favourite', favouriteRouter);
+app.use('/api/v1/recipes', apiLimiter, recipeRouter);
+app.use('/api/v1/comments', apiLimiter, commentRouter);
+app.use('/api/v1/rates', apiLimiter, rateRouter);
+app.use('/api/v1/favourite', apiLimiter, favouriteRouter);
 
-
+app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../../client/dist", "index.html"));
+})
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

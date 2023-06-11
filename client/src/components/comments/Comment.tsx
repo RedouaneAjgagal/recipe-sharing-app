@@ -11,7 +11,7 @@ import likeComment from "../../features/likeComment";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import StatusResponse from "../StatusResponse";
 import useStatusResponse from "../../hooks/useStatusResponse";
-import createdAtFormated from "../../utils/CreatedAtFormated";
+import createdAtFormated from "../../utils/createdAtFormated";
 
 interface Props {
     id: string;

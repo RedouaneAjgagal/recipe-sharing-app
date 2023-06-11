@@ -1,18 +1,21 @@
 import { Router } from "express";
 import { currentUser, userProfile, singleProfile, updateProfile, uploadPicture } from "../controllers/userController";
 import authenticateUser from "../middlewares/authentication";
+import rateLimiter from "../utils/rateLimiter";
 
 
 const router = Router();
 
+const apiLimiter = rateLimiter({ windowMs: 15 * 60 * 1000, max: 100 });
+
 
 router.route('/')
     .get(authenticateUser, userProfile)
-    .patch(authenticateUser, updateProfile)
-    .post(authenticateUser, uploadPicture);
-    
-router.get('/current-user', authenticateUser, currentUser);
-router.get("/:userId", singleProfile);
+    .patch(apiLimiter, authenticateUser, updateProfile)
+    .post(apiLimiter, authenticateUser, uploadPicture);
+
+router.get('/current-user', apiLimiter, authenticateUser, currentUser);
+router.get("/:userId", apiLimiter, singleProfile);
 
 
 
