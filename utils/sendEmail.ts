@@ -12,7 +12,7 @@ const sendEmail = ({ to, subject, html }: SendEmail) => {
     const transporter = nodemailer.createTransport(nodemailerConfig);
 
     return transporter.sendMail({
-        from: `Recipe Sharing App <${process.env.EMAIL_SENDER}>`,
+        from: `Recipe App <${process.env.EMAIL_SENDER}>`,
         to,
         subject,
         html,

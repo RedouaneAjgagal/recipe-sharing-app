@@ -34,6 +34,7 @@ import favouriteRouter from './routes/favouriteRouter';
 import rateLimiter from './utils/rateLimiter';
 
 
+app.set("trust proxy", 4);
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -63,6 +64,7 @@ app.use(fileUpload({ useTempFiles: true, safeFileNames: true }));
 
 // Request Limiter
 const apiLimiter = rateLimiter({ windowMs: 15 * 60 * 1000, max: 100 });
+
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
