@@ -35,19 +35,24 @@ const CommentSection = (props: React.PropsWithoutRef<Props>) => {
                 {commentsQuery.isError && <StatusResponse message={(commentsQuery.error as Error).message} success={false} />}
                 <h3 className="text-xl text-slate-900 font-medium tracking-wide pb-4 border-b border-slate-800/50">{recipeComments.length} Comments</h3>
                 <PostComment />
-                <article>
-                    {recipeComments.length ?
-                        <>
-                            <CommentsNav onSort={onSort} />
-                            <CommentsList recipeComments={recipeComments} recipeId={props.recipeId} />
-                        </>
+                {
+                    commentsQuery.isSuccess ?
+                        <article>
+                            {recipeComments.length ?
+                                <>
+                                    <CommentsNav onSort={onSort} />
+                                    <CommentsList recipeComments={recipeComments} recipeId={props.recipeId} />
+                                </>
+                                :
+                                <div className="text-slate-500 leading-7 text-lg">
+                                    <p>So empty..</p>
+                                    <p>Be the first to comment</p>
+                                </div>
+                            }
+                        </article>
                         :
-                        <div className="text-slate-500 leading-7 text-lg">
-                            <p>So empty..</p>
-                            <p>Be the first to comment</p>
-                        </div>
-                    }
-                </article>
+                        <p>{(commentsQuery.error as Error)?.message}</p>
+                }
             </section>
     )
 }

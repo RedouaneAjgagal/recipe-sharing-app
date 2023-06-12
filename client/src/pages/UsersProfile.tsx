@@ -21,7 +21,10 @@ const UsersProfile = () => {
         userInfoQuery.isLoading ?
             <Loading />
             :
-            <UserProfile userInfo={userInfoQuery.data as UUserProfile} />
+            userInfoQuery.isSuccess ?
+                <UserProfile userInfo={userInfoQuery.data as UUserProfile} />
+                :
+                <p>{(userInfoQuery.error as Error)?.message}</p>
     )
 }
 

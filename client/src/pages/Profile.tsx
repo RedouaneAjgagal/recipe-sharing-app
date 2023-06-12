@@ -36,7 +36,7 @@ const Profile = () => {
             profileQuery.isSuccess ?
                 <ProfileInfo profileInfo={profileQuery.data as ProfileData} />
                 :
-                null
+                <p>{(profileQuery.error as Error)?.message}</p>
     )
 }
 

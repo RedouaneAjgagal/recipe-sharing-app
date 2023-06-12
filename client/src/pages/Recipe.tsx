@@ -95,7 +95,7 @@ const Recipe = () => {
                         <RecipeDetails recipeDetails={recipeDetails} />
                     </>
                     :
-                    null
+                    <p>{(recipeQuery.error as Error)?.message}</p>
                 )
             }
             {recipeQuery.isSuccess ?

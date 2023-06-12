@@ -25,7 +25,10 @@ const Settings = () => {
             profileQuery.isLoading ?
                 <Loading />
                 :
-                <ProfileSettings profileInfo={profileQuery.data as ProfileData} />
+                profileQuery.isSuccess ?
+                    <ProfileSettings profileInfo={profileQuery.data as ProfileData} />
+                    :
+                    <p>{(profileQuery.error as Error)?.message}</p>
             :
             null
     )

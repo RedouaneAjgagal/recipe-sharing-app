@@ -38,7 +38,10 @@ const UserRecipes = () => {
                 userRecipesQuery.isLoading ?
                     <Loading />
                     :
-                    <UserRecipesList userRecipes={userRecipesQuery.data as UProfileRecipes[]} />
+                    userRecipesQuery.isSuccess ?
+                        <UserRecipesList userRecipes={userRecipesQuery.data as UProfileRecipes[]} />
+                        :
+                        <p>{(userRecipesQuery.error as Error)?.message}</p>
                 :
                 null
             }

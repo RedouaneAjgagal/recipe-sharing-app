@@ -36,7 +36,7 @@ const Home = () => {
             :
             <h1 className="text-xl font-medium text-center">There is no recipe to show</h1>
           :
-          <Loading />
+          <p>{(query.error as Error)?.message}</p>
         )
       }
     </div>
