@@ -45,7 +45,16 @@ cloudinary.config({
 
 app.use(express.static(path.resolve(__dirname, "../client/dist")));
 app.use(express.json());
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            imgSrc: ["'self'", "https://res.cloudinary.com/dqfrgtxde/image/upload/"]
+        }
+    },
+    crossOriginEmbedderPolicy: {
+        policy: "credentialless"
+    }
+}));
 app.use(mongoSanitize());
 app.use(xssCleaner());
 app.use(cookieParser(process.env.COOKIE_SECRET));
