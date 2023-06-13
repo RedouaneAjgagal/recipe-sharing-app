@@ -11,7 +11,7 @@ export interface UErrorsForm {
     prepTime?: boolean;
     cookTime?: boolean;
     title?: boolean;
-    isInvalidImg?: boolean; 
+    isInvalidImg?: boolean;
     images?: string;
 }
 
@@ -25,7 +25,7 @@ const NewPrecipe = () => {
 
     useEffect(() => {
         if (authenticationQuery.isError && (authenticationQuery.error as Error).message === "Authentication failed") {
-            return navigate("/login");
+            return navigate("/login", { replace: true });
         }
     }, [authenticationQuery.isError, authenticationQuery.error])
 

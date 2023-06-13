@@ -9,13 +9,14 @@ interface SendEmail {
 }
 
 const sendEmail = ({ to, subject, html }: SendEmail) => {
-    const transporter = nodemailer.createTransport(nodemailerConfig);
+    let transporter = nodemailer.createTransport(nodemailerConfig);
 
     return transporter.sendMail({
-        from: `Recipe App <${process.env.EMAIL_SENDER}>`,
-        to,
-        subject,
-        html,
+        from: '"Recipe Sharing App" <support@sharingrecipeapp.com>', // sender address
+        to, // list of receivers
+        subject, // Subject line
+        html // html body
+        // text:  // plain text body
     });
 }
 

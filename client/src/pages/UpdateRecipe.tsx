@@ -14,7 +14,7 @@ const UpdateRecipe = () => {
 
     useEffect(() => {
         if (authenticationQuery.isError && (authenticationQuery.error as Error).message === "Authentication failed") {
-            return navigate("/login");
+            return navigate("/login", { replace: true });
         }
     }, [authenticationQuery]);
 

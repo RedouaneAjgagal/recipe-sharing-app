@@ -16,7 +16,7 @@ const Auth = (props: React.PropsWithoutRef<Props>) => {
 
     useEffect(() => {
         if (userData && isAuthenticated.isSuccess) {
-            navigate("/profile");
+            navigate("/profile", { replace: true });
         }
     }, [userData, isAuthenticated.isSuccess]);
 

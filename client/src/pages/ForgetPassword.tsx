@@ -9,7 +9,7 @@ const ForgetPassword = () => {
     const navigate = useNavigate();
     useEffect(() => {
         if (authQury.isSuccess) {
-            navigate("/");
+            navigate("/", { replace: true });
         }
     }, [authQury.isSuccess]);
 
