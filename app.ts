@@ -19,6 +19,9 @@ import xssCleaner from "xss-clean";
 import fileUpload from "express-fileupload";
 import { v2 as cloudinary } from "cloudinary";
 
+// crons
+import restartServerJob from "./crons/requestingServer";
+
 // middlewares
 import errorHandlerMiddleware from './middlewares/error-handler';
 import notFoundMiddleware from './middlewares/not-found';
@@ -79,6 +82,10 @@ app.get("*", (req, res) => {
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
+
+
+// restart the server every 14 min
+restartServerJob();
 
 
 const port = process.env.PORT || 5000;
